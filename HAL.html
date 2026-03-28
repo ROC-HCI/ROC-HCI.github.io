@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="HAL: Inducing Human-likeness in LLMs with Alignment - Masum Hasan, Junjie Zhao, Ehsan Hoque">
+  <meta name="description" content="HAL is a framework for aligning language models to conversational human-likeness using an interpretable, data-driven reward derived from explicit conversational traits.">
+  <meta name="keywords" content="human-likeness, large language models, alignment, conversational AI, preference optimization, Turing test, human-AI interaction, RLHF, LLM">
+  <meta name="author" content="Masum Hasan, Junjie Zhao, Ehsan Hoque">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ROC-HCI Lab, University of Rochester">
+  <meta property="og:title" content="HAL: Inducing Human-likeness in LLMs with Alignment">
+  <meta property="og:description" content="HAL is a framework for aligning language models to conversational human-likeness using an interpretable, data-driven reward derived from explicit conversational traits.">
+  <meta property="og:url" content="https://roc-hci.github.io/hal/HAL.html">
+  <meta property="og:image" content="https://roc-hci.github.io/hal/static/images/main-figure.jpg">
+  <meta property="og:image:secure_url" content="https://roc-hci.github.io/hal/static/images/main-figure.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HAL: Inducing Human-likeness in LLMs with Alignment - Research Preview">
+  <meta property="article:published_time" content="2026-01-01T00:00:00.000Z">
+  <meta property="article:author" content="Masum Hasan">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="human-likeness">
+  <meta property="article:tag" content="LLM alignment">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@ROC_HCI">
+  <meta name="twitter:title" content="HAL: Inducing Human-likeness in LLMs with Alignment">
+  <meta name="twitter:description" content="HAL is a framework for aligning language models to conversational human-likeness using an interpretable, data-driven reward derived from explicit conversational traits.">
+  <meta name="twitter:image" content="https://roc-hci.github.io/hal/static/images/main-figure.jpg">
+  <meta name="twitter:image:alt" content="HAL: Inducing Human-likeness in LLMs with Alignment - Research Preview">
+  <meta name="twitter:creator" content="@masumhasan">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="HAL: Inducing Human-likeness in LLMs with Alignment">
+  <meta name="citation_author" content="Hasan, Masum">
+  <meta name="citation_author" content="Zhao, Junjie">
+  <meta name="citation_author" content="Hoque, Ehsan">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_arxiv_id" content="2601.02813">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2601.02813">
+  
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <link rel="canonical" href="https://roc-hci.github.io/hal/HAL.html">
+
+  <title>HAL: Inducing Human-likeness in LLMs with Alignment | Hasan, Zhao, Hoque</title>
+  
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+  
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+  
+  <!-- Fonts - Optimized loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+  
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "HAL: Inducing Human-likeness in LLMs with Alignment",
+    "description": "HAL is a framework for aligning language models to conversational human-likeness using an interpretable, data-driven reward derived from explicit conversational traits.",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Masum Hasan",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "University of Rochester"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Junjie Zhao",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "University of Rochester"
+        }
+      },
+      {
+        "@type": "Person",
+        "name": "Ehsan Hoque",
+        "affiliation": {
+          "@type": "Organization",
+          "name": "University of Rochester"
+        }
+      }
+    ],
+    "datePublished": "2026-01-01",
+    "url": "https://arxiv.org/abs/2601.02813",
+    "image": "https://roc-hci.github.io/hal/static/images/main-figure.jpg",
+    "keywords": ["human-likeness", "LLM alignment", "conversational AI", "preference optimization", "Turing test", "human-AI interaction"],
+    "abstract": "Conversational human-likeness plays a central role in human-AI interaction, yet it has remained difficult to define, measure, and optimize. As a result, improvements in human-like behavior are largely driven by scale or broad supervised training, rather than targeted alignment. We introduce Human Aligning LLMs (HAL), a framework for aligning language models to conversational human-likeness using an interpretable, data-driven reward. HAL derives explicit conversational traits from contrastive dialogue data, combines them into a compact scalar score, and uses this score as a transparent reward signal for alignment with standard preference optimization methods.",
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by/4.0/"
+  }
+  </script>
+  
+  <!-- Website/Organization Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ROC-HCI Lab, University of Rochester",
+    "url": "https://roc-hci.com",
+    "sameAs": [
+      "https://github.com/ROC-HCI"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- More Works Dropdown -->
+  <div class="more-works-container">
+    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
+      <i class="fas fa-flask"></i>
+      More Works
+      <i class="fas fa-chevron-down dropdown-arrow"></i>
+    </button>
+    <div class="more-works-dropdown" id="moreWorksDropdown">
+      <div class="dropdown-header">
+        <h4>More Works</h4>
+        <button class="close-btn" onclick="toggleMoreWorks()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="works-list">
+        <a href="https://roc-hci.com/" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>ROC-HCI Lab</h5>
+            <p>Research on human-computer interaction, affective computing, and AI for health.</p>
+            <span class="work-venue">University of Rochester</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://masumhasan.com/" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>Masum Hasan</h5>
+            <p>PhD Candidate researching human-like virtual agents driven by LLMs, alignment, and human-centered AI.</p>
+            <span class="work-venue">University of Rochester</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">HAL: Inducing Human-likeness in LLMs with Alignment</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://masumhasan.com" target="_blank">Masum Hasan</a>,</span>
+              <span class="author-block">
+                Junjie Zhao,</span>
+              <span class="author-block">
+                <a href="https://hoques.com" target="_blank">Ehsan Hoque</a>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="https://www.rochester.edu" target="_blank">University of Rochester</a></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+
+
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2601.02813" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="ai ai-arxiv"></i>
+                </span>
+                <span>Paper (arXiv)</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://github.com/ROC-HCI/hal" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Training Code</span>
+            </a>
+          </span>
+
+          <span class="link-block">
+            <a href="https://huggingface.co/collections/roc-hci/hal-qwen14b" target="_blank"
+            class="external-link button is-normal is-rounded is-dark">
+            <span class="icon">
+              <img src="static/icons/huggingface.png" alt="" width="20" height="20" style="height: 1.25rem; width: auto; display: block;">
+            </span>
+            <span>Model Weights</span>
+          </a>
+        </span>
+
+        <span class="link-block">
+          <a href="https://colab.research.google.com/drive/1Xh3hdXlZJoXjFuDsfB1daFk-T8YjML3w?usp=sharing" target="_blank"
+          class="external-link button is-normal is-rounded is-dark">
+          <span class="icon">
+            <img src="static/icons/colab.webp" alt="" width="20" height="20" style="height: 1.25rem; width: auto; display: block;">
+          </span>
+          <span>Interactive Demo</span>
+        </a>
+      </span>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Main Figure -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="static/images/main-figure.jpg" alt="The HAL pipeline diagram" style="width:100%; border-radius:8px;" loading="lazy"/>
+      <h2 class="subtitle has-text-centered" style="margin-top:1rem;">
+        The HAL pipeline: (a) identifying human-likeness traits from contrastive dialogues (e.g. Turing tests), (b)
+        learning trait weights via a proxy classification task, and (c) computing a human-likeness score for alignment.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<!-- Paper abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Conversational human-likeness plays a central role in human-AI interaction, yet it has
+            remained difficult to define, measure, and optimize. As a result, improvements in human-like
+            behavior are largely driven by scale or broad
+            supervised training, rather than targeted alignment. We introduce Human Aligning LLMs
+            (HAL), a framework for aligning language
+            models to conversational human-likeness using an interpretable, data-driven reward. HAL
+            derives explicit conversational traits from contrastive dialogue data, combines them into a
+            compact scalar score, and uses this score as a
+            transparent reward signal for alignment with
+            standard preference optimization methods. Using this approach, we align models of varying sizes without affecting their overall performance. In large-scale human evaluations, a
+            model aligned with HAL is more frequently
+            perceived as human-like in conversation. Because HAL operates over explicit, interpretable
+            traits, it enables inspection of alignment behavior and diagnosis of unintended effects. More
+            broadly, HAL demonstrates how soft, qualitative properties of language&mdash;previously outside
+            the scope for alignment&mdash;can be made measurable and aligned in an interpretable and explainable way.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End paper abstract -->
+
+
+<!-- Paper poster -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title">Poster</h2>
+      <iframe src="static/pdfs/HAL--poster.pdf" width="100%" height="550">
+      </iframe>
+    </div>
+  </div>
+</section>
+<!-- End paper poster -->
+
+
+<!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@misc{hasan2026hal,
+      title={HAL: Inducing Human-likeness in LLMs with Alignment}, 
+      author={Masum Hasan and Junjie Zhao and Ehsan Hoque},
+      year={2026},
+      url={https://arxiv.org/abs/2601.02813}, 
+}</code></pre>
+    </div>
+</section>
+<!--End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+  </html>
