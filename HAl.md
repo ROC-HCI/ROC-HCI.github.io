@@ -54,6 +54,9 @@ https://github.com/ROC-HCI/hal
 ## Model Weights
 https://huggingface.co/collections/roc-hci/hal-qwen14b
 
+## Ollama
+https://ollama.com/urochci/hal
+
 
 ## Interactive demo (Colab)
 https://colab.research.google.com/drive/1Xh3hdXlZJoXjFuDsfB1daFk-T8YjML3w?usp=sharing
