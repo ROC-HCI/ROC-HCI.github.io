@@ -526,8 +526,12 @@ input.btn { width: 8.5em; cursor: text; }
     </div>
     <h1 class="pt-h1" id="hello">Today's exercises</h1>
     <p class="pt-lead" id="home-lead">Do them one at a time. The phone will guide you.</p>
+    <h2 class="pt-h2" id="plan-h" data-i18n>Your routine</h2>
     <ol class="plan" id="plan"></ol>
+    <h2 class="pt-h2" id="more-h" data-i18n>More exercises</h2>
+    <ol class="plan" id="plan-more"></ol>
     <button class="big secondary" id="btn-progress" data-i18n>My progress</button>
+    <button class="linkbtn center" id="btn-finishday" hidden data-i18n>Finish for today</button>
     <div class="su-sum" id="home-setup"><span id="home-setup-text"></span><button class="linkbtn" id="btn-resetup" data-i18n>Change set-up</button></div>
     <p class="pt-note" id="home-note" data-i18n>After you tap I'm ready, the app talks you through each exercise and moves on by itself.</p>
     <p class="pt-fine"><span data-i18n>Research prototype, not a medical device. Video stays on this phone.</span> <button class="linkbtn" id="open-family" data-i18n>For family</button> <button class="linkbtn" id="open-clinic" data-i18n>For clinicians</button></p>
@@ -659,12 +663,13 @@ input.btn { width: 8.5em; cursor: text; }
     <div class="actions">
       <button class="big primary" id="btn-next">Next exercise</button>
       <button class="linkbtn center" id="btn-again">Do this one again</button>
+      <button class="linkbtn center" id="btn-finishday-r" data-i18n>Finish for today</button>
     </div>
   </section>
 
   <!-- ================= PATIENT: all done ================= -->
   <section class="screen pt" id="scr-done" hidden>
-    <h1 class="pt-h1 center" data-i18n>All done for today</h1>
+    <h1 class="pt-h1 center" id="done-title">All done for today</h1>
     <div class="scorebox"><p class="kicker" data-i18n>Today's score</p><div class="ring" id="done-ring"></div><div class="stars" id="done-stars" aria-hidden="true"></div></div>
     <p class="pt-lead center" id="done-lead"></p>
     <div class="week" id="done-week"></div>
@@ -781,6 +786,95 @@ const I18N = (function () {
     'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
     'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
     'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
+    'Arm curls': 'ثني الذراع بالوزن',
+    'Seated knee straightening': 'فرد الركبة جالساً',
+    'Heel raises': 'رفع الكعبين',
+    'Curls': 'مرات الثني',
+    'Raises': 'مرات الرفع',
+    'Sitting down, hold a light weight and bend your elbow to bring it up to your shoulder, then lower it. As many times as you can in 30 seconds.': 'وأنت جالس، أمسك وزناً خفيفاً واثنِ مرفقك لترفعه إلى كتفك، ثم أنزله. أكبر عدد ممكن من المرات خلال ٣٠ ثانية.',
+    'Bend your elbow and bring the weight up, then lower it all the way. As many as you can in 30 seconds. Go.': 'اثنِ مرفقك وارفع الوزن، ثم أنزله إلى الأسفل تماماً. أكبر عدد ممكن خلال ٣٠ ثانية. ابدأ.',
+    'Sitting down, straighten one knee, hold it for a count of three, then lower it. 10 times with each leg.': 'وأنت جالس، افرد ركبة واحدة، وثبّتها وأنت تعدّ إلى ثلاثة، ثم أنزلها. ١٠ مرات لكل ساق.',
+    'Straighten the leg nearer the camera. Hold it for three, then lower it. Ten times.': 'افرد الساق الأقرب إلى الكاميرا. ثبّتها وعدّ إلى ثلاثة، ثم أنزلها. عشر مرات.',
+    'Holding on to a counter or a sturdy chair, rise up onto your toes, pause, then lower your heels slowly. 10 times.': 'وأنت ممسك بسطح المطبخ أو بكرسي ثابت، ارتفع على أطراف أصابعك، وتوقف قليلاً، ثم أنزل كعبيك ببطء. ١٠ مرات.',
+    'Hold on to your support. Rise up onto your toes, pause, then lower slowly. Ten times.': 'أمسك بالسند. ارتفع على أطراف أصابعك، وتوقف قليلاً، ثم انزل ببطء. عشر مرات.',
+    'Sit side-on, weight in hand': 'اجلس جانبياً والوزن في يدك',
+    'Arm straight down': 'الذراع ممدودة للأسفل',
+    'Curl up to the shoulder': 'اثنِ الذراع حتى الكتف',
+    'Lower fully, repeat': 'أنزلها تماماً، وكرّر',
+    'Sit side-on to the camera': 'اجلس جانبياً للكاميرا',
+    'Straighten one knee': 'افرد ركبة واحدة',
+    'Hold, then lower': 'ثبّت، ثم أنزل',
+    'Turn the chair, other leg': 'أدِر الكرسي، والساق الأخرى',
+    'Side-on, hold a support': 'جانبياً، وأمسك بسند',
+    'Stand tall': 'قف مستقيماً',
+    'Rise onto your toes': 'ارتفع على أطراف أصابعك',
+    'Bend your elbow all the way up': 'اثنِ مرفقك إلى الأعلى تماماً',
+    'Straighten your arm fully at the bottom': 'افرد ذراعك تماماً في الأسفل',
+    'Keep your elbow close to your side': 'أبقِ مرفقك قريباً من جانبك',
+    'Keep your body still': 'أبقِ جسمك ثابتاً',
+    'Good curl': 'ثني جيد',
+    'Straighten your knee a little more': 'افرد ركبتك أكثر قليلاً',
+    'Hold your leg straight for a count of three': 'ثبّت ساقك مفرودة وأنت تعدّ إلى ثلاثة',
+    'Sit up tall, do not lean back': 'اجلس مستقيماً ولا تمِل إلى الخلف',
+    'Good, nice and straight': 'جيد، مفرودة تماماً',
+    'Rise a little higher onto your toes': 'ارتفع أكثر قليلاً على أطراف أصابعك',
+    'Keep your knees straight': 'أبقِ ركبتيك مستقيمتين',
+    'Stand tall and keep your body still': 'قف مستقيماً وأبقِ جسمك ثابتاً',
+    'Good, nice and high': 'جيد، ارتفاع ممتاز',
+    'Ready. Bring the weight up to your shoulder.': 'جاهز. ارفع الوزن إلى كتفك.',
+    'Ready. Straighten your knee and hold it.': 'جاهز. افرد ركبتك وثبّتها.',
+    'Hold it straight… 1, 2, 3': 'ثبّتها مفرودة… ١، ٢، ٣',
+    'Ready. Rise up onto your toes.': 'جاهز. ارتفع على أطراف أصابعك.',
+    'Well done.': 'أحسنت.',
+    'Now turn your chair around so the other leg is nearer the camera, and do 10 more.': 'الآن أدِر كرسيك لتكون الساق الأخرى أقرب إلى الكاميرا، وكرّر ١٠ مرات أخرى.',
+    'Use a light weight you can lift comfortably. Stop if your shoulder or elbow hurts.': 'استخدم وزناً خفيفاً ترفعه براحة. توقّف إذا شعرت بألم في كتفك أو مرفقك.',
+    'Sit on a firm chair without wheels. Stop if your knee hurts.': 'اجلس على كرسي ثابت بدون عجلات. توقّف إذا شعرت بألم في ركبتك.',
+    'Hold on to a counter or a heavy chair the whole time.': 'أمسك بسطح المطبخ أو بكرسي ثقيل طوال الوقت.',
+    'curls': 'مرات ثني',
+    'curls in 30 seconds': 'مرة ثني خلال ٣٠ ثانية',
+    'knee straightenings': 'مرات فرد الركبة',
+    'heel raises': 'مرات رفع الكعبين',
+    '{n} more curls than last time.': '{n} مرات ثني أكثر من المرة السابقة.',
+    'Your knee straightened {x}° more than last time.': 'انفردت ركبتك {x}° أكثر من المرة السابقة.',
+    '{n} more than last time.': '{n} مرات أكثر من المرة السابقة.',
+    'Your heels rose {x}° higher than last time.': 'ارتفع كعباك {x}° أكثر من المرة السابقة.',
+    'You did a strong number of curls.': 'أدّيت عدداً جيداً من مرات الثني.',
+    'You bent and straightened your arm all the way.': 'ثنيت ذراعك وفردتها تماماً.',
+    'You kept your elbow in and your body still.': 'أبقيت مرفقك قريباً وجسمك ثابتاً.',
+    'Almost every curl was done with good form.': 'كانت كل مرات الثني تقريباً بأداء جيد.',
+    'Curl at a steady pace. The number will grow as your arm gets stronger.': 'اثنِ بإيقاع ثابت. سيزداد العدد كلما قويت ذراعك.',
+    'Bring your hand all the way up, then straighten your arm fully.': 'ارفع يدك إلى الأعلى تماماً، ثم افرد ذراعك بالكامل.',
+    'Keep your elbow close to your side and let only your forearm move.': 'أبقِ مرفقك قريباً من جانبك ودع ساعدك فقط يتحرك.',
+    'You straightened your knee nearly all the way.': 'فردت ركبتك بالكامل تقريباً.',
+    'You held your leg straight nice and steadily.': 'ثبّتت ساقك مفرودة بثبات جيد.',
+    'You sat tall the whole time.': 'جلست مستقيماً طوال الوقت.',
+    'Try to straighten your knee a little more each time.': 'حاول أن تفرد ركبتك أكثر قليلاً في كل مرة.',
+    'Hold your leg straight for a slow count of three.': 'ثبّت ساقك مفرودة وعدّ ببطء إلى ثلاثة.',
+    'Sit up tall. Let your leg do the work, not your back.': 'اجلس مستقيماً. دع ساقك تقوم بالعمل، لا ظهرك.',
+    'You rose high onto your toes.': 'ارتفعت عالياً على أطراف أصابعك.',
+    'You paused at the top with control.': 'توقفت في الأعلى بتحكم.',
+    'You kept your knees straight.': 'أبقيت ركبتيك مستقيمتين.',
+    'You stood tall and steady.': 'وقفت مستقيماً وثابتاً.',
+    'Almost every raise was done with good form.': 'كانت كل مرات الرفع تقريباً بأداء جيد.',
+    'Try to rise a little higher onto your toes.': 'حاول أن ترتفع أكثر قليلاً على أطراف أصابعك.',
+    'Pause for a moment at the top before lowering.': 'توقف لحظة في الأعلى قبل أن تنزل.',
+    'Keep your knees straight as you rise.': 'أبقِ ركبتيك مستقيمتين وأنت ترتفع.',
+    'Stand tall and hold your support lightly.': 'قف مستقيماً وأمسك بالسند بخفة.',
+    'Arm strength': 'قوة الذراع',
+    'Knee straightening': 'فرد الركبة',
+    'Calf strength': 'قوة السمانة',
+    'Your routine': 'برنامجك',
+    'More exercises': 'تمارين أخرى',
+    'Finish for today': 'إنهاء لهذا اليوم',
+    'Finished for today': 'انتهيت لهذا اليوم',
+    'Start ›': 'ابدأ ›',
+    'Choose any exercise, or tap Start to do your routine in order.': 'اختر أي تمرين، أو اضغط «ابدأ» لأداء برنامجك بالترتيب.',
+    'You have finished your routine for today. Well done!': 'أنهيت برنامجك لهذا اليوم. أحسنت!',
+    'You can do any exercise again, or finish for today.': 'يمكنك إعادة أي تمرين، أو الإنهاء لهذا اليوم.',
+    '{n} done today.': 'أنجزت {n} اليوم.',
+    'Do as many or as few as you like, then finish for today.': 'أدِّ ما تشاء من التمارين، قليلاً أو كثيراً، ثم أنهِ لهذا اليوم.',
+    'Choose another exercise': 'اختر تمريناً آخر',
+    'Thank you.': 'شكراً لك.',
     'Welcome to iRehab': 'مرحباً بك في iRehab',
     'Before you start, let\'s set things up. It takes about two minutes.': 'قبل أن تبدأ، لنجهّز المكان. يستغرق ذلك دقيقتين تقريباً.',
     'What will you use?': 'ماذا ستستخدم؟',
@@ -1589,6 +1683,207 @@ const Core = (function () {
              rms: mean(reps.map((r) => r.rms)), range: mean(reps.map((r) => r.range)), vel: mean(reps.map((r) => r.vel)) };
   }
 
+
+  /* ================= 30-Second Arm Curl (seated, side view; Rikli & Jones Senior Fitness Test) ================= */
+  /* Elbow angle (shoulder-elbow-wrist) of the arm nearer the camera (higher landmark visibility). 180 = straight.
+     A curl counts when the elbow bends past CURL.UP after being straight; it completes when the arm straightens again.
+     Elbow drift = how far the upper arm swings away from the trunk; lean = trunk sway from vertical. */
+  const CURL = { UP: 80, DOWN: 130, FULL_FLEX: 60, FULL_EXT: 150, DRIFT: 25, LEAN: 10, MIN_DUR: 0.4, WINDOW: 30 };
+  function curlFrame(p) {
+    const out = { ok: false, elbow: NaN, drift: NaN, lean: NaN, side: '', hint: '' };
+    const arms = [['L', LM.L_SH, LM.L_EL, LM.L_WR, LM.L_HIP], ['R', LM.R_SH, LM.R_EL, LM.R_WR, LM.R_HIP]].filter(([, s, e, w]) => ok(p[s], p[e], p[w]));
+    if (!arms.length) { out.hint = 'Shoulder, elbow and wrist of one arm must be in view'; return out; }
+    const vis = (a) => Math.min(p[a[1]].v, p[a[2]].v, p[a[3]].v);
+    const a = arms.sort((x, y) => vis(y) - vis(x))[0], S = p[a[1]], E = p[a[2]], W = p[a[3]], H = p[a[4]];
+    out.side = a[0]; out.elbow = joint(S, E, W);
+    const down = ok(H) ? sub(H, S) : { x: 0, y: 1 };
+    out.drift = angle(sub(E, S), down);
+    if (ok(H)) { const up = sub(S, H); out.lean = Math.abs(Math.atan2(up.x, -up.y) * 180 / Math.PI); }
+    out.ok = true; return out;
+  }
+  function CurlCounter() {
+    let phase = 'down', startT = null, ext = NaN, cur = null;
+    const reps = [];
+    return {
+      reps, get phase() { return phase; },
+      feed(f, t) {
+        if (!f.ok || isNaN(f.elbow)) return null;
+        this.lastT = t;
+        const v = f.elbow;
+        if (phase === 'down') {
+          if (isNaN(ext) || v > ext) ext = v;                    // straightest the arm got before this curl
+          if (v > CURL.DOWN || startT === null) startT = t;
+          if (v < CURL.UP) { phase = 'up'; cur = { tStart: startT, tUp: t, flex: v, ext, drift: f.drift || 0, lean: f.lean || 0, side: f.side }; return { type: 'up', rep: cur }; }
+          return null;
+        }
+        if (v < cur.flex) cur.flex = v;
+        if (f.drift > cur.drift) cur.drift = f.drift;
+        if (f.lean > cur.lean) cur.lean = f.lean;
+        if (v > CURL.DOWN) {
+          phase = 'down'; startT = t; ext = v;
+          const r = cur; cur = null; r.tEnd = t; r.dur = r.tEnd - r.tStart;
+          if (r.dur < CURL.MIN_DUR) return null;
+          r.full = r.flex <= CURL.FULL_FLEX && r.ext >= CURL.FULL_EXT;
+          r.cue = curlCue(r); reps.push(r);
+          return { type: 'down', rep: r };
+        }
+        return null;
+      },
+    };
+  }
+  function curlCue(r) {
+    if (r.flex > CURL.FULL_FLEX) return { ok: false, text: 'Bend your elbow all the way up' };
+    if (r.ext < CURL.FULL_EXT) return { ok: false, text: 'Straighten your arm fully at the bottom' };
+    if (r.drift > CURL.DRIFT) return { ok: false, text: 'Keep your elbow close to your side' };
+    if (r.lean > CURL.LEAN) return { ok: false, text: 'Keep your body still' };
+    return { ok: true, text: 'Good curl' };
+  }
+  function summarizeCurl(reps, tEnd) {
+    const t0 = reps.length ? reps[0].tStart : NaN;
+    return {
+      reps: reps.length,
+      in30: reps.filter((r) => r.tUp - t0 <= CURL.WINDOW).length,
+      spans30: reps.length ? (Math.max(reps[reps.length - 1].tUp, tEnd == null ? -Infinity : tEnd) - t0) >= CURL.WINDOW : false,
+      full: reps.filter((r) => r.full).length,
+      meanFlex: mean(clean(reps.map((r) => r.flex))), meanExt: mean(clean(reps.map((r) => r.ext))),
+      maxDrift: maxOf(clean(reps.map((r) => r.drift))), maxLean: maxOf(clean(reps.map((r) => r.lean))),
+      meanDur: mean(clean(reps.map((r) => r.dur))), slowing: slowing(reps.map((r) => r.dur)), rests: rests(reps),
+      good: reps.filter((r) => r.cue && r.cue.ok).length, side: reps.length ? reps[0].side : '',
+    };
+  }
+
+  /* ================= Seated knee extension (side view, one leg at a time) ================= */
+  /* Knee angle (hip-knee-ankle) of the leg nearer the camera. About 90 seated with the foot down, 180 = straight.
+     A rep starts when the knee opens past KNEE.UP and ends when it bends back past KNEE.DOWN. Hold = time spent
+     within KNEE.HOLD_BAND of that rep's peak. Lean = trunk tilted back from vertical (leaning back to lift the leg). */
+  const KNEE = { UP: 135, DOWN: 120, FULL: 165, HOLD_BAND: 8, HOLD_TARGET: 2, LEAN: 15, MIN_DUR: 0.5 };
+  function kneeFrame(p) {
+    const out = { ok: false, knee: NaN, side: '', lean: NaN, hint: '' };
+    const legs = [['L', LM.L_HIP, LM.L_KNEE, LM.L_ANK], ['R', LM.R_HIP, LM.R_KNEE, LM.R_ANK]].filter(([, h, k, a]) => ok(p[h], p[k], p[a]));
+    if (!legs.length) { out.hint = 'Hip, knee and ankle of one leg must be in view'; return out; }
+    const vis = (l) => Math.min(p[l[1]].v, p[l[2]].v, p[l[3]].v);
+    const l = legs.sort((x, y) => vis(y) - vis(x))[0], H = p[l[1]];
+    out.side = l[0]; out.knee = joint(H, p[l[2]], p[l[3]]);
+    const sh = l[0] === 'L' ? p[LM.L_SH] : p[LM.R_SH];
+    if (ok(sh)) { const up = sub(sh, H); out.lean = Math.abs(Math.atan2(up.x, -up.y) * 180 / Math.PI); }
+    out.ok = true; return out;
+  }
+  function KneeCounter() {
+    let phase = 'down', startT = null, cur = null;
+    const reps = [];
+    return {
+      reps, get phase() { return phase; },
+      count(side) { return reps.filter((r) => r.side === side).length; },
+      feed(f, t) {
+        if (!f.ok || isNaN(f.knee)) return null;
+        this.lastT = t;
+        const v = f.knee;
+        if (phase === 'down') {
+          if (v < KNEE.DOWN || startT === null) startT = t;
+          if (v > KNEE.UP) { phase = 'up'; cur = { tStart: startT, tPeak: t, peak: v, side: f.side, lean: f.lean || 0, trace: [[t, v]] }; }
+          return null;
+        }
+        cur.trace.push([t, v]);
+        if (v > cur.peak) { cur.peak = v; cur.tPeak = t; }
+        if (f.lean > cur.lean) cur.lean = f.lean;
+        if (v < KNEE.DOWN) {
+          phase = 'down'; startT = t;
+          const r = cur; cur = null; r.tEnd = t; r.dur = r.tEnd - r.tStart;
+          if (r.dur < KNEE.MIN_DUR) return null;
+          let hold = 0; for (let i = 1; i < r.trace.length; i++) if (r.trace[i][1] >= r.peak - KNEE.HOLD_BAND) hold += r.trace[i][0] - r.trace[i - 1][0];
+          r.hold = hold; delete r.trace;
+          r.cue = kneeCue(r); reps.push(r);
+          return r;
+        }
+        return null;
+      },
+    };
+  }
+  function kneeCue(r) {
+    if (r.peak < KNEE.FULL - 10) return { ok: false, text: 'Straighten your knee a little more' };
+    if (r.hold < KNEE.HOLD_TARGET - 0.5) return { ok: false, text: 'Hold your leg straight for a count of three' };
+    if (r.lean > KNEE.LEAN) return { ok: false, text: 'Sit up tall, do not lean back' };
+    return { ok: true, text: 'Good, nice and straight' };
+  }
+  function summarizeKnee(reps) {
+    const side = (s) => reps.filter((r) => r.side === s), pk = (a) => clean(a.map((r) => r.peak));
+    const L = side('L'), R = side('R');
+    return {
+      reps: reps.length, left: L.length, right: R.length,
+      bestL: maxOf(pk(L)), bestR: maxOf(pk(R)), meanL: mean(pk(L)), meanR: mean(pk(R)),
+      meanHold: mean(clean(reps.map((r) => r.hold))), full: reps.filter((r) => r.peak >= KNEE.FULL).length,
+      maxLean: maxOf(clean(reps.map((r) => r.lean))), meanDur: mean(clean(reps.map((r) => r.dur))),
+      slowing: slowing(reps.map((r) => r.dur)), rests: rests(reps), good: reps.filter((r) => r.cue && r.cue.ok).length,
+    };
+  }
+
+  /* ================= Heel raises with support (standing, side view) ================= */
+  /* Time at the top = time at or above 80% of that raise's peak (robust to tracking noise).
+     Heel lift = angle of the heel-to-toe line above its resting angle (MediaPipe heel 29/30, foot index 31/32).
+     The resting angle is learned while the heels are down, so a slightly tilted camera does not matter. */
+  const HEEL = { UP: 7, DOWN: 3, FULL: 20, KNEE_STRAIGHT: 155, LEAN: 10, MIN_DUR: 0.4, HOLD_FRAC: 0.8 };
+  const HEEL_I = { L: [LM.L_ANK, 29, 31, LM.L_KNEE, LM.L_HIP], R: [LM.R_ANK, 30, 32, LM.R_KNEE, LM.R_HIP] };
+  function heelFrame(p) {
+    const out = { ok: false, foot: NaN, knee: NaN, lean: NaN, side: '', hint: '' };
+    const feet = ['L', 'R'].filter((s) => ok(p[HEEL_I[s][0]], p[HEEL_I[s][1]], p[HEEL_I[s][2]]));
+    if (!feet.length) { out.hint = 'Heel and toes of one foot must be in view'; return out; }
+    const vis = (s) => Math.min(...HEEL_I[s].slice(0, 3).map((i) => p[i].v));
+    const s = feet.sort((x, y) => vis(y) - vis(x))[0], [ia, ih, it, ik, ihip] = HEEL_I[s], hl = p[ih], to = p[it];
+    out.side = s; out.foot = Math.atan2(to.y - hl.y, Math.abs(to.x - hl.x)) * 180 / Math.PI;
+    if (ok(p[ihip], p[ik])) out.knee = joint(p[ihip], p[ik], p[ia]);
+    const sh = s === 'L' ? p[LM.L_SH] : p[LM.R_SH];
+    if (ok(sh, p[ihip])) { const up = sub(sh, p[ihip]); out.lean = Math.abs(Math.atan2(up.x, -up.y) * 180 / Math.PI); }
+    out.ok = true; return out;
+  }
+  function HeelCounter() {
+    let phase = 'down', startT = null, base = NaN, cur = null;
+    const reps = [];
+    return {
+      reps, get phase() { return phase; }, get base() { return base; },
+      lift(f) { return isNaN(base) || isNaN(f.foot) ? NaN : f.foot - base; },
+      feed(f, t) {
+        if (!f.ok || isNaN(f.foot)) return null;
+        this.lastT = t;
+        if (isNaN(base)) base = f.foot;
+        const v = f.foot - base;
+        if (phase === 'down') {
+          if (v < HEEL.UP / 2) base += 0.1 * (f.foot - base);   // heels down: keep learning the resting angle
+          if (v < HEEL.DOWN || startT === null) startT = t;
+          if (v > HEEL.UP) { phase = 'up'; cur = { tStart: startT, tPeak: t, peak: v, knee: isNaN(f.knee) ? 180 : f.knee, lean: f.lean || 0, trace: [[t, v]] }; }
+          return null;
+        }
+        cur.trace.push([t, v]);
+        if (v > cur.peak) { cur.peak = v; cur.tPeak = t; }
+        if (!isNaN(f.knee) && f.knee < cur.knee) cur.knee = f.knee;
+        if (f.lean > cur.lean) cur.lean = f.lean;
+        if (v < HEEL.DOWN) {
+          phase = 'down'; startT = t;
+          const r = cur; cur = null; r.tEnd = t; r.dur = r.tEnd - r.tStart;
+          if (r.dur < HEEL.MIN_DUR) return null;
+          let hold = 0; for (let i = 1; i < r.trace.length; i++) if (r.trace[i][1] >= r.peak * HEEL.HOLD_FRAC) hold += r.trace[i][0] - r.trace[i - 1][0];
+          r.hold = hold; delete r.trace;
+          r.cue = heelCue(r); reps.push(r);
+          return r;
+        }
+        return null;
+      },
+    };
+  }
+  function heelCue(r) {
+    if (r.peak < HEEL.FULL) return { ok: false, text: 'Rise a little higher onto your toes' };
+    if (r.knee < HEEL.KNEE_STRAIGHT) return { ok: false, text: 'Keep your knees straight' };
+    if (r.lean > HEEL.LEAN) return { ok: false, text: 'Stand tall and keep your body still' };
+    return { ok: true, text: 'Good, nice and high' };
+  }
+  function summarizeHeel(reps) {
+    return {
+      reps: reps.length, meanLift: mean(clean(reps.map((r) => r.peak))), bestLift: maxOf(clean(reps.map((r) => r.peak))),
+      full: reps.filter((r) => r.peak >= HEEL.FULL).length, meanHold: mean(clean(reps.map((r) => r.hold))),
+      bentKnee: reps.filter((r) => r.knee < HEEL.KNEE_STRAIGHT).length, maxLean: maxOf(clean(reps.map((r) => r.lean))),
+      meanDur: mean(clean(reps.map((r) => r.dur))), slowing: slowing(reps.map((r) => r.dur)), rests: rests(reps), good: reps.filter((r) => r.cue && r.cue.ok).length,
+    };
+  }
+
   /* Per-signal smoothing used by the app and the tests: median of the last 3 samples, then exponential
      smoothing with time constant tau. The median removes single-frame tracking glitches. */
   function Smoother() {
@@ -1607,9 +1902,9 @@ const Core = (function () {
   // the peak knee lift). At low frame rates a one-frame spike cannot make a step, because a step needs 2 frames above MARCH.UP.
   const SMOOTH_TAU = { march: 0.04 }, SMOOTH_MEDIAN = { march: 'auto' };
 
-  return { LM, SH, STS, MARCH, TUG, BAL, Smoother, SMOOTH_TAU, SMOOTH_MEDIAN, toPoints, shoulderFrame, stsFrame, marchFrame, tugFrame, balanceFrame,
-           ShoulderCounter, StsCounter, MarchCounter, TugCounter, BalanceCounter,
-           summarizeShoulder, summarizeSts, summarizeMarch, summarizeTug, summarizeBalance, angle, joint };
+  return { LM, SH, STS, MARCH, TUG, BAL, CURL, KNEE, HEEL, Smoother, SMOOTH_TAU, SMOOTH_MEDIAN, toPoints, shoulderFrame, stsFrame, marchFrame, tugFrame, balanceFrame,
+           curlFrame, kneeFrame, heelFrame, ShoulderCounter, StsCounter, MarchCounter, TugCounter, BalanceCounter, CurlCounter, KneeCounter, HeelCounter,
+           summarizeShoulder, summarizeSts, summarizeMarch, summarizeTug, summarizeBalance, summarizeCurl, summarizeKnee, summarizeHeel, angle, joint };
 })();
 if (typeof module !== 'undefined') module.exports = Core;
 
@@ -1748,12 +2043,76 @@ const Report = (function () {
       praise: { 'Hold time': 'You held your balance for a long time.', Steadiness: 'You stood very still with little sway.' },
       focus: { 'Hold time': 'Try to hold a few seconds longer next time, with a support in reach.', Steadiness: 'Pick a spot on the wall to look at. It helps you stay still.' },
     },
+    curl: {
+      name: 'Arm curls', headline: (m) => (num(m.curls30) ? [m.curls30, 'curls in 30 seconds'] : [m.reps, 'curls completed']),
+      metrics: [['reps', 'Curls', '', 0, 'up'], ['curls30', 'Curls in 30 seconds', '', 0, 'up'], ['fullPct', 'Curls through full range', '%', 0, 'up'],
+                ['flex', 'Mean elbow angle at the top', '°', 0, 'down'], ['ext', 'Mean elbow angle at the bottom', '°', 0, 'up'], ['drift', 'Largest upper-arm swing', '°', 0, 'down'],
+                ['lean', 'Largest trunk sway', '°', 0, 'down'], ['repTime', 'Mean curl time', ' s', 1, ''], ['goodPct', 'Curls with good form', '%', 0, 'up'],
+                ['slowing', 'Slowing, last third vs first', '%', 0, 'down'], ['rests', 'Rests over 3 s', '', 0, 'down']],
+      trend: { title: '30-Second Arm Curl', unit: '', series: [['curls30', 'Curls in 30 s']] },
+      measure(c) {
+        const s = Core.summarizeCurl(c.reps, c.lastT), n = s.reps;
+        return { reps: n, curls30: s.spans30 ? s.in30 : NaN, fullPct: pctOf(s.full, n), flex: s.meanFlex, ext: s.meanExt, drift: s.maxDrift, lean: s.maxLean,
+                 repTime: s.meanDur, goodPct: pctOf(s.good, n), slowing: s.slowing, rests: s.rests.n };
+      },
+      score(m) {
+        const cnt = clamp((num(m.curls30) ? m.curls30 : m.reps) / 18 * 100), still = clamp(100 - Math.max(0, m.drift - 15) * 3 - Math.max(0, m.lean - 4) * 5);
+        const d = { 'Number of curls': cnt, 'Full range': clamp(m.fullPct), 'Steady body': still, Endurance: endurance(m), 'Form': clamp(m.goodPct) };
+        return { d, r: { arms: avg([cnt, d['Full range']]) } };
+      },
+      praise: { 'Number of curls': 'You did a strong number of curls.', 'Full range': 'You bent and straightened your arm all the way.', 'Steady body': 'You kept your elbow in and your body still.',
+                Endurance: 'You kept a steady pace right to the end.', 'Form': 'Almost every curl was done with good form.' },
+      focus: { 'Number of curls': 'Curl at a steady pace. The number will grow as your arm gets stronger.', 'Full range': 'Bring your hand all the way up, then straighten your arm fully.',
+               'Steady body': 'Keep your elbow close to your side and let only your forearm move.', Endurance: 'Take your time. Rest when you need to, then carry on.', 'Form': 'Watch the picture guide once more before you start.' },
+    },
+    knee: {
+      name: 'Seated knee straightening', headline: (m) => [m.reps, 'knee straightenings'],
+      metrics: [['reps', 'Reps', '', 0, 'up'], ['left', 'Reps, left leg', '', 0, ''], ['right', 'Reps, right leg', '', 0, ''],
+                ['bestL', 'Best knee extension, left', '°', 0, 'up'], ['bestR', 'Best knee extension, right', '°', 0, 'up'], ['diff', 'Left and right difference', '°', 0, 'down'],
+                ['hold', 'Mean hold at the top', ' s', 1, 'up'], ['fullPct', 'Reps reaching 165° or more', '%', 0, 'up'], ['lean', 'Largest trunk lean', '°', 0, 'down'],
+                ['repTime', 'Mean rep time', ' s', 1, ''], ['goodPct', 'Reps with good form', '%', 0, 'up'], ['slowing', 'Slowing, last third vs first', '%', 0, 'down'], ['rests', 'Rests over 3 s', '', 0, 'down']],
+      trend: { title: 'Best active knee extension', unit: '°', series: [['bestL', 'Left knee'], ['bestR', 'Right knee']] },
+      measure(c) {
+        const s = Core.summarizeKnee(c.reps), n = s.reps;
+        return { reps: n, left: s.left, right: s.right, bestL: s.bestL, bestR: s.bestR, meanL: s.meanL, meanR: s.meanR, diff: num(s.bestL) && num(s.bestR) ? Math.abs(s.bestL - s.bestR) : NaN,
+                 hold: s.meanHold, fullPct: pctOf(s.full, n), lean: s.maxLean, repTime: s.meanDur, goodPct: pctOf(s.good, n), slowing: s.slowing, rests: s.rests.n };
+      },
+      score(m) {
+        const st = (v) => (num(v) ? clamp((v - 95) / (172 - 95) * 100) : NaN), ext = avg([st(m.bestL), st(m.bestR)]);
+        const d = { 'Knee straightening': ext, 'Holding straight': clamp(m.hold / 2 * 100), 'Trunk control': clamp(100 - Math.max(0, m.lean - 8) * 5), Endurance: endurance(m), 'Form': clamp(m.goodPct) };
+        return { d, r: { knees: ext } };
+      },
+      praise: { 'Knee straightening': 'You straightened your knee nearly all the way.', 'Holding straight': 'You held your leg straight nice and steadily.', 'Trunk control': 'You sat tall the whole time.',
+                Endurance: 'You kept a steady pace right to the end.', 'Form': 'Almost every rep was done with good form.' },
+      focus: { 'Knee straightening': 'Try to straighten your knee a little more each time.', 'Holding straight': 'Hold your leg straight for a slow count of three.', 'Trunk control': 'Sit up tall. Let your leg do the work, not your back.',
+               Endurance: 'Take your time. Rest when you need to, then carry on.', 'Form': 'Watch the picture guide once more before you start.' },
+    },
+    heel: {
+      name: 'Heel raises', headline: (m) => [m.reps, 'heel raises'],
+      metrics: [['reps', 'Raises', '', 0, 'up'], ['lift', 'Mean heel lift', '°', 0, 'up'], ['best', 'Highest heel lift', '°', 0, 'up'], ['fullPct', 'Raises reaching full height', '%', 0, 'up'],
+                ['hold', 'Mean time at the top', ' s', 1, 'up'], ['bentPct', 'Raises with bent knees', '%', 0, 'down'], ['lean', 'Largest trunk lean', '°', 0, 'down'],
+                ['repTime', 'Mean raise time', ' s', 1, ''], ['goodPct', 'Raises with good form', '%', 0, 'up'], ['slowing', 'Slowing, last third vs first', '%', 0, 'down'], ['rests', 'Rests over 3 s', '', 0, 'down']],
+      trend: { title: 'Mean heel lift', unit: '°', series: [['lift', 'Heel lift']] },
+      measure(c) {
+        const s = Core.summarizeHeel(c.reps), n = s.reps;
+        return { reps: n, lift: s.meanLift, best: s.bestLift, fullPct: pctOf(s.full, n), hold: s.meanHold, bentPct: pctOf(s.bentKnee, n), lean: s.maxLean,
+                 repTime: s.meanDur, goodPct: pctOf(s.good, n), slowing: s.slowing, rests: s.rests.n };
+      },
+      score(m) {
+        const h = clamp(m.lift / 28 * 100), d = { Height: h, 'Control at the top': clamp(m.hold / 0.8 * 100), 'Straight knees': clamp(100 - m.bentPct), 'Trunk control': control(m.lean), Endurance: endurance(m), 'Form': clamp(m.goodPct) };
+        return { d, r: { calves: avg([h, d['Control at the top']]) } };
+      },
+      praise: { Height: 'You rose high onto your toes.', 'Control at the top': 'You paused at the top with control.', 'Straight knees': 'You kept your knees straight.', 'Trunk control': 'You stood tall and steady.',
+                Endurance: 'You kept a steady pace right to the end.', 'Form': 'Almost every raise was done with good form.' },
+      focus: { Height: 'Try to rise a little higher onto your toes.', 'Control at the top': 'Pause for a moment at the top before lowering.', 'Straight knees': 'Keep your knees straight as you rise.',
+               'Trunk control': 'Stand tall and hold your support lightly.', Endurance: 'Take your time. Rest when you need to, then carry on.', 'Form': 'Watch the picture guide once more before you start.' },
+    },
   };
   const EXKEYS = Object.keys(DEF);
 
   /* ---------- standard clinical outcome measures ---------- */
   /* Sources: CDC STEADI (30-Second Chair Stand, TUG, 4-Stage Balance); Bohannon 2006 and Buatois 2008 (5xSTS);
-     Rikli & Jones 1999, 2013 (2-Minute Step Test); Guralnik 1994 (SPPB); Meretta 2006, Wright 2011, Flansbjer 2005 (change thresholds). */
+     Rikli & Jones 1999, 2013 (2-Minute Step Test, 30-Second Arm Curl); Guralnik 1994 (SPPB); Meretta 2006, Wright 2011, Flansbjer 2005 (change thresholds). */
   // Published norms cover ages 60 to 94 (STEADI, Rikli & Jones) and 60 to 89 (Bohannon, Steffen). Outside that, no age norm is applied.
   const band5 = (a) => (!num(a) || a < 60 || a > 94 ? -1 : a < 65 ? 0 : a < 70 ? 1 : a < 75 ? 2 : a < 80 ? 3 : a < 85 ? 4 : a < 90 ? 5 : 6);   // 60-64 ... 90-94
   const band10 = (a) => (!num(a) || a < 60 || a > 89 ? -1 : a < 70 ? 0 : a < 80 ? 1 : 2);                                                    // 60s, 70s, 80s
@@ -1763,6 +2122,7 @@ const Report = (function () {
     tmstIndep: { M: [106, 101, 95, 88, 80, 71, 60], F: [97, 93, 89, 84, 78, 70, 60] },     // Rikli & Jones 2013
     five: [11.4, 12.6, 14.8],                                                              // slower than this = worse than average (Bohannon 2006)
     tug: { M: [8, 9, 10], F: [8, 9, 11] },                                                 // mean seconds (Steffen 2002)
+    curl: { M: [16, 15, 14, 13, 13, 11, 10], F: [13, 12, 12, 11, 10, 10, 8] },            // lower end of the normal range (Rikli & Jones 2013)
   };
   const needs = (p, lo, hi) => (!num(p.age) || !(p.sex === 'M' || p.sex === 'F') ? ' Enter age and sex for the age-matched value.'
     : p.age < (lo || 60) || p.age > (hi || 94) ? ' Published norms cover ages ' + (lo || 60) + ' to ' + (hi || 94) + ', so none is applied at age ' + p.age + '.' : '');
@@ -1815,6 +2175,24 @@ const Report = (function () {
       row('Single-leg stance hold (max 30 s)', 'holdOne', ' s', 1, 'up', 'Timed single-leg stance; 10 s passes stage 4.', null, null, '');
       row('SPPB balance points (0 to 4)', 'sppbBal', '', 0, 'up', 'Feet together 10 s = 1; semi-tandem 10 s = 1; tandem 10 s = 2, 3 to 9.99 s = 1 (Guralnik 1994).', null, null, '');
     }
+    if (ex === 'curl') {
+      const lo = sx && a5 >= 0 ? NORM.curl[sx][a5] : null, v = m.curls30;
+      row('30-Second Arm Curl (curls in 30 s)', 'curls30', '', 0, 'up',
+        (lo ? 'Below the normal range for age and sex if under ' + lo + ' (Rikli & Jones 2013).' : 'Lower ends of the normal range run from 16 (men 60 to 64) to 8 (women 90 to 94) (Rikli & Jones 2013).' + needs(p)) +
+        ' Norms assume a 2.3 kg (women) or 3.6 kg (men) weight; the weight used at home is not checked.',
+        !num(v) ? fl(false, 'Session shorter than 30 s') : lo ? fl(v >= lo, v >= lo ? 'Within or above the normal range' : 'Below the normal range for age and sex') : null, null, 'No MCID established');
+      row('Curls through full range', 'fullPct', '%', 0, 'up', 'Full range: elbow 60° or less at the top and 150° or more at the bottom.', null, null, '');
+    }
+    if (ex === 'knee') {
+      const ref = 'Active extension, seated. Straight reads about 175 to 180°. Camera estimate with about 5 to 10° method error; not a goniometer measurement.';
+      row('Best active knee extension, left', 'bestL', '°', 0, 'up', ref, null, 10, 'beyond the 10° method error');
+      row('Best active knee extension, right', 'bestR', '°', 0, 'up', ref, null, 10, 'beyond the 10° method error');
+      row('Mean hold at the top', 'hold', ' s', 1, 'up', 'Time held within 8° of the peak; the exercise asks for about 3 s.', null, null, '');
+    }
+    if (ex === 'heel') {
+      row('Mean heel lift (heel-to-toe line)', 'lift', '°', 0, 'up', 'No published norm for supported double-leg heel raises. A full rise lifts the heel-to-toe line about 25° or more on camera.', null, null, 'No MCID established');
+      row('Raises with bent knees', 'bentPct', '%', 0, 'down', 'Bending the knees lets the thigh muscles do the work instead of the calves.', null, null, '');
+    }
     rows.push({ label: 'Perceived exertion after the session (Borg CR10, 0 to 10)', top: 'rpe', unit: '', dec: 0, better: '', ref: 'Self-reported. 3 = moderate, 5 = hard, 7 = very hard.', flag: null, mcid: null, mcidText: '' });
     rows.push({ label: 'Pain during the session (0 to 10)', top: 'pain', unit: '', dec: 0, better: 'down', ref: 'Self-reported numeric rating scale.', flag: null, mcid: null, mcidText: '' });
     return rows;
@@ -1823,7 +2201,7 @@ const Report = (function () {
   function cutoffs(p) {
     const a5 = band5(p.age), a10 = band10(p.age), sx = p.sex === 'M' || p.sex === 'F' ? p.sex : null;
     return { cst30: sx && a5 >= 0 ? NORM.cst30[sx][a5] : null, five: a10 >= 0 ? NORM.five[a10] : null, fiveFall: 15, tug: 12,
-      tugMean: sx && a10 >= 0 ? NORM.tug[sx][a10] : null, tmstMean: sx && a5 >= 0 ? NORM.tmstMean[sx][a5] : null, tmstInd: sx && a5 >= 0 ? NORM.tmstIndep[sx][a5] : null,
+      tugMean: sx && a10 >= 0 ? NORM.tug[sx][a10] : null, curl: sx && a5 >= 0 ? NORM.curl[sx][a5] : null, tmstMean: sx && a5 >= 0 ? NORM.tmstMean[sx][a5] : null, tmstInd: sx && a5 >= 0 ? NORM.tmstIndep[sx][a5] : null,
       older: older(p), ageKnown: num(p.age), sexKnown: !!sx };
   }
   const people = () => { try { return JSON.parse(localStorage.getItem('irehab.people')) || {}; } catch (e) { return {}; } };
@@ -1850,8 +2228,11 @@ const Report = (function () {
       march: { tmst: [14, 62], tmstFull: [1, 1], steps: [98, 166], cadence: [52, 84], liftL: [38, 64], liftR: [30, 52], lean: [8, 4], targetPct: [25, 80], slowing: [25, 8], rests: [2, 0] },
       tug: { trials: [3, 3], validTrials: [2, 3], best: [19.5, 11.6], bestAny: [19.5, 11.6], bestGo: [20.3, 12.4], mean: [21, 12.3], spread: [14, 6], rise: [1.1, 0.6], turn: [2.4, 1.4], phasedPct: [67, 100], fromGoPct: [100, 100] },
       balance: { holds: [4, 4], holdTwo: [10, 10], holdSemi: [5, 13], holdTandem: [1.5, 12], holdOne: [0.5, 9], meanHold: [5, 9], rms: [2.1, 0.9], range: [7, 3.2], fullPct: [25, 75] },
+      curl: { reps: [9, 15], curls30: [9, 15], fullPct: [44, 87], flex: [72, 52], ext: [158, 168], drift: [24, 12], lean: [9, 4], repTime: [3.0, 1.9], goodPct: [33, 80], slowing: [24, 9], rests: [1, 0] },
+      knee: { reps: [10, 20], left: [5, 10], right: [5, 10], bestL: [152, 170], bestR: [161, 173], hold: [1.1, 2.6], fullPct: [20, 85], lean: [14, 6], repTime: [3.2, 4.4], goodPct: [20, 80], slowing: [20, 8], rests: [1, 0] },
+      heel: { reps: [6, 10], lift: [14, 27], best: [18, 31], fullPct: [17, 80], hold: [0.3, 0.9], bentPct: [50, 10], lean: [8, 3], repTime: [2.0, 2.6], goodPct: [17, 80], slowing: [20, 6], rests: [1, 0] },
     };
-    const wob = [0, 0.06, -0.05, 0.04, -0.03, 0], whole = { reps: 1, steps: 1, trials: 1, validTrials: 1, holds: 1, rests: 1, cst30: 1, tmst: 1, tmstFull: 1 };
+    const wob = [0, 0.06, -0.05, 0.04, -0.03, 0], whole = { reps: 1, steps: 1, trials: 1, validTrials: 1, holds: 1, rests: 1, cst30: 1, tmst: 1, tmstFull: 1, curls30: 1, left: 1, right: 1 };
     setPerson(EXAMPLE, { age: 72, sex: 'F' });
     const out = all().slice();
     for (const ex of EXKEYS) days.forEach((dAgo, i) => {
@@ -1862,6 +2243,7 @@ const Report = (function () {
       if ('romL' in m) m.romDiff = Math.abs(m.romL - m.romR);
       if ('peakL' in m) m.asym = Math.abs(m.peakL - m.peakR);
       if ('liftL' in m) m.asym = Math.abs(m.liftL - m.liftR);
+      if ('bestL' in m) m.diff = Math.abs(m.bestL - m.bestR);
       const t = new Date(Date.now() - dAgo * 864e5); t.setHours(10, 30, 0, 0);
       out.push({ id: 'ex' + ex + i, pid: EXAMPLE, ex, stance: null, t: t.toISOString(), dur: 60, track: 96, m, sample: true, rpe: [7, 6, 6, 5, 4, 4][i], pain: [4, 3, 3, 2, 2, 1][i] });
     });
@@ -1899,12 +2281,18 @@ const Report = (function () {
       '<ellipse class="reg ' + cls('trunk') + '" cx="170" cy="112" rx="17" ry="27"/>' +
       '<circle class="reg ' + cls('shR') + '" cx="137" cy="76" r="12"/><circle class="reg ' + cls('shL') + '" cx="203" cy="76" r="12"/>' +
       '<circle class="reg ' + cls('hipR') + '" cx="155" cy="162" r="11"/><circle class="reg ' + cls('hipL') + '" cx="185" cy="162" r="11"/>' +
-      '<circle class="reg ' + cls('legs') + '" cx="153" cy="218" r="11"/><circle class="reg ' + cls('legs') + '" cx="187" cy="218" r="11"/>' +
+      '<circle class="reg ' + cls('arms') + '" cx="128" cy="113" r="9"/><circle class="reg ' + cls('arms') + '" cx="212" cy="113" r="9"/>' +
+      '<circle class="reg ' + cls('legs') + '" cx="154" cy="196" r="10"/><circle class="reg ' + cls('legs') + '" cx="186" cy="196" r="10"/>' +
+      '<circle class="reg ' + cls('knees') + '" cx="153" cy="226" r="9"/><circle class="reg ' + cls('knees') + '" cx="187" cy="226" r="9"/>' +
+      '<circle class="reg ' + cls('calves') + '" cx="152" cy="256" r="8"/><circle class="reg ' + cls('calves') + '" cx="188" cy="256" r="8"/>' +
       '<ellipse class="reg ' + cls('balance') + '" cx="170" cy="286" rx="36" ry="8"/>' +
       lead(125, 76, 100, 70) + lab(96, 68, 'end', 'Right shoulder', 'shR') + lead(215, 76, 240, 70) + lab(244, 68, 'start', 'Left shoulder', 'shL') +
       lead(153, 112, 100, 116) + lab(96, 114, 'end', 'Trunk control', 'trunk') +
       lead(144, 162, 100, 162) + lab(96, 160, 'end', 'Right hip lift', 'hipR') + lead(196, 162, 240, 162) + lab(244, 160, 'start', 'Left hip lift', 'hipL') +
-      lead(198, 218, 240, 214) + lab(244, 212, 'start', 'Legs: standing up', 'legs') +
+      lead(221, 113, 240, 114) + lab(244, 112, 'start', 'Arm strength', 'arms') +
+      lead(196, 196, 240, 206) + lab(244, 204, 'start', 'Legs: standing up', 'legs') +
+      lead(144, 226, 100, 228) + lab(96, 226, 'end', 'Knee straightening', 'knees') +
+      lead(196, 256, 240, 254) + lab(244, 252, 'start', 'Calf strength', 'calves') +
       lead(134, 286, 100, 280) + lab(96, 278, 'end', 'Standing balance', 'balance') +
       '</svg>' +
       '<div class="mob"><span class="dot b-' + band(g('mobility')) + '"></span><span><b>' + T('Walking mobility') + '</b> (' + T('Timed Up and Go') + '): ' +
@@ -2120,7 +2508,15 @@ const Clinic = (function () {
       value: (m) => (m.tmstFull ? m.tmst : NaN) },
     { key: 'upper', ex: 'shoulder', title: 'Shoulder range of motion', measure: 'Active abduction, more limited side', short: 'Abduction', unit: '°', dec: 0, better: 1, mcid: 10, mcidText: 'threshold 10°, the camera method error',
       value: (m) => (num(m.romL) && num(m.romR) ? Math.min(m.romL, m.romR) : num(m.romL) ? m.romL : m.romR) },
+    // optional exercises: shown only once the patient has done them
+    { key: 'arm', ex: 'curl', optional: true, title: 'Upper-limb strength', measure: '30-Second Arm Curl', short: '30-s arm curl', unit: ' curls', dec: 0, better: 1, mcid: null, mcidText: 'no MCID established',
+      value: (m) => m.curls30 },
+    { key: 'knee', ex: 'knee', optional: true, title: 'Knee extension', measure: 'Active knee extension, more limited side (seated)', short: 'knee extension', unit: '°', dec: 0, better: 1, mcid: 10, mcidText: 'threshold 10°, the camera method error',
+      value: (m) => (num(m.bestL) && num(m.bestR) ? Math.min(m.bestL, m.bestR) : num(m.bestL) ? m.bestL : m.bestR) },
+    { key: 'calf', ex: 'heel', optional: true, title: 'Ankle plantarflexion', measure: 'Supported heel raises, mean heel lift', short: 'heel lift', unit: '°', dec: 0, better: 1, mcid: null, mcidText: 'no MCID established',
+      value: (m) => m.lift },
   ];
+  const KSIDE = (m) => (num(m.bestL) && num(m.bestR) ? (m.bestL < m.bestR ? 'left' : 'right') : num(m.bestL) ? 'left' : 'right');
   const SIDE = (m) => (num(m.romL) && num(m.romR) ? (m.romL < m.romR ? 'left' : 'right') : '');
 
   /* status of the latest value: 'good' | 'watch' | 'concern' | 'none', with the reason */
@@ -2146,6 +2542,20 @@ const Clinic = (function () {
       if (!num(v)) return ['none', num(m.steps) ? 'Session under 2 minutes, so no 2MST score' : 'Not measured'];
       if (c.tmstInd) return v >= c.tmstInd ? ['good', 'At or above the independence threshold (' + c.tmstInd + ')'] : v >= c.tmstInd * 0.8 ? ['watch', 'Below the independence threshold (' + c.tmstInd + ')'] : ['concern', 'Well below the independence threshold (' + c.tmstInd + ')'];
       return [scoreBand(d, m), 'No age and sex norm applied'];
+    }
+    if (d.key === 'arm') {
+      if (!num(v)) return ['none', num(m.reps) ? 'Session under 30 s, so no 30-Second Arm Curl score' : 'Not measured'];
+      if (c.curl) return v >= c.curl ? ['good', 'Within or above the normal range for age and sex (lower end ' + c.curl + '); weight used not verified'] : ['concern', 'Below the normal range for age and sex (under ' + c.curl + '); weight used not verified'];
+      return [scoreBand(d, m), 'No age and sex norm applied' + (c.ageKnown && c.sexKnown ? ' at this age' : ': enter age and sex')];
+    }
+    if (d.key === 'knee') {
+      if (!num(v)) return ['none', 'Not measured'];
+      const one = !(num(m.bestL) && num(m.bestR)) ? ' (one leg only)' : '';
+      return v >= 170 ? ['good', 'Near full active extension' + one] : v >= 160 ? ['watch', 'Active extension deficit of about ' + fx(180 - v) + '° on the ' + KSIDE(m) + one] : ['concern', 'Active extension deficit of about ' + fx(180 - v) + '° on the ' + KSIDE(m) + one];
+    }
+    if (d.key === 'calf') {
+      if (!num(v)) return ['none', 'Not measured'];
+      return v >= 25 ? ['good', 'Full heel rise (no published norm; judged against the exercise target)'] : v >= 15 ? ['watch', 'Partial heel rise (no published norm)'] : ['concern', 'Small heel rise (no published norm)'];
     }
     if (!num(v)) return ['none', 'Not measured'];
     return v >= 150 ? ['good', 'Near full range on both sides (full is about 180°)'] : v >= 120 ? ['watch', 'Reduced range on the ' + SIDE(m) + ' side'] : ['concern', 'Below 120° on the ' + SIDE(m) + ' side: overhead reach is usually limited'];
@@ -2202,6 +2612,23 @@ const Clinic = (function () {
       'Progressive static balance work (Otago-style), with support within reach.'],
     ['balance', 'work', (m) => m.holdOne >= 10, (m) => 'Single-leg stance held ' + fx(m.holdOne, 1) + ' s.', ''],
     ['balance', 'limit', (m) => m.rms >= 2, (m) => 'High postural sway during holds (RMS ' + fx(m.rms, 1) + '°).', 'Narrow the base gradually; add a fixed visual target.'],
+    // arm curl
+    ['curl', 'limit', (m) => m.fullPct < 70 && m.reps >= 3, (m) => 'Only ' + fx(m.fullPct) + '% of curls went through full range (elbow ' + fx(m.flex) + '° at the top, ' + fx(m.ext) + '° at the bottom on average).',
+      'Check elbow range and pain; reduce the weight so the full range is reachable.'],
+    ['curl', 'limit', (m) => m.drift >= 25 || m.lean >= 10, (m) => 'Uses momentum: the upper arm swings up to ' + fx(m.drift) + '° and the trunk sways ' + fx(m.lean) + '°.', 'Cue the elbow to stay by the side; slower curls or a lighter weight.'],
+    ['curl', 'work', (m) => m.fullPct >= 90 && m.reps >= 5, (m) => fx(m.fullPct) + '% of curls through full range.', ''],
+    ['curl', 'limit', (m) => m.slowing >= 25 || m.rests >= 1, (m) => fatigue(m, 'curls'), 'Build upper-limb endurance with more sets at a lighter weight.'],
+    // knee straightening
+    ['knee', 'limit', (m) => m.diff >= 10, (m) => 'Knee extension asymmetry: left ' + fx(m.bestL) + '°, right ' + fx(m.bestR) + '° (' + fx(m.diff) + '° less on the ' + KSIDE(m) + ').',
+      'Compare with passive extension on that side to tell an extensor lag from a joint restriction.'],
+    ['knee', 'limit', (m) => m.hold < 1.5 && m.reps >= 3, (m) => 'Cannot hold the knee straight: mean ' + fx(m.hold, 1) + ' s at the top (asked for about 3 s).', 'Isometric quadriceps work at end range (quads sets, short-arc holds).'],
+    ['knee', 'limit', (m) => m.lean >= 15, (m) => 'Leans back up to ' + fx(m.lean) + '° to lift the leg: likely compensating for quadriceps weakness or hamstring tightness.', 'Cue an upright trunk; check hamstring length.'],
+    ['knee', 'work', (m) => Math.min(num(m.bestL) ? m.bestL : 999, num(m.bestR) ? m.bestR : 999) >= 170, () => 'Near full active knee extension.', ''],
+    // heel raises
+    ['heel', 'limit', (m) => m.lift < 18 && m.reps >= 3, (m) => 'Small heel rise (mean ' + fx(m.lift) + '° on camera): reduced plantarflexor strength or ankle range.', 'Progressive calf strengthening (double then single leg); check ankle range.'],
+    ['heel', 'limit', (m) => m.bentPct >= 30, (m) => 'Knees bend in ' + fx(m.bentPct) + '% of raises: the thigh is substituting for the calf.', 'Cue straight knees; lower the target height if needed.'],
+    ['heel', 'work', (m) => m.lift >= 25 && m.reps >= 5, (m) => 'Full heel rise (mean ' + fx(m.lift) + '°).', ''],
+    ['heel', 'limit', (m) => m.slowing >= 25 || m.rests >= 1, (m) => fatigue(m, 'raises'), 'Build calf endurance gradually.'],
   ];
   function fatigue(m, what) {
     const parts = [];
@@ -2223,7 +2650,7 @@ const Clinic = (function () {
     out.calendar = [];
     for (let i = 27; i >= 0; i--) { const d = new Date(now - i * DAY).toDateString(); out.calendar.push({ day: d, n: all.filter((r) => new Date(r.t).toDateString() === d).length }); }
 
-    out.domains = DOMAINS.map((d) => {
+    out.domains = DOMAINS.filter((d) => !d.optional || R.sessions(pid, d.ex).length).map((d) => {
       const recs = R.sessions(pid, d.ex);
       if (!recs.length) return { d, recs, st: ['none', 'Not done yet'], tr: { pts: [], verdict: 'none', text: 'Not done yet' } };
       const cur = recs[recs.length - 1];
@@ -2303,7 +2730,7 @@ const Clinic = (function () {
     s.push(days.size + ' session day' + (days.size > 1 ? 's' : '') + ' (' + all.length + ' exercise' + (all.length > 1 ? 's' : '') + ') from ' + dstr(first.t) + ' to ' + dstr(last.t) + '; active on ' + out.period.active7 + ' of the last 7 days.');
     if (imp.length) s.push('Meaningful improvement in ' + list(imp.map((x) => nm(x) + ' (' + fx(x.tr.a, x.d.dec) + ' → ' + fx(x.tr.b, x.d.dec) + x.d.unit + ')')) + '.');
     if (dec.length) s.push('Meaningful decline in ' + list(dec.map((x) => nm(x) + ' (' + fx(x.tr.a, x.d.dec) + ' → ' + fx(x.tr.b, x.d.dec) + x.d.unit + ')')) + '.');
-    if (conc.length) s.push('Below norm or cut-off: ' + list(conc.map((x) => nm(x) + ' (' + cv(x) + ')')) + '.');
+    if (conc.length) s.push('Below norm, cut-off or target: ' + list(conc.map((x) => nm(x) + ' (' + cv(x) + ')')) + '.');
     else if (out.domains.some((x) => x.st[0] === 'good')) s.push('No measure is below its norm or cut-off.');
     if (out.fallKnown) s.push('Fall-risk screen: ' + out.fallPos + ' of ' + out.fallKnown + ' indicators positive' + (out.fallPos ? ' (' + list(out.fall.filter((x) => x.pos).map((x) => x.tag)) + ')' : '') + '.');
     out.summary = s;
@@ -2315,7 +2742,8 @@ const Clinic = (function () {
   function domainConsider(k) {
     return { strength: 'Progressive lower-limb strengthening; functional sit-to-stand practice.', mobility: 'Gait and balance training; review walking aid and home safety (STEADI).',
       balance: 'Progressive static and dynamic balance training (for example the Otago programme).', endurance: 'Graded aerobic activity such as walking or stepping bouts.',
-      upper: 'Active and active-assisted range of motion on the limited side.' }[k] || '';
+      upper: 'Active and active-assisted range of motion on the limited side.', arm: 'Progressive upper-limb strengthening.',
+      knee: 'End-range quadriceps strengthening; check passive extension.', calf: 'Progressive calf strengthening with support.' }[k] || '';
   }
   function planHint(o, eN, pN) {
     if (!o.n) return null;
@@ -2328,6 +2756,8 @@ const Clinic = (function () {
 
   /* ---------- drawing ---------- */
   const ST = { good: ['good', 'Within norm'], watch: ['watch', 'Borderline'], concern: ['concern', 'Below norm or cut-off'], none: ['none', 'No score'] };
+  // areas with no published norm are judged against the exercise target, and say so
+  const ST_TARGET = { good: ['good', 'On target'], watch: ['watch', 'Partly on target'], concern: ['concern', 'Below target'], none: ['none', 'No score'] };
   const TR = { improved: ['up', '▲'], up: ['up', '▲'], declined: ['down', '▼'], down: ['down', '▼'], stable: ['flat', '■'], baseline: ['flat', '•'], none: ['flat', ''] };
   const OV = { improving: 'good', 'improving, with limitations': 'watch', stable: 'none', baseline: 'none', declining: 'concern' };
 
@@ -2388,7 +2818,7 @@ const Clinic = (function () {
     // one card per function area
     h += '<h2 class="cr-sec">Function by area</h2><div class="cr-grid">';
     for (const dom of o.domains) {
-      const d = dom.d, st = ST[dom.st[0]], tr = TR[dom.tr.verdict] || TR.none, cur = dom.cur;
+      const d = dom.d, st = (d.key === 'knee' || d.key === 'calf' ? ST_TARGET : ST)[dom.st[0]], tr = TR[dom.tr.verdict] || TR.none, cur = dom.cur;
       h += '<section class="cr-card cr-dom" data-domain="' + d.key + '"><div class="cr-dh"><h3>' + esc(d.title) + '</h3><span class="cr-chip ' + st[0] + '">' + st[1] + '</span></div>';
       if (!cur) { h += '<p class="cr-none">Not done yet.</p></section>'; continue; }
       const v = d.value(cur.m);
@@ -2399,12 +2829,14 @@ const Clinic = (function () {
       const c = o.cut;
       if (d.key === 'upper') h += chart([{ name: 'L', pts: dom.recs.filter((r) => num(r.m.romL)).map((r) => ({ t: r.t, v: r.m.romL })) }, { name: 'R', pts: dom.recs.filter((r) => num(r.m.romR)).map((r) => ({ t: r.t, v: r.m.romR })) }], { dec: 0, unit: '°', ref: 150, refLabel: '150°', label: 'Active abduction by session, left and right' });
       if (d.key === 'upper') h += '<p class="cr-legend"><span><i class="s0"></i>Left</span><span><i class="s1"></i>Right</span></p>';
+      else if (d.key === 'knee') h += chart([{ name: 'L', pts: dom.recs.filter((r) => num(r.m.bestL)).map((r) => ({ t: r.t, v: r.m.bestL })) }, { name: 'R', pts: dom.recs.filter((r) => num(r.m.bestR)).map((r) => ({ t: r.t, v: r.m.bestR })) }], { dec: 0, unit: '°', ref: 170, refLabel: '170°', label: 'Best active knee extension by session, left and right' }) +
+        '<p class="cr-legend"><span><i class="s0"></i>Left</span><span><i class="s1"></i>Right</span></p>';
       else if (d.key === 'mobility' && dom.recs.some((r) => num(r.m.bestGo))) {
         h += chart([{ name: 'Move', pts: dom.tr.pts.map((p) => ({ t: p.t, v: p.v })) }, { name: 'Go', pts: dom.recs.filter((r) => num(r.m.bestGo)).map((r) => ({ t: r.t, v: r.m.bestGo })) }], { dec: 1, unit: ' s', ref: 12, refLabel: '12 s cut-off (from "Go")', label: 'Timed Up and Go by session' }) +
           '<p class="cr-legend"><span><i class="s0"></i>Movement time</span><span><i class="s1"></i>From "Go" (stopwatch equivalent)</span></p>';
       } else if (dom.tr.pts.length) {
-        const ref = d.key === 'strength' ? c.cst30 : d.key === 'mobility' ? 12 : d.key === 'balance' ? 3 : d.key === 'endurance' ? c.tmstInd : null;
-        const rl = d.key === 'strength' ? 'age and sex norm' : d.key === 'mobility' ? '12 s cut-off' : d.key === 'balance' ? 'tandem held (STEADI)' : 'independence threshold';
+        const ref = d.key === 'strength' ? c.cst30 : d.key === 'mobility' ? 12 : d.key === 'balance' ? 3 : d.key === 'endurance' ? c.tmstInd : d.key === 'arm' ? c.curl : d.key === 'calf' ? 25 : null;
+        const rl = d.key === 'strength' ? 'age and sex norm' : d.key === 'mobility' ? '12 s cut-off' : d.key === 'balance' ? 'tandem held (STEADI)' : d.key === 'arm' ? 'normal range, lower end' : d.key === 'calf' ? 'full rise' : 'independence threshold';
         h += chart([{ pts: dom.tr.pts }], { dec: d.dec, unit: d.unit, ref, refLabel: num(ref) ? rl : '', label: d.measure + ' by session', lo: d.key === 'balance' ? 0 : null, hi: d.key === 'balance' ? 4 : null });
       }
       // supporting measures from the latest session
@@ -2441,6 +2873,9 @@ const Clinic = (function () {
     if (ex === 'balance') { add('Semi-tandem', m.holdSemi, 1, ' s'); add('Tandem', m.holdTandem, 1, ' s'); add('Single leg', m.holdOne, 1, ' s'); add('Sway (RMS)', m.rms, 1, '°'); }
     if (ex === 'march') { add('Steps', m.steps, 0); add('Cadence', m.cadence, 0, '/min'); add('Knee lift L', m.liftL, 0, '°'); add('Knee lift R', m.liftR, 0, '°'); }
     if (ex === 'shoulder') { add('Left', m.romL, 0, '°'); add('Right', m.romR, 0, '°'); add('Trunk lean', m.lean, 0, '°'); add('Good-form reps', m.goodPct, 0, '%'); }
+    if (ex === 'curl') { add('Full range', m.fullPct, 0, '%'); add('Elbow at top', m.flex, 0, '°'); add('Upper-arm swing', m.drift, 0, '°'); add('Trunk sway', m.lean, 0, '°'); }
+    if (ex === 'knee') { add('Left', m.bestL, 0, '°'); add('Right', m.bestR, 0, '°'); add('Hold at top', m.hold, 1, ' s'); add('Trunk lean', m.lean, 0, '°'); }
+    if (ex === 'heel') { add('Raises', m.reps, 0); add('Time at top', m.hold, 1, ' s'); add('Bent knees', m.bentPct, 0, '%'); add('Trunk lean', m.lean, 0, '°'); }
     return s;
   }
   const sessionsText = (recs) => recs.length + ' session' + (recs.length > 1 ? 's' : '') + ', latest ' + dstr(recs[recs.length - 1].t) + '.';
@@ -2834,6 +3269,128 @@ if (typeof module !== 'undefined') module.exports = Clinic;
                 ['Mean sway (RMS)', fmt(s.rms, 1, '°')], ['Mean sway range', fmt(s.range, 1, '°')], ['Mean sway speed', fmt(s.vel, 1, '°/s')]];
       },
     },
+
+    curl: {
+      name: 'Arm curls', countLabel: 'Curls', dur: '30 seconds',
+      what: 'Sitting down, hold a light weight and bend your elbow to bring it up to your shoulder, then lower it. As many times as you can in 30 seconds.',
+      startSay: 'Bend your elbow and bring the weight up, then lower it all the way. As many as you can in 30 seconds. Go.',
+      auto: (t) => counter.reps.length && t - counter.reps[0].tStart >= Core.CURL.WINDOW && (counter.phase === 'down' || t - counter.reps[0].tStart >= Core.CURL.WINDOW + 3),
+      setup: ['Sit on a firm chair side-on to the camera, the arm you will use nearer the camera.',
+              'Hold a weight: about 2 kg for women (a 2-litre water bottle) or 3.5 kg for men, or the weight your therapist gave you.',
+              'Start with the arm straight down by your side, palm facing in.',
+              'Bend the elbow to bring the weight up toward your shoulder, turning the palm up, then lower it all the way. Keep the elbow by your side.'],
+      why: 'Side-on view: the elbow angle is measured from the side. Only the arm nearer the camera is scored.',
+      scope: 'Runs as the 30-Second Arm Curl (Senior Fitness Test): counts curls in 30 seconds. Also measures elbow angle at the top and bottom, upper-arm swing, trunk sway and slowing. The weight used is not checked.',
+      head: ['#', 'Arm', 'Top', 'Bottom', 'Arm swing', 'Trunk sway', 'Curl time', 'Feedback'],
+      gauges: () => gauge('gE', 'Elbow bend', [[38.9, 'counted'], [66.7, 'full']]),
+      stats: () => stat('Time left', 's-left') + stat('Curls', 's-n') + stat('Upper-arm swing', 's-drift') + COMMON_STATS,
+      make: () => Core.CurlCounter(),
+      frame: (p) => Core.curlFrame(p),
+      step(f, t, ema) {
+        const g = Object.assign({}, f, { elbow: ema('elbow', f.elbow), drift: ema('drift', f.drift), lean: ema('lean', f.lean) });
+        setGauge('gE', (180 - g.elbow) / 180, fmt(180 - g.elbow, 0, '°')); $('s-drift').textContent = fmt(g.drift, 0, '°');
+        const ev = counter.feed(g, t), reps = counter.reps;
+        if (ev && ev.type === 'up') {
+          const n = reps.length + 1; setCount(n);
+          if (!reps.length || t - reps[0].tStart <= Core.CURL.WINDOW) say(String(n));
+        } else if (ev && ev.type === 'down') {
+          const r = ev.rep, n = reps.length;
+          addRow([n, r.side === 'L' ? 'Left' : 'Right', fmt(r.flex, 0, '°'), fmt(r.ext, 0, '°'), fmt(r.drift, 0, '°'), fmt(r.lean, 0, '°'), fmt(r.dur, 1, ' s'), chip(r.cue)]);
+          showCue(r.cue.text, r.cue.ok ? 'good' : 'fix');
+          if (!r.cue.ok && (live.lastSay == null || t - live.lastSay > 6)) { say(r.cue.text); live.lastSay = t; }
+        } else if (!reps.length && counter.phase === 'down') showCue('Ready. Bring the weight up to your shoulder.', '');
+        $('s-n').textContent = reps.length;
+        if (reps.length) $('s-left').textContent = clockStr(Math.max(0, Core.CURL.WINDOW - (t - reps[0].tStart)));
+      },
+      overlay(f, label) { if (!isNaN(f.elbow)) label(f.side === 'L' ? 13 : 14, Math.round(sm.elbow == null ? f.elbow : sm.elbow) + '°', 0.05); },
+      summary() {
+        const s = Core.summarizeCurl(counter.reps, counter.lastT);
+        return [['Curls', s.reps], ['Curls in 30 seconds', s.spans30 ? s.in30 : s.in30 + ' (session under 30 s)'], ['Curls through full range', s.full + ' of ' + s.reps],
+                ['Mean elbow angle at the top', fmt(s.meanFlex, 0, '°')], ['Mean elbow angle at the bottom', fmt(s.meanExt, 0, '°')],
+                ['Largest upper-arm swing', fmt(s.maxDrift, 0, '°')], ['Largest trunk sway', fmt(s.maxLean, 0, '°')], ['Mean curl time', fmt(s.meanDur, 1, ' s')],
+                ['Slowing, last third vs first', pct(s.slowing)], ['Rests over 3 s', restStr(s.rests)]];
+      },
+    },
+
+    knee: {
+      name: 'Seated knee straightening', countLabel: 'Reps', dur: 'About 2 minutes', goal: 20,
+      what: 'Sitting down, straighten one knee, hold it for a count of three, then lower it. 10 times with each leg.',
+      startSay: 'Straighten the leg nearer the camera. Hold it for three, then lower it. Ten times.',
+      auto: (t) => { const r = counter.reps, last = r.length ? r[r.length - 1].tEnd : null;
+        return (counter.count('L') >= 10 && counter.count('R') >= 10 && t - last > 1) || (r.length && counter.phase === 'down' && t - last > 45) || (!r.length && t > 90); },
+      setup: ['Sit on a firm chair side-on to the camera, feet flat on the floor.',
+              'Straighten the knee nearer the camera until the leg is straight out in front of you.',
+              'Hold it straight for a count of three, then lower it slowly. Do this 10 times.',
+              'Then turn your chair around so the other leg is nearer the camera, and do 10 more.'],
+      why: 'Side-on view: only the leg nearer the camera is measured reliably. Turning the chair puts the other leg in view.',
+      scope: 'Measures: reps on each leg, best active knee extension on each side, time held straight, trunk lean and slowing. Camera estimate of the knee angle, not a goniometer measurement.',
+      head: ['#', 'Leg', 'Peak knee angle', 'Held', 'Trunk lean', 'Rep time', 'Feedback'],
+      gauges: () => gauge('gK', 'Knee angle', [[50, 'bent'], [91.7, 'straight']]),
+      stats: () => stat('Reps, left / right', 's-lr') + stat('Trunk lean', 's-lean') + COMMON_STATS,
+      make: () => Core.KneeCounter(),
+      frame: (p) => Core.kneeFrame(p),
+      step(f, t, ema) {
+        const g = Object.assign({}, f, { knee: ema('knee', f.knee), lean: ema('lean', f.lean) });
+        setGauge('gK', g.knee / 180, fmt(g.knee, 0, '°')); $('s-lean').textContent = fmt(g.lean, 0, '°');
+        const r = counter.feed(g, t), n = counter.reps.length;
+        if (r) {
+          setCount(n);
+          addRow([n, r.side === 'L' ? 'Left' : 'Right', fmt(r.peak, 0, '°'), fmt(r.hold, 1, ' s'), fmt(r.lean, 0, '°'), fmt(r.dur, 1, ' s'), chip(r.cue)]);
+          showCue(r.cue.text, r.cue.ok ? 'good' : 'fix');
+          const sideN = counter.count(r.side), other = r.side === 'L' ? 'R' : 'L';
+          if (sideN === 10 && counter.count(other) < 10) { say(L('Well done.') + ' ' + L('Now turn your chair around so the other leg is nearer the camera, and do 10 more.')); live.lastSay = t; }
+          else say(String(sideN) + (!r.cue.ok && (live.lastSay == null || t - live.lastSay > 6) ? '. ' + L(r.cue.text) : ''));
+          if (!r.cue.ok) live.lastSay = t;
+        } else if (!n && counter.phase === 'down') showCue('Ready. Straighten your knee and hold it.', '');
+        else if (counter.phase === 'up') showCue('Hold it straight… 1, 2, 3', '');
+        $('s-lr').textContent = counter.count('L') + ' / ' + counter.count('R');
+      },
+      overlay(f, label) { if (!isNaN(f.knee)) label(f.side === 'L' ? 25 : 26, Math.round(sm.knee == null ? f.knee : sm.knee) + '°', 0.06); },
+      summary() {
+        const s = Core.summarizeKnee(counter.reps);
+        return [['Reps', s.reps], ['Left / right', s.left + ' / ' + s.right], ['Best knee extension, left', fmt(s.bestL, 0, '°')], ['Best knee extension, right', fmt(s.bestR, 0, '°')],
+                ['Mean time held straight', fmt(s.meanHold, 1, ' s')], ['Reps reaching 165° or more', s.full + ' of ' + s.reps], ['Largest trunk lean', fmt(s.maxLean, 0, '°')],
+                ['Mean rep time', fmt(s.meanDur, 1, ' s')], ['Slowing, last third vs first', pct(s.slowing)], ['Rests over 3 s', restStr(s.rests)]];
+      },
+    },
+
+    heel: {
+      name: 'Heel raises', countLabel: 'Raises', dur: 'About 1 minute', goal: 10,
+      what: 'Holding on to a counter or a sturdy chair, rise up onto your toes, pause, then lower your heels slowly. 10 times.',
+      startSay: 'Hold on to your support. Rise up onto your toes, pause, then lower slowly. Ten times.',
+      auto: (t) => counter.reps.length >= 10 && t - counter.reps[9].tEnd > 0.8,
+      setup: ['Stand side-on to the camera, holding a kitchen counter or the back of a heavy chair.',
+              'Put the phone low enough to see your feet clearly, heels and toes.',
+              'Rise up onto your toes as high as is comfortable, keeping your knees straight.',
+              'Pause at the top, then lower your heels slowly. Repeat 10 times.'],
+      why: 'Side-on view with the feet in the picture: the heel lift is read from the heel-to-toe line.',
+      scope: 'Measures: raises, heel lift, time at the top, bent knees, trunk lean and slowing. Does not detect how much weight is taken through the hands.',
+      head: ['#', 'Heel lift', 'At the top', 'Knee', 'Trunk lean', 'Raise time', 'Feedback'],
+      gauges: () => gauge('gH', 'Heel lift', [[25, 'counted'], [50, 'full']]),
+      stats: () => stat('Raises', 's-n') + stat('Trunk lean', 's-lean') + COMMON_STATS,
+      make: () => Core.HeelCounter(),
+      frame: (p) => Core.heelFrame(p),
+      step(f, t, ema) {
+        const g = Object.assign({}, f, { foot: ema('foot', f.foot), knee: ema('knee', f.knee), lean: ema('lean', f.lean) });
+        const r = counter.feed(g, t), lift = counter.lift(g), n = counter.reps.length;
+        setGauge('gH', lift / 40, fmt(lift, 0, '°')); $('s-lean').textContent = fmt(g.lean, 0, '°');
+        if (r) {
+          setCount(n);
+          addRow([n, fmt(r.peak, 0, '°'), fmt(r.hold, 1, ' s'), fmt(r.knee, 0, '°'), fmt(r.lean, 0, '°'), fmt(r.dur, 1, ' s'), chip(r.cue)]);
+          showCue(r.cue.text, r.cue.ok ? 'good' : 'fix');
+          say(String(n) + (!r.cue.ok && (live.lastSay == null || t - live.lastSay > 6) ? '. ' + L(r.cue.text) : ''));
+          if (!r.cue.ok) live.lastSay = t;
+        } else if (!n && counter.phase === 'down') showCue('Ready. Rise up onto your toes.', '');
+        $('s-n').textContent = n;
+      },
+      overlay(f, label) { const lift = counter.lift({ foot: sm.foot == null ? f.foot : sm.foot }); if (!isNaN(lift)) label(f.side === 'L' ? 29 : 30, Math.round(lift) + '°', 0.05); },
+      summary() {
+        const s = Core.summarizeHeel(counter.reps);
+        return [['Raises', s.reps], ['Mean heel lift', fmt(s.meanLift, 0, '°')], ['Highest heel lift', fmt(s.bestLift, 0, '°')], ['Raises reaching full height', s.full + ' of ' + s.reps],
+                ['Mean time at the top', fmt(s.meanHold, 1, ' s')], ['Raises with bent knees', s.bentKnee + ' of ' + s.reps], ['Largest trunk lean', fmt(s.maxLean, 0, '°')],
+                ['Slowing, last third vs first', pct(s.slowing)], ['Rests over 3 s', restStr(s.rests)]];
+      },
+    },
   };
 
   /* ---------- pictogram instructions (drawn, so they need no translation) ---------- */
@@ -2863,6 +3420,10 @@ if (typeof module !== 'undefined') module.exports = Clinic;
       const d = o.dir, le = o.lean * rad, sx = hx + d * 30 * Math.sin(le), sy = hip - 30 * Math.cos(le), out = [];
       out.push('<circle class="fg" cx="' + r1(sx + d * 2) + '" cy="' + r1(sy - 11) + '" r="6"/>', L([[sx, sy], [hx, hip]]));
       if (o.arm === 'cross') out.push(L([[sx, sy + 3], [sx + d * 3, sy + 13], [sx + d * 10, sy + 8]]));
+      else if (typeof o.arm === 'number') {   // elbow flexion in degrees, upper arm by the side, a weight in the hand
+        const f = Math.max(12, o.arm) * rad, ex = sx + d * 4, ey = sy + 14, hx = ex + d * 13 * Math.sin(f), hy = ey + 13 * Math.cos(f);
+        out.push(L([[sx, sy + 3], [ex, ey], [hx, hy]]), '<circle class="acf" cx="' + r1(hx) + '" cy="' + r1(hy) + '" r="3"/>');
+      }
       else out.push(L([[sx, sy + 3], [sx - d * 2, sy + 15], [sx + d * 3, sy + 26]]));
       o.thigh.forEach((th, i) => {
         const t = th * rad, s = o.shin[i] * rad, kx = hx + d * 17 * Math.sin(t), ky = hip + 17 * Math.cos(t);
@@ -2876,7 +3437,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     const dist = (x1, x2, y, label) => '<path class="dimline" d="M' + x1 + ' ' + y + 'H' + x2 + '" marker-start="url(#tk)" marker-end="url(#tk)"/>' + txt((x1 + x2) / 2, y - 4, label);
     const foot = (x, y, cls) => '<ellipse class="' + (cls || 'fg') + '" cx="' + x + '" cy="' + y + '" rx="5" ry="11"/>';
     const SIT = { thigh: [88, 88], shin: [0, 0] }, G = 104;       // G = floor line y
-    const svg = (body) => '<svg viewBox="0 0 130 116" role="img" aria-hidden="true"><defs>' +
+    const svg = (body) => '<svg viewBox="0 0 130 116" style="direction:ltr" role="img" aria-hidden="true"><defs>' +
       '<marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="acf"/></marker>' +
       '<marker id="tk" viewBox="0 0 2 10" refX="1" refY="5" markerWidth="2" markerHeight="8" orient="auto"><path d="M1 0V10" class="dimline"/></marker></defs>' + body + '</svg>';
     const setupFront = (extra) => svg(floor(8, 122, G) + cam(22, G - 22) + front(98, G - 34, {}) + dist(30, 88, 22, '2–3 m') + (extra || ''));
@@ -2906,6 +3467,24 @@ if (typeof module !== 'undefined') module.exports = Clinic;
         [svg(floor(4, 126, G) + chair(16, G - 34, 1) + side(52, G - 34, { thigh: [22, -18], shin: [-6, -28], arm: 'hang' }) + L([[100, G - 6], [100, G + 6]], 'ac') + arrow('M66 40 H96')), 'Stand, walk to the line'],
         [svg(floor(4, 126, G) + side(84, G - 34, { arm: 'hang' }) + L([[100, G - 6], [100, G + 6]], 'ac') + arrow('M100 44 C122 44 122 20 100 20 H74')), 'Turn around'],
         [svg(floor(4, 126, G) + chair(16, G - 34, 1) + side(62, G - 34, { thigh: [22, -18], shin: [-6, -28], arm: 'hang', dir: -1 }) + arrow('M52 40 H26')), 'Walk back, sit down'],
+      ],
+      curl: () => [
+        [svg(floor(8, 122, G) + cam(20, G - 22) + chair(98, G - 34, 1) + side(98, G - 34, Object.assign({ arm: 0 }, SIT)) + dist(28, 88, 22, '2–3 m')), 'Sit side-on, weight in hand'],
+        [svg(floor(30, 110, G) + chair(60, G - 34, 1) + side(60, G - 34, Object.assign({ arm: 0 }, SIT))), 'Arm straight down'],
+        [svg(floor(30, 110, G) + chair(60, G - 34, 1) + side(60, G - 34, Object.assign({ arm: 145 }, SIT)) + arrow('M86 64 Q88 46 76 38')), 'Curl up to the shoulder'],
+        [svg(floor(30, 110, G) + chair(60, G - 34, 1) + side(60, G - 34, Object.assign({ arm: 0 }, SIT)) + arrow('M80 40 Q90 52 82 66') + txt(106, 30, '30 s')), 'Lower fully, repeat'],
+      ],
+      knee: () => [
+        [svg(floor(8, 122, G) + cam(20, G - 22) + chair(98, G - 34, 1) + side(98, G - 34, Object.assign({ arm: 'hang' }, SIT)) + dist(28, 88, 22, '2–3 m')), 'Sit side-on to the camera'],
+        [svg(floor(30, 110, G) + chair(50, G - 34, 1) + side(50, G - 34, { thigh: [88, 88], shin: [0, 84], arm: 'hang' }) + arrow('M70 98 Q92 96 96 74')), 'Straighten one knee'],
+        [svg(floor(30, 110, G) + chair(50, G - 34, 1) + side(50, G - 34, { thigh: [88, 88], shin: [0, 84], arm: 'hang' }) + '<circle class="ac" cx="106" cy="30" r="13"/>' + L([[106, 30], [106, 21]], 'ac') + L([[106, 30], [112, 33]], 'ac') + txt(106, 56, '3 s')), 'Hold, then lower'],
+        [svg(floor(30, 110, G) + chair(65, G - 34, -1) + side(65, G - 34, { thigh: [88, 88], shin: [0, 0], arm: 'hang', dir: -1 }) + arrow('M40 30 C60 10 80 10 96 30') + txt(65, 112, '10 + 10')), 'Turn the chair, other leg'],
+      ],
+      heel: () => [
+        [svg(floor(8, 122, G) + cam(20, G - 22) + support(110) + side(96, G - 34, { arm: 'hang' }) + dist(28, 86, 22, '2–3 m')), 'Side-on, hold a support'],
+        [svg(floor(30, 110, G) + support(84) + side(62, G - 34, { arm: 'hang' })), 'Stand tall'],
+        [svg(floor(30, 110, G) + support(84) + '<g transform="translate(0,-7)">' + side(62, G - 34, { arm: 'hang' }) + '</g>' + L([[62, G - 7], [70, G]], 'fg') + arrow('M44 92 V70')), 'Rise onto your toes'],
+        [svg(floor(30, 110, G) + support(84) + side(62, G - 34, { arm: 'hang' }) + arrow('M44 70 V92') + txt(40, 30, '×10')), 'Lower slowly, repeat'],
       ],
       balance: (stance) => {
         const feet = stance === 'one' ? foot(55, 62) + foot(75, 44, 'dimfoot') + arrow('M75 62 V50')
@@ -3134,8 +3713,9 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     }
   }
 
-  /* Guided start. Each exercise asks only for the body parts its scoring uses (sit to stand and Timed Up and Go:
-     one whole leg; marching: both legs; balance: both feet and shoulders; shoulder raises: shoulders and an arm).
+  /* Guided start. Each exercise asks only for the body parts its scoring uses (sit to stand, Timed Up and Go and knee
+     straightening: one whole leg; marching: both legs; balance: both feet and shoulders; shoulder raises: shoulders and an arm;
+     arm curls: one whole arm; heel raises: the heel and toes of one foot).
      It starts once that view has been steady for 1 s (75% of frames, so one bad frame does not reset it).
      After 12 s of a partly usable view it starts anyway and marks the session, so nobody is stuck. */
   const POS = { STEADY: 1.0, OK_FRAC: 0.75, GIVE_UP: 12, WEAK_FRAC: 0.3, TIP_AT: 8, TIP_SAY: 15 };
@@ -3154,6 +3734,9 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     else if (exKey === 'sts' || exKey === 'tug') m = legSeen(lms, 'L') || legSeen(lms, 'R') ? null : legGap(lms);
     else if (exKey === 'march') { const l = legSeen(lms, 'L'), r = legSeen(lms, 'R'); m = l && r ? null : l || r ? 'oneLeg' : legGap(lms); }
     else if (exKey === 'balance') m = !(seen(lms[27]) && seen(lms[28])) ? 'feet' : !(seen(lms[11]) && seen(lms[12])) ? 'shoulders' : null;
+    else if (exKey === 'curl') m = [11, 13, 15].every((i) => seen(lms[i])) || [12, 14, 16].every((i) => seen(lms[i])) ? null : !(seen(lms[11]) || seen(lms[12])) ? 'shoulders' : 'arms';
+    else if (exKey === 'knee') m = legSeen(lms, 'L') || legSeen(lms, 'R') ? null : legGap(lms);
+    else if (exKey === 'heel') m = [27, 29, 31].every((i) => seen(lms[i])) || [28, 30, 32].every((i) => seen(lms[i])) ? null : 'feet';
     return m || (f.ok ? null : 'clear');
   }
   const POS_MSG = { none: 'Please step in front of the camera.', shoulders: 'I cannot see your shoulders. Step back a little.',
@@ -3282,7 +3865,9 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   };
 
   /* ---------- patient flow ---------- */
-  const ORDER = ['shoulder', 'sts', 'march', 'balance', 'tug'];
+  const ORDER = ['shoulder', 'curl', 'knee', 'sts', 'heel', 'march', 'balance', 'tug'];
+  const DEFAULT_PLAN = ['shoulder', 'sts', 'march', 'balance', 'tug'];   // the routine until a clinician changes it; the rest are under "More exercises"
+  let routineMode = false;   // true when the patient tapped Start and is going through the routine in order
   const L = I18N.L, D = I18N.D;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const isNum = (v) => typeof v === 'number' && isFinite(v);
@@ -3292,7 +3877,8 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   /* a "round" is one pass through the plan; finishing it and tapping "Do them again" starts a new round the same day */
   function roundT() { let t = 0; try { t = +localStorage.getItem('irehab.round.' + pid()) || 0; } catch (e) { /* optional */ } const mid = new Date(); mid.setHours(0, 0, 0, 0); return Math.max(t, mid.getTime()); }
   function newRound() { skipped = {}; try { localStorage.setItem('irehab.round.' + pid(), String(Date.now())); } catch (e) { /* optional */ } }
-  function plan() { try { const p = JSON.parse(localStorage.getItem('irehab.plan.' + pid())); if (Array.isArray(p) && p.length) return ORDER.filter((k) => p.includes(k)); } catch (e) { /* default plan */ } return ORDER.slice(); }
+  function plan() { try { const p = JSON.parse(localStorage.getItem('irehab.plan.' + pid())); if (Array.isArray(p) && p.length) return ORDER.filter((k) => p.includes(k)); } catch (e) { /* default plan */ } return DEFAULT_PLAN.slice(); }
+  const extras = () => ORDER.filter((k) => !plan().includes(k));
   function setPlan(p) { try { localStorage.setItem('irehab.plan.' + pid(), JSON.stringify(p)); } catch (e) { /* optional */ } }
   let skipped = {};
   const doneTodayRec = (k) => { const t0 = roundT(); return Report.sessions(pid(), k).some((r) => new Date(r.t).getTime() >= t0); };
@@ -3302,10 +3888,11 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   const icon = (k) => (k === 'balance' ? PIC.balance('tandem')[1][0] : PIC[k]()[k === 'tug' ? 1 : 2][0]);
   const scoreOf = (k, m) => Report.scoreOf(k, m);
 
-  function planList(el, mark) {
-    const p = plan(), nextK = p.find((k) => !isDone(k));
+  function planList(el, mark, keys) {
+    const p = keys || plan(), nextK = keys ? null : p.find((k) => !isDone(k));
     el.innerHTML = p.map((k) => {
-      const d = isDone(k), n = timesToday(k), st = d ? (!doneTodayRec(k) ? ['later', L('Skipped')] : ['done', L('Done ✓') + (n > 1 ? ' ×' + D(n) : '')]) : k === nextK && mark ? ['next', L('Next')] : ['later', L('To do')];
+      const n = timesToday(k), d = keys ? n > 0 : isDone(k);
+      const st = d ? (!keys && !doneTodayRec(k) ? ['later', L('Skipped')] : ['done', L('Done ✓') + (n > 1 ? ' ×' + D(n) : '')]) : k === nextK && mark ? ['next', L('Next')] : ['later', L(keys ? 'Start ›' : 'To do')];
       return '<li' + (mark ? ' data-ex="' + k + '" role="button" tabindex="0"' : '') + ' class="' + (d ? 'done' : k === nextK && mark ? 'next' : '') + '"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + L(EX[k].name) + '</span><br><span class="du">' + L(EX[k].dur) + (EX[k].helper ? ' · ' + L('with a helper') : '') + '</span></span><span class="st ' + st[0] + '">' + st[1] + '</span></li>';
     }).join('');
     return nextK;
@@ -3313,9 +3900,13 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   function renderHome() {
     const nm = (Report.person(pid()).name || '').trim();
     $('hello').textContent = nm ? L('Hello, {name}', { name: nm }) : L("Today's exercises");
-    const nextK = planList($('plan'), true), p = plan(), left = p.filter((k) => !isDone(k)).length;
-    $('home-lead').textContent = (!left ? L('You have finished everything for today. Well done!') : left === p.length ? L('Do them one at a time. The phone will guide you.') : L('{n} left for today. Keep going!', { n: D(left) })) + ' ' + L('Tap any exercise to do it now, as often as you like.');
-    $('btn-progress').hidden = !Report.sessions(pid()).length;
+    const nextK = planList($('plan'), true), p = plan(), left = p.filter((k) => !isDone(k)).length, ex2 = extras();
+    planList($('plan-more'), true, ex2); $('more-h').hidden = $('plan-more').hidden = !ex2.length;
+    const doneToday = ORDER.filter((k) => timesToday(k) > 0).length;
+    $('home-lead').textContent = !doneToday ? L('Choose any exercise, or tap Start to do your routine in order.')
+      : !left ? L('You have finished your routine for today. Well done!') + ' ' + L('You can do any exercise again, or finish for today.')
+      : L('{n} done today.', { n: D(doneToday) }) + ' ' + L('Do as many or as few as you like, then finish for today.');
+    $('btn-progress').hidden = false; $('btn-finishday').hidden = !doneToday;
     const b = $('btn-start');
     if (!landmarker) { b.disabled = true; b.textContent = L('Getting ready…'); return; }
     b.disabled = false; b.textContent = L(!left ? 'Do them again' : left === p.length ? 'Start' : 'Continue');
@@ -3348,14 +3939,17 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   document.addEventListener('keydown', pauseAuto, true);
   const canAutoStart = (k) => camOK && !EX[k].helper;
 
+  const SAFETY = { march: 'Stand next to a sturdy chair or counter. Hold it if you need to.', sts: 'Use a firm chair without wheels, against a wall.',
+    curl: 'Use a light weight you can lift comfortably. Stop if your shoulder or elbow hurts.', knee: 'Sit on a firm chair without wheels. Stop if your knee hurts.',
+    heel: 'Hold on to a counter or a heavy chair the whole time.' };
   function openIntro(k) {
     cancelAuto();
     if (exKey !== k) { exKey = k; renderExercise(); }
     const p = plan(), i = p.indexOf(k);
-    $('intro-step').textContent = L('Exercise {i} of {n}', { i: D(i + 1), n: D(p.length) });
+    $('intro-step').textContent = i < 0 ? L('More exercises') : L('Exercise {i} of {n}', { i: D(i + 1), n: D(p.length) });
     $('intro-title').textContent = L(EX[k].name); $('intro-what').textContent = L(EX[k].what);
     renderIdle(); renderDemo(k);
-    $('intro-safety').textContent = L(EX[k].helper ? 'Only do this with another person close by. Use your usual walking aid.' : k === 'march' ? 'Stand next to a sturdy chair or counter. Hold it if you need to.' : k === 'sts' ? 'Use a firm chair without wheels, against a wall.' : '');
+    $('intro-safety').textContent = L(EX[k].helper ? 'Only do this with another person close by. Use your usual walking aid.' : SAFETY[k] || '');
     $('helper-row').hidden = !EX[k].helper; $('helper').checked = false;
     $('btn-ready').disabled = !!EX[k].helper;
     show('scr-intro');
@@ -3415,6 +4009,9 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   /* what the patient reads after an exercise */
   function headline(k, m) {
     if (k === 'shoulder') return [D(m.reps), L('raises')];
+    if (k === 'curl') return isNum(m.curls30) ? [D(m.curls30), L('curls in 30 seconds')] : [D(m.reps), L('curls')];
+    if (k === 'knee') return [D(m.reps), L('knee straightenings')];
+    if (k === 'heel') return [D(m.reps), L('heel raises')];
     if (k === 'sts') return isNum(m.cst30) ? [D(m.cst30), L('stands in 30 seconds')] : [D(m.reps), L('stands')];
     if (k === 'march') return [D(m.steps), L('steps')];
     if (k === 'tug') { const b = isNum(m.best) ? m.best : m.bestAny; return [isNum(b) ? D(b.toFixed(1)) : '…', L('seconds, your best time')]; }
@@ -3427,6 +4024,9 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     if (k === 'march') { const d = n(m.steps) - n(pm.steps); return d > 0 ? L('{n} more steps than last time.', { n: D(d) }) : ''; }
     if (k === 'tug') { const a = isNum(m.best) ? m.best : m.bestAny, b = isNum(pm.best) ? pm.best : pm.bestAny; return isNum(a) && isNum(b) && b - a >= 0.3 ? L('{x} seconds faster than last time.', { x: D((b - a).toFixed(1)) }) : ''; }
     if (k === 'balance') { const d = n(m.stage) - n(pm.stage); return d > 0 ? L('{n} more positions than last time.', { n: D(d) }) : ''; }
+    if (k === 'curl') { const d = n(isNum(m.curls30) ? m.curls30 : m.reps) - n(isNum(pm.curls30) ? pm.curls30 : pm.reps); return d > 0 ? L('{n} more curls than last time.', { n: D(d) }) : ''; }
+    if (k === 'knee') { const best = (q) => Math.max(n(q.bestL), n(q.bestR)), d = Math.round(best(m) - best(pm)); return d >= 3 ? L('Your knee straightened {x}° more than last time.', { x: D(d) }) : n(m.reps) > n(pm.reps) ? L('{n} more than last time.', { n: D(n(m.reps) - n(pm.reps)) }) : ''; }
+    if (k === 'heel') { const d = Math.round(n(m.lift) - n(pm.lift)); return d >= 2 ? L('Your heels rose {x}° higher than last time.', { x: D(d) }) : n(m.reps) > n(pm.reps) ? L('{n} more than last time.', { n: D(n(m.reps) - n(pm.reps)) }) : ''; }
     const a = (n(m.romL) + n(m.romR)) / 2, b = (n(pm.romL) + n(pm.romR)) / 2;
     if (a - b >= 3) return L('Your arms went {x}° higher than last time.', { x: D(Math.round(a - b)) });
     return n(m.reps) > n(pm.reps) ? L('{n} more raises than last time.', { n: D(n(m.reps) - n(pm.reps)) }) : '';
@@ -3467,13 +4067,15 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     $('res-next').dataset.label = L('Next time: '); $('res-next').textContent = patientTip(k, m);
     $('rate-block').hidden = false;
     faces($('faces-rpe'), 'rpe', last.rpe, ['Easy', 'Very hard']); faces($('faces-pain'), 'pain', last.pain, ['None', 'Worst']);
-    const nextK = nextAfter(k);
-    $('btn-next').textContent = L(nextK ? 'Next exercise' : 'Finish'); $('btn-next').dataset.act = nextK ? 'next' : 'done';
+    const nextK = routineMode && plan().includes(k) ? nextAfter(k) : null;
+    if (routineMode && plan().includes(k)) { $('btn-next').textContent = L(nextK ? 'Next exercise' : 'Finish'); $('btn-next').dataset.act = nextK ? 'next' : 'done'; }
+    else { $('btn-next').textContent = L('Choose another exercise'); $('btn-next').dataset.act = 'home'; }
     $('btn-again').textContent = L('Do this one again'); $('btn-again').dataset.act = 'again';
     show('scr-result');
     confetti(pb || !prev);
     resultSpeech = [L('Well done!'), L('Your score') + ' ' + Math.round(s) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0]].join(' ');
     const nextLabel = (n) => (nextK ? L('Next: {name}, in {n} seconds.', { name: L(EX[nextK].name), n: D(n) }) : L('Finishing in {n} seconds.', { n: D(n) }));
+    if ($('btn-next').dataset.act === 'home') { $('res-auto').hidden = true; say(resultSpeech); return; }
     say(resultSpeech + ' ' + nextLabel(AUTO.NEXT));
     autoCount($('res-auto'), 'scr-result', AUTO.NEXT, nextLabel, () => (nextK ? openIntro(nextK) : showDone()));
   }
@@ -3486,11 +4088,14 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     el.innerHTML = html; return n;
   }
   function dayScore(date) {
-    const s = plan().map((k) => Report.sessions(pid(), k).filter((r) => day(r.t) === date).pop()).filter(Boolean).map((r) => scoreOf(r.ex, r.m)).filter(isNum);
+    const s = ORDER.map((k) => Report.sessions(pid(), k).filter((r) => day(r.t) === date).pop()).filter(Boolean).map((r) => scoreOf(r.ex, r.m)).filter(isNum);
     return s.length ? s.reduce((a, b) => a + b, 0) / s.length : NaN;
   }
   function showDone() {
-    planList($('done-plan'), false);
+    cancelAuto();
+    const did = ORDER.filter((k) => timesToday(k) > 0);
+    planList($('done-plan'), false, did);
+    $('done-title').textContent = L(plan().every((k) => timesToday(k) > 0) ? 'All done for today' : 'Finished for today');
     const s = dayScore(today()); ring($('done-ring'), s); stars($('done-stars'), s);
     weekDots($('done-week'));
     const days = new Set(Report.sessions(pid()).map((r) => day(r.t)));
@@ -3499,10 +4104,10 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     faces($('done-rpe'), 'rpe', common('rpe'), ['Easy', 'Very hard']); faces($('done-pain'), 'pain', common('pain'), ['None', 'Worst']);
     const ask = rs.some((r) => r.rpe == null || r.pain == null);
     show('scr-done'); confetti(true);
-    say(L('All done for today. Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.' + (ask ? ' ' + L('How hard was today overall? Tap a face.') : ''));
+    say($('done-title').textContent + '. ' + L('Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.' + (ask ? ' ' + L('How hard was today overall? Tap a face.') : ''));
   }
 
-  const roundSessions = () => { const t0 = roundT(); return Report.sessions(pid()).filter((r) => new Date(r.t).getTime() >= t0 && plan().includes(r.ex)); };
+  const roundSessions = () => { const t0 = roundT(); return Report.sessions(pid()).filter((r) => new Date(r.t).getTime() >= t0); };
   /* patient: my progress */
   function spark(vals) {
     const v = vals.filter(isNum); if (v.length < 2) return '';
@@ -3513,7 +4118,8 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     const all = Report.sessions(pid()), dates = [...new Set(all.map((r) => day(r.t)))].sort();
     const s = dates.length ? dayScore(dates[dates.length - 1]) : NaN; ring($('prog-ring'), s);
     const n = weekDots($('prog-week')); $('prog-days').textContent = D(n) + ' / ' + D(7) + ' ' + L('days active');
-    $('prog-list').innerHTML = plan().map((k) => {
+    const tried = ORDER.filter((k) => Report.sessions(pid(), k).length);
+    $('prog-list').innerHTML = tried.concat(ORDER.filter((k) => !tried.includes(k))).map((k) => {
       const recs = Report.sessions(pid(), k);
       if (!recs.length) return '<div class="card"><div class="pc-head"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + esc(L(EX[k].name)) + '</span><br><span class="sub">' + esc(L('Not done yet')) + '</span></span><span></span></div></div>';
       const sc = recs.map((r) => scoreOf(k, r.m)), last = recs[recs.length - 1], h = headline(k, last.m), d = Math.round(sc[sc.length - 1] - sc[0]);
@@ -3546,16 +4152,19 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   $('btn-report').onclick = () => showCReport();
   $('btn-example').onclick = () => { $('pid').value = Report.EXAMPLE; Report.seedExample(); loadPerson(); renderPlanEdit(); showReport(); showCReport(); };
 
-  $('btn-start').onclick = () => { if (plan().every(isDone)) { newRound(); openIntro(plan()[0]); } else openIntro($('btn-start').dataset.ex || plan()[0]); };
-  const pickEx = (e) => { const li = e.target.closest('li[data-ex]'); if (!li || !landmarker) return; if (plan().every(isDone)) newRound(); openIntro(li.dataset.ex); };
-  $('plan').onclick = pickEx;
-  $('plan').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickEx(e); } };
+  $('btn-start').onclick = () => { routineMode = true; if (plan().every(isDone)) { newRound(); openIntro(plan()[0]); } else openIntro($('btn-start').dataset.ex || plan()[0]); };
+  const pickEx = (e) => { const li = e.target.closest('li[data-ex]'); if (!li || !landmarker) return; routineMode = false; if (plan().every(isDone)) newRound(); openIntro(li.dataset.ex); };
+  for (const id of ['plan', 'plan-more']) {
+    $(id).onclick = pickEx;
+    $(id).onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickEx(e); } };
+  }
+  $('btn-finishday').onclick = () => showDone(); $('btn-finishday-r').onclick = () => { cancelAuto(); showDone(); };
   $('intro-back').onclick = () => { renderHome(); show('scr-home'); speakHome(); };
   $('helper').onchange = () => { $('btn-ready').disabled = !$('helper').checked; };
   $('btn-ready').onclick = ready;
   $('btn-skip').onclick = () => { skipped[exKey] = today(); goNext(); };
   $('btn-finish').onclick = () => { if (guided) say('Stopped.'); finish(); };
-  $('btn-next').onclick = () => { const a = $('btn-next').dataset.act; if (a === 'again') openIntro(exKey); else if (a === 'done') showDone(); else goNext(); };
+  $('btn-next').onclick = () => { const a = $('btn-next').dataset.act; if (a === 'again') openIntro(exKey); else if (a === 'done') showDone(); else if (a === 'home') { cancelAuto(); renderHome(); show('scr-home'); } else goNext(); };
   $('btn-again').onclick = () => { if ($('btn-again').dataset.act === 'skip') { skipped[exKey] = today(); goNext(); } else openIntro(exKey); };
   $('btn-home').onclick = () => { renderHome(); show('scr-home'); speakHome(); };
   $('btn-progress').onclick = showProgress; $('btn-done-progress').onclick = showProgress;
@@ -3621,7 +4230,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     $('plan-edit').innerHTML = ORDER.map((k) => '<label class="check"><input type="checkbox" data-plan="' + k + '"' + (p.includes(k) ? ' checked' : '') + '> ' + esc(L(EX[k].name)) + '</label>').join('');
     $('pname').value = Report.person(pid()).name || '';
   }
-  $('plan-edit').onchange = () => { const p = [...$('plan-edit').querySelectorAll('input:checked')].map((x) => x.dataset.plan); setPlan(p.length ? p : ORDER.slice()); };
+  $('plan-edit').onchange = () => { const p = [...$('plan-edit').querySelectorAll('input:checked')].map((x) => x.dataset.plan); setPlan(p.length ? p : DEFAULT_PLAN.slice()); };
   $('pname').onchange = () => { Report.setPerson(pid(), Object.assign({}, Report.person(pid()), { name: $('pname').value.trim() || null })); };
   $('show-tech').onchange = () => { $('tech').hidden = !$('show-tech').checked; };
   $('btn-detail').onclick = () => { show('scr-clinic'); showReport(); $('report').scrollIntoView({ block: 'start' }); };
