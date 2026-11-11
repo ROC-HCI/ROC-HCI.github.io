@@ -154,7 +154,7 @@ svg.chart { width: 100%; height: auto; }
 .base { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; }
 .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
 .ln.s0 { stroke: var(--s0); } .ln.s1 { stroke: var(--s1); }
-.pt { stroke: var(--surface); stroke-width: 2; }
+svg .pt { stroke: var(--surface); stroke-width: 2; }
 .pt.s0 { fill: var(--s0); } .pt.s1 { fill: var(--s1); }
 .dl { font: 600 12px var(--font); fill: var(--ink); }
 .hit { fill: transparent; } .hit:hover { fill: var(--ink); fill-opacity: .06; }
@@ -384,6 +384,86 @@ input.btn { width: 8.5em; cursor: text; }
 .clin { min-height: 100dvh; }
 .clin h2 { margin: 6px 0 0; }
 .clin .panel h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- clinician report ---------- */
+.pt.wide { max-width: 1120px; }
+.cr { display: flex; flex-direction: column; gap: 16px; font-size: 15px; line-height: 1.5; color: var(--ink); }
+.cr h1 { font-size: 26px; margin: 0; line-height: 1.2; }
+.cr h2 { font-size: 17px; margin: 0 0 10px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.cr h3 { font-size: 16px; margin: 0; }
+.cr p { margin: 0; }
+.cr-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.cr-kicker { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; }
+.cr-sub { color: var(--muted); }
+.cr-badge, .cr-chip { display: inline-block; white-space: nowrap; border-radius: 999px; padding: 4px 11px; font-size: 13px; font-weight: 700; }
+.cr-badge.good, .cr-chip.good { background: var(--good-soft); color: var(--good); }
+.cr-badge.watch, .cr-chip.watch { background: #fff3c4; color: #7a5a00; }
+.cr-badge.concern, .cr-chip.concern { background: var(--warn-soft); color: var(--warn); }
+.cr-badge.none, .cr-chip.none { background: var(--sil); color: var(--muted); }
+.cr-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; min-width: 0; }
+.cr-summary ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+.cr-plan { margin-top: 12px !important; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); }
+.cr-plan.review { background: var(--warn-soft); }
+.cr-plan.progress { background: var(--good-soft); }
+.cr-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.cr-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 860px) { .cr-two, .cr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.cr-sec { font-size: 18px; margin: 6px 0 -4px; }
+.cr-h2s { font-size: 14px; color: var(--muted); font-weight: 600; }
+.cr-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.cr-list li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; }
+.cr-list.small { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; }
+.cr-ic { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 800; margin-top: 1px; }
+.cr-list li.work .cr-ic { background: var(--good-soft); color: var(--good); }
+.cr-list li.limit .cr-ic { background: var(--warn-soft); color: var(--warn); }
+.cr-con { color: var(--muted); font-size: 14px; margin-top: 2px !important; }
+.cr-con span { font-weight: 700; color: var(--accent); }
+.cr-seen { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.cr-seen.firm { color: var(--ink); font-weight: 600; }
+.cr-none, .cr-empty, .cr-more { color: var(--muted); }
+.cr-more { font-size: 14px; margin-top: 8px !important; }
+.cr-fall, .cr-q { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.cr-fall li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
+.cr-fall li:first-child { border-top: 0; }
+.cr-fn small { display: block; color: var(--muted); font-size: 12px; }
+.cr-fv { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.cr-dot { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 13px; }
+.pos .cr-dot, .cr-q .no .cr-dot { background: var(--warn-soft); color: var(--warn); }
+.neg .cr-dot, .cr-q .ok .cr-dot { background: var(--good-soft); color: var(--good); }
+.na .cr-dot { background: var(--sil); color: var(--muted); }
+.na .cr-fn, .na .cr-fv { color: var(--muted); }
+.cr-q li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: start; padding: 6px 0; }
+.cr-note { color: var(--muted); font-size: 13px; margin-top: 10px !important; }
+.cr-dom { display: flex; flex-direction: column; gap: 10px; }
+.cr-dh { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.cr-kpi { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.cr-mn { display: block; font-size: 13px; color: var(--muted); }
+.cr-big { font-size: 34px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cr-big small { font-size: 16px; font-weight: 600; color: var(--muted); margin-left: 3px; }
+.cr-delta { text-align: right; font-size: 13px; color: var(--muted); }
+.cr-delta b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+.cr-delta.up b { color: var(--good); } .cr-delta.down b { color: var(--warn); } .cr-delta.flat b { color: var(--muted); }
+.cr-why { font-size: 14px; }
+.cr-chart { width: 100%; height: auto; display: block; }
+.cr-chart .grid { stroke: var(--line); stroke-width: 1; }
+.cr-chart .ax { fill: var(--muted); font-size: 10px; }
+.cr-chart .ref { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 4 4; }
+.cr-chart .reft { fill: var(--muted); font-size: 10px; }
+.cr-chart .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.cr-chart .ln.s0 { stroke: var(--s0); } .cr-chart .ln.s1 { stroke: var(--s1); }
+.cr-chart .dot { stroke: var(--surface); stroke-width: 2; } .cr-chart .dot.s0 { fill: var(--s0); } .cr-chart .dot.s1 { fill: var(--s1); }
+.cr-chart .vl { font-size: 11px; font-weight: 700; fill: var(--ink); }
+.cr-sup { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin: 0; }
+.cr-sup div { background: var(--bg); border-radius: 10px; padding: 6px 10px; }
+.cr-sup dt { font-size: 12px; color: var(--muted); } .cr-sup dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cr-src { font-size: 12px; color: var(--muted); }
+.cr-adh { margin-bottom: 10px !important; }
+.cr-cal { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; max-width: 420px; }
+.cr-cal i { aspect-ratio: 1; border-radius: 4px; background: var(--sil); }
+.cr-cal i.l1 { background: color-mix(in srgb, var(--accent) 40%, var(--sil)); } .cr-cal i.l2 { background: color-mix(in srgb, var(--accent) 70%, var(--sil)); } .cr-cal i.l3 { background: var(--accent); }
+@media (prefers-color-scheme: dark) { .cr-badge.watch, .cr-chip.watch { background: #3a3110; color: #f2d36b; } }
+.actions.static { position: static; }
+.cr-legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 4px; } .cr-legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; } .cr-legend .s0 { background: var(--s0); } .cr-legend .s1 { background: var(--s1); }
 </style>
 </head>
 <body>
@@ -491,10 +571,10 @@ input.btn { width: 8.5em; cursor: text; }
   </section>
 
   <!-- ================= CLINICIAN: phone-friendly report ================= -->
-  <section class="screen pt" id="scr-creport" hidden>
+  <section class="screen pt wide" id="scr-creport" hidden>
     <div class="pt-top"><button class="backbtn" id="crep-back" data-i18n>‹ Back</button><span class="step" data-i18n>Clinician report</span></div>
     <div id="crep"></div>
-    <div class="actions"><button class="big secondary" id="btn-detail" data-i18n>Detailed tables and data tools (English)</button></div>
+    <div class="actions static"><button class="big secondary" id="btn-detail" data-i18n>Detailed tables and data tools (English)</button></div>
   </section>
 
   <!-- ================= CLINICIAN ================= -->
@@ -1526,6 +1606,13 @@ const Report = (function () {
     rows.push({ label: 'Pain during the session (0 to 10)', top: 'pain', unit: '', dec: 0, better: 'down', ref: 'Self-reported numeric rating scale.', flag: null, mcid: null, mcidText: '' });
     return rows;
   }
+  /* numeric reference values for this person (null where no published norm applies) */
+  function cutoffs(p) {
+    const a5 = band5(p.age), a10 = band10(p.age), sx = p.sex === 'M' || p.sex === 'F' ? p.sex : null;
+    return { cst30: sx && a5 >= 0 ? NORM.cst30[sx][a5] : null, five: a10 >= 0 ? NORM.five[a10] : null, fiveFall: 15, tug: 12,
+      tugMean: sx && a10 >= 0 ? NORM.tug[sx][a10] : null, tmstMean: sx && a5 >= 0 ? NORM.tmstMean[sx][a5] : null, tmstInd: sx && a5 >= 0 ? NORM.tmstIndep[sx][a5] : null,
+      older: older(p), ageKnown: num(p.age), sexKnown: !!sx };
+  }
   const people = () => { try { return JSON.parse(localStorage.getItem('irehab.people')) || {}; } catch (e) { return {}; } };
   const person = (pid) => people()[pid] || {};
   function setPerson(pid, info) { const all = people(); all[pid] = info; try { localStorage.setItem('irehab.people', JSON.stringify(all)); } catch (e) { /* optional */ } }
@@ -1791,9 +1878,363 @@ const Report = (function () {
 
   function rateLatest(pid, ex, key, v) { const s = sessions(pid, ex), last = s[s.length - 1]; if (last) update(last.id, pid, { [key]: v }); }
   const scoreOf = (ex, m) => overall(DEF[ex].score(m).d);   // 0 to 100 movement-quality score for one session
-  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest, rate: update, bodyMap, latestRegions, scoreOf, band };
+  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest, rate: update, cutoffs, bodyMap, latestRegions, scoreOf, band };
 })();
 if (typeof module !== 'undefined') module.exports = Report;
+
+/* Clinician report: turns a participant's sessions into a clinical reading.
+   analyze() is pure (testable in node): domains with status against age norms or cut-offs, change against
+   published minimal clinically important differences (MCID), STEADI-based fall-risk screen, movement findings
+   with the evidence behind them and how persistent they are, patient-reported effort and pain, adherence, and data quality.
+   render() draws it. Wording is for clinicians and stays in English. Considerations are prompts, not prescriptions. */
+const Clinic = (function () {
+  const R = typeof Report !== 'undefined' ? Report : require('./report.js');
+  const num = (v) => typeof v === 'number' && isFinite(v);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const fx = (v, d) => (num(v) ? (+v).toFixed(d || 0) : 'n/a');
+  const DAY = 864e5;
+  const dstr = (t) => new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+
+  /* ---------- domains: one primary standard measure each ---------- */
+  const DOMAINS = [
+    { key: 'strength', ex: 'sts', title: 'Lower-limb strength and transfers', measure: '30-Second Chair Stand', short: '30CST', unit: ' stands', dec: 0, better: 1, mcid: 2, mcidText: 'MCID 2 stands, Wright 2011',
+      value: (m) => m.cst30 },
+    { key: 'mobility', ex: 'tug', title: 'Functional mobility', measure: 'Timed Up and Go (best valid)', short: 'TUG', unit: ' s', dec: 1, better: -1, mcid: 2.9, mcidText: 'MDC 2.9 s, Flansbjer 2005',
+      value: (m) => m.best },
+    { key: 'balance', ex: 'balance', title: 'Static balance', measure: '4-Stage Balance Test', short: '4-Stage', unit: ' of 4', dec: 0, better: 1, mcid: 1, mcidText: 'threshold one full stage',
+      value: (m) => m.stage },
+    { key: 'endurance', ex: 'march', title: 'Endurance and stepping', measure: '2-Minute Step Test', short: '2MST', unit: ' steps', dec: 0, better: 1, mcid: null, mcidText: 'no MCID established',
+      value: (m) => (m.tmstFull ? m.tmst : NaN) },
+    { key: 'upper', ex: 'shoulder', title: 'Shoulder range of motion', measure: 'Active abduction, more limited side', short: 'Abduction', unit: '°', dec: 0, better: 1, mcid: 10, mcidText: 'threshold 10°, the camera method error',
+      value: (m) => (num(m.romL) && num(m.romR) ? Math.min(m.romL, m.romR) : num(m.romL) ? m.romL : m.romR) },
+  ];
+  const SIDE = (m) => (num(m.romL) && num(m.romR) ? (m.romL < m.romR ? 'left' : 'right') : '');
+
+  /* status of the latest value: 'good' | 'watch' | 'concern' | 'none', with the reason */
+  function status(d, m, c, rec) {
+    const v = d.value(m);
+    if (d.key === 'strength') {
+      if (!num(v)) return ['none', num(m.reps) ? 'Session under 30 s, so no 30CST score' : 'Not measured'];
+      if (c.cst30) return v >= c.cst30 ? ['good', 'At or above the age and sex average (below average is under ' + c.cst30 + ')'] : ['concern', 'Below average for age and sex (under ' + c.cst30 + ')'];
+      return [scoreBand(d, m), 'No age and sex norm applied' + (c.ageKnown && c.sexKnown ? ' at this age' : ': enter age and sex')];
+    }
+    if (d.key === 'mobility') {
+      if (!num(v)) return ['none', num(m.bestAny) ? 'No trial passed the validity checks' : 'Not measured'];
+      if (num(m.spread) && m.spread > 20) return ['watch', 'Trials differ by ' + fx(m.spread) + '%: repeat before interpreting'];
+      const go = num(m.bestGo), t = go ? m.bestGo : v, basis = go ? fx(t, 1) + ' s from "Go" (stopwatch equivalent)' : fx(t, 1) + ' s movement time (no "Go" timing)';
+      if (c.older) return t < 12 ? ['good', basis + ' is under the 12 s fall-risk cut-off'] : ['concern', basis + ' is at or above the 12 s fall-risk cut-off'];
+      return [t < 10 ? 'good' : t < 12 ? 'watch' : 'concern', basis + '; the 12 s cut-off was set in adults 60 and over'];
+    }
+    if (d.key === 'balance') {
+      if (!num(v)) return ['none', 'Not measured'];
+      return v >= 3 ? ['good', v >= 4 ? 'All four stages held' : 'Tandem stance held 10 s; single leg not yet'] : ['concern', 'Tandem stance not held 10 s (STEADI fall-risk sign)'];
+    }
+    if (d.key === 'endurance') {
+      if (!num(v)) return ['none', num(m.steps) ? 'Session under 2 minutes, so no 2MST score' : 'Not measured'];
+      if (c.tmstInd) return v >= c.tmstInd ? ['good', 'At or above the independence threshold (' + c.tmstInd + ')'] : v >= c.tmstInd * 0.8 ? ['watch', 'Below the independence threshold (' + c.tmstInd + ')'] : ['concern', 'Well below the independence threshold (' + c.tmstInd + ')'];
+      return [scoreBand(d, m), 'No age and sex norm applied'];
+    }
+    if (!num(v)) return ['none', 'Not measured'];
+    return v >= 150 ? ['good', 'Near full range on both sides (full is about 180°)'] : v >= 120 ? ['watch', 'Reduced range on the ' + SIDE(m) + ' side'] : ['concern', 'Below 120° on the ' + SIDE(m) + ' side: overhead reach is usually limited'];
+  }
+  function scoreBand(d, m) { const s = R.scoreOf(d.ex, m); return !num(s) ? 'none' : s >= 75 ? 'good' : s >= 50 ? 'watch' : 'concern'; }
+
+  /* change from the first to the latest valid value, judged against the MCID */
+  function trend(d, recs) {
+    const pts = recs.map((r) => ({ t: r.t, v: d.value(r.m), rec: r })).filter((p) => num(p.v));
+    if (!pts.length) return { pts, verdict: 'none', text: 'No valid score yet' };
+    if (pts.length < 2) return { pts, verdict: 'baseline', text: 'Baseline only' };
+    const a = pts[0].v, b = pts[pts.length - 1].v, delta = b - a, good = delta * d.better > 0;
+    let verdict, text;
+    if (!delta) { verdict = 'stable'; text = 'No change'; }
+    else if (d.mcid && Math.abs(delta) >= d.mcid) { verdict = good ? 'improved' : 'declined'; text = (good ? 'Meaningful improvement' : 'Meaningful decline') + ' (' + d.mcidText + ')'; }
+    else { verdict = good ? 'up' : 'down'; text = (good ? 'Better' : 'Worse') + (d.mcid ? ', within ' + d.mcidText : ' (' + d.mcidText + ')'); }
+    // direction over the last three valid sessions, to show where things are heading now
+    const last3 = pts.slice(-3), recent = last3.length === 3 ? (last3[2].v - last3[0].v) * d.better : NaN;
+    return { pts, a, b, delta, verdict, text, recent };
+  }
+
+  /* ---------- movement findings: rules on the latest session, with persistence over the last three ---------- */
+  const RULES = [
+    // sit to stand
+    ['sts', 'limit', (m) => m.handsPct >= 30, (m) => 'Pushes on the thighs to rise in ' + fx(m.handsPct) + '% of stands: upper-limb compensation, suggesting reduced hip and knee extensor strength.',
+      'Practise rising with arms crossed from a higher seat, lowering it as strength improves; hip and knee extensor strengthening.'],
+    ['sts', 'work', (m) => m.handsPct === 0 && m.reps >= 5, () => 'Rises without using the hands.', ''],
+    ['sts', 'limit', (m) => m.uprightPct < 80, (m) => 'Does not reach full hip and knee extension at the top in ' + fx(100 - m.uprightPct) + '% of stands.',
+      'Cue "stand tall" at the top; check hip extensor strength and hip flexor length.'],
+    ['sts', 'limit', (m) => m.controlledPct < 70, (m) => 'Drops into the chair in ' + fx(100 - m.controlledPct) + '% of sits: reduced eccentric control.',
+      'Slow, controlled lowering (about 3 s); eccentric quadriceps work.'],
+    ['sts', 'work', (m) => m.controlledPct >= 90 && m.reps >= 5, (m) => 'Controlled lowering in ' + fx(m.controlledPct) + '% of sits.', ''],
+    ['sts', 'limit', (m) => m.slowing >= 20 || m.rests >= 1, (m) => fatigue(m, 'stands'), 'Build muscular endurance: more sets at a sub-maximal effort.'],
+    // shoulder
+    ['shoulder', 'limit', (m) => m.romDiff >= 15, (m) => 'Abduction asymmetry: left ' + fx(m.romL) + '°, right ' + fx(m.romR) + '° (' + fx(m.romDiff) + '° less on the ' + SIDE(m) + ').',
+      'Target the limited side with active-assisted then active range work; check pain and scapular control on that side.'],
+    ['shoulder', 'work', (m) => Math.min(m.romL, m.romR) >= 150, (m) => 'Active abduction ' + fx(Math.min(m.romL, m.romR)) + '° or more on both sides.', ''],
+    ['shoulder', 'limit', (m) => m.lean >= 10, (m) => 'Trunk leans up to ' + fx(m.lean) + '° while lifting: likely compensating for limited range or strength.',
+      'Cue an upright trunk (a mirror helps); work within the range reachable without leaning.'],
+    ['shoulder', 'limit', (m) => m.goodPct < 60 && m.reps >= 3, (m) => 'Only ' + fx(m.goodPct) + '% of raises met the form criteria (height, straight elbows, upright trunk).', 'Review technique with the patient; reduce repetitions to keep quality.'],
+    ['shoulder', 'limit', (m) => m.slowing >= 25 || m.rests >= 1, (m) => fatigue(m, 'raises'), 'Shorter sets with rests; build repetitions gradually.'],
+    // marching
+    ['march', 'limit', (m) => m.asym >= 10, (m) => 'Knee-lift asymmetry: left ' + fx(m.liftL) + '°, right ' + fx(m.liftR) + '° of hip flexion.',
+      'Check hip flexor strength and single-leg stance on the lower side.'],
+    ['march', 'limit', (m) => m.lean >= 10, (m) => 'Trunk sways up to ' + fx(m.lean) + '° while stepping: possible reduced single-leg stability.', 'Add single-leg stance work with support nearby.'],
+    ['march', 'work', (m) => m.targetPct >= 80, (m) => fx(m.targetPct) + '% of steps reach the target knee height.', ''],
+    ['march', 'limit', (m) => m.slowing >= 20 || m.rests >= 1, (m) => fatigue(m, 'steps'), 'Build aerobic tolerance gradually: longer bouts at a comfortable pace.'],
+    // Timed Up and Go
+    ['tug', 'limit', (m) => m.turn >= 2.5, (m) => 'Slow 180° turn (' + fx(m.turn, 1) + ' s). Turning difficulty is associated with falls.', 'Include turning practice with small steps in gait training.'],
+    ['tug', 'limit', (m) => m.rise >= 1.5, (m) => 'Slow rise phase within the TUG (' + fx(m.rise, 1) + ' s), consistent with the sit-to-stand findings.', ''],
+    ['tug', 'work', (m) => num(m.best) && m.best < 10, (m) => 'TUG under 10 s (' + fx(m.best, 1) + ' s).', ''],
+    // balance
+    ['balance', 'limit', (m) => num(m.holdOne) && m.holdOne < 5, (m) => 'Single-leg stance ' + fx(m.holdOne, 1) + ' s: under 5 s is associated with injurious falls (Vellas 1997).',
+      'Progressive static balance work (Otago-style), with support within reach.'],
+    ['balance', 'work', (m) => m.holdOne >= 10, (m) => 'Single-leg stance held ' + fx(m.holdOne, 1) + ' s.', ''],
+    ['balance', 'limit', (m) => m.rms >= 2, (m) => 'High postural sway during holds (RMS ' + fx(m.rms, 1) + '°).', 'Narrow the base gradually; add a fixed visual target.'],
+  ];
+  function fatigue(m, what) {
+    const parts = [];
+    if (m.slowing >= 15) parts.push('pace slowed ' + fx(m.slowing) + '% from the first to the last third of ' + what);
+    if (m.rests >= 1) parts.push('rested ' + m.rests + (m.rests === 1 ? ' time' : ' times') + ' for over 3 s');
+    return (parts.join('; ') || 'signs of fatigue') .replace(/^./, (c) => c.toUpperCase()) + ': limited muscular endurance.';
+  }
+
+  /* ---------- the reading ---------- */
+  function analyze(pid, opts) {
+    const now = (opts && opts.now) || Date.now(), P = R.person(pid), c = R.cutoffs(P), all = R.sessions(pid);
+    const out = { pid, person: P, cut: c, n: all.length, example: all.some((r) => r.sample) };
+    if (!all.length) return out;
+    const first = all[0], last = all[all.length - 1];
+    const days = new Set(all.map((r) => new Date(r.t).toDateString()));
+    const within = (k) => new Set(all.filter((r) => now - new Date(r.t).getTime() < k * DAY).map((r) => new Date(r.t).toDateString())).size;
+    out.period = { first: first.t, last: last.t, spanDays: Math.max(1, Math.round((new Date(last.t) - new Date(first.t)) / DAY) + 1), activeDays: days.size, active7: within(7), active28: within(28),
+      sinceLast: Math.floor((now - new Date(last.t).getTime()) / DAY) };
+    out.calendar = [];
+    for (let i = 27; i >= 0; i--) { const d = new Date(now - i * DAY).toDateString(); out.calendar.push({ day: d, n: all.filter((r) => new Date(r.t).toDateString() === d).length }); }
+
+    out.domains = DOMAINS.map((d) => {
+      const recs = R.sessions(pid, d.ex);
+      if (!recs.length) return { d, recs, st: ['none', 'Not done yet'], tr: { pts: [], verdict: 'none', text: 'Not done yet' } };
+      const cur = recs[recs.length - 1];
+      return { d, recs, cur, st: status(d, cur.m, c, cur), tr: trend(d, recs) };
+    });
+
+    const nm = (x) => (x.d.key === 'upper' && x.cur ? SIDE(x.cur.m) + ' shoulder abduction' : x.d.short);
+    const cap = (s) => s.replace(/^./, (q) => q.toUpperCase());
+    const cv = (x) => { const m = x.cur.m; return x.d.key === 'mobility' && num(m.bestGo) ? fx(m.bestGo, 1) + ' s from "Go"' : fx(x.d.value(m), x.d.dec) + x.d.unit; };
+    // findings, newest session first; persistence = how many of the last three sessions show the same sign
+    out.findings = [];
+    for (const dom of out.domains) {
+      if (!dom.cur) continue;
+      const recent = dom.recs.slice(-3);
+      for (const [ex, kind, cond, text, consider] of RULES) {
+        if (ex !== dom.d.ex) continue;
+        const m = dom.cur.m;
+        let hit = false; try { hit = !!cond(m); } catch (e) { hit = false; }
+        if (!hit) continue;
+        const seen = recent.filter((r) => { try { return !!cond(r.m); } catch (e) { return false; } }).length;
+        out.findings.push({ domain: dom.d.key, ex, kind, text: text(m), consider, seen, of: recent.length });
+      }
+      // add the standard-measure reading itself as a finding
+      if (dom.st[0] === 'concern') out.findings.push({ domain: dom.d.key, ex: dom.d.ex, kind: 'limit', primary: true, text: (dom.d.key === 'mobility' ? 'Timed Up and Go ' + cv(dom) + ': at or above the 12 s fall-risk cut-off (STEADI).' : dom.d.measure + ' ' + cv(dom) + ': ' + dom.st[1].replace(/^./, (x) => x.toLowerCase()) + '.'), consider: domainConsider(dom.d.key), seen: 0, of: 0 });
+      if (dom.tr.verdict === 'improved') out.findings.push({ domain: dom.d.key, ex: dom.d.ex, kind: 'work', primary: true, text: cap(nm(dom)) + ' ' + fx(dom.tr.a, dom.d.dec) + ' → ' + fx(dom.tr.b, dom.d.dec) + dom.d.unit + ': meaningful improvement (' + dom.d.mcidText + ').', consider: '', seen: 0, of: 0 });
+      if (dom.tr.verdict === 'declined') out.findings.push({ domain: dom.d.key, ex: dom.d.ex, kind: 'limit', primary: true, text: cap(nm(dom)) + ' ' + fx(dom.tr.a, dom.d.dec) + ' → ' + fx(dom.tr.b, dom.d.dec) + dom.d.unit + ': meaningful decline (' + dom.d.mcidText + ').', consider: 'Review for intercurrent illness, pain, medication change or a fall.', seen: 0, of: 0 });
+    }
+    const rank = (f) => (f.primary ? 0 : 1) * 10 - f.seen;
+    out.working = out.findings.filter((f) => f.kind === 'work').sort((a, b) => rank(a) - rank(b));
+    out.limits = out.findings.filter((f) => f.kind === 'limit').sort((a, b) => rank(a) - rank(b));
+
+    // fall-risk screen (CDC STEADI strength, gait and balance tests; plus Buatois 5xSTS)
+    const L = (ex) => { const s = R.sessions(pid, ex); return s.length ? s[s.length - 1].m : null; };
+    const sts = L('sts'), tug = L('tug'), bal = L('balance');
+    const tugV = tug ? (num(tug.bestGo) ? tug.bestGo : tug.best) : NaN;
+    out.fall = [
+      { tag: 'TUG', name: 'Timed Up and Go 12 s or more', test: 'STEADI gait', val: num(tugV) ? fx(tugV, 1) + ' s' + (num(tug.bestGo) ? ' from "Go"' : ' movement time') : 'n/a', pos: num(tugV) ? tugV >= 12 : null },
+      { tag: '30CST', name: '30-Second Chair Stand below age norm', test: 'STEADI strength', val: sts && num(sts.cst30) ? sts.cst30 + (c.cst30 ? ' (norm ' + c.cst30 + '+)' : '') : 'n/a', pos: sts && num(sts.cst30) && c.cst30 ? sts.cst30 < c.cst30 : null },
+      { tag: 'tandem stance', name: 'Tandem stance under 10 s', test: 'STEADI balance', val: bal ? (num(bal.holdTandem) ? fx(bal.holdTandem, 1) + ' s' : 'not reached') : 'n/a', pos: bal ? !(bal.stage >= 3) : null },
+      { tag: '5xSTS', name: 'Five Times Sit to Stand over 15 s', test: 'Buatois 2008', val: sts && num(sts.fiveStand) ? fx(sts.fiveStand, 1) + ' s' : 'n/a', pos: sts && num(sts.fiveStand) ? sts.fiveStand > 15 : null },
+    ];
+    out.fallPos = out.fall.filter((x) => x.pos === true).length; out.fallKnown = out.fall.filter((x) => x.pos !== null).length;
+
+    // patient-reported
+    const rated = all.filter((r) => num(r.pain) || num(r.rpe));
+    const byDay = {}; for (const r of rated) { const k = new Date(r.t).toDateString(); (byDay[k] = byDay[k] || { t: r.t, pain: [], rpe: [] }); if (num(r.pain)) byDay[k].pain.push(r.pain); if (num(r.rpe)) byDay[k].rpe.push(r.rpe); }
+    const mx = (a) => (a.length ? Math.max(...a) : NaN);
+    out.pro = Object.values(byDay).sort((a, b) => a.t.localeCompare(b.t)).map((d) => ({ t: d.t, pain: mx(d.pain), rpe: mx(d.rpe) }));
+    const pr = out.pro, p0 = pr.find((x) => num(x.pain)), pN = [...pr].reverse().find((x) => num(x.pain)), eN = [...pr].reverse().find((x) => num(x.rpe));
+    out.proNotes = [];
+    if (pN && pN.pain >= 4) out.proNotes.push({ kind: 'limit', text: 'Pain ' + pN.pain + '/10 at the latest session.', consider: 'Review the pain response before progressing load.' });
+    if (p0 && pN && p0 !== pN && pN.pain - p0.pain >= 2) out.proNotes.push({ kind: 'limit', text: 'Pain up from ' + p0.pain + ' to ' + pN.pain + '/10 since the first session.', consider: 'Check for flare-up or over-loading.' });
+    if (p0 && pN && p0 !== pN && p0.pain - pN.pain >= 2) out.proNotes.push({ kind: 'work', text: 'Pain down from ' + p0.pain + ' to ' + pN.pain + '/10 since the first session.' });
+    if (eN && eN.rpe >= 7) out.proNotes.push({ kind: 'limit', text: 'Rated the latest session very hard (' + eN.rpe + '/10 Borg CR10).', consider: 'Consider reducing volume or intensity.' });
+    for (const n of out.proNotes) (n.kind === 'work' ? out.working : out.limits).push(Object.assign({ domain: 'pro', seen: 0, of: 0, primary: n.kind === 'limit' }, n));
+    out.working.sort((a, b) => rank(a) - rank(b)); out.limits.sort((a, b) => rank(a) - rank(b));
+    if (!rated.length) out.proMissing = true;
+
+    // data quality of each exercise's latest session
+    out.quality = [];
+    for (const dom of out.domains) {
+      const r = dom.cur; if (!r) continue;
+      const q = [];
+      if (r.posWeak) q.push('started without a clear camera view');
+      if (num(r.track) && r.track < 80) q.push('tracking usable in ' + fx(r.track) + '% of frames');
+      if (num(r.fps) && r.fps < 15) q.push(fx(r.fps) + ' frames/s' + (r.fps < 10 ? ': timing unreliable' : ''));
+      if (r.stalls > 0) q.push(r.stalls + ' frame stall' + (r.stalls > 1 ? 's' : ''));
+      if (dom.d.ex === 'tug' && num(r.m.trials) && r.m.validTrials < r.m.trials) q.push(r.m.validTrials + ' of ' + r.m.trials + ' trials valid');
+      if (dom.d.ex === 'march' && !r.m.tmstFull) q.push('under 2 minutes');
+      out.quality.push({ domain: dom.d.key, title: dom.d.title, ok: !q.length, notes: q });
+    }
+
+    // plain-language summary and the overall picture
+    const imp = out.domains.filter((x) => x.tr.verdict === 'improved'), dec = out.domains.filter((x) => x.tr.verdict === 'declined');
+    const conc = out.domains.filter((x) => x.st[0] === 'concern');
+    const s = [];
+    s.push(days.size + ' session day' + (days.size > 1 ? 's' : '') + ' (' + all.length + ' exercise' + (all.length > 1 ? 's' : '') + ') from ' + dstr(first.t) + ' to ' + dstr(last.t) + '; active on ' + out.period.active7 + ' of the last 7 days.');
+    if (imp.length) s.push('Meaningful improvement in ' + list(imp.map((x) => nm(x) + ' (' + fx(x.tr.a, x.d.dec) + ' → ' + fx(x.tr.b, x.d.dec) + x.d.unit + ')')) + '.');
+    if (dec.length) s.push('Meaningful decline in ' + list(dec.map((x) => nm(x) + ' (' + fx(x.tr.a, x.d.dec) + ' → ' + fx(x.tr.b, x.d.dec) + x.d.unit + ')')) + '.');
+    if (conc.length) s.push('Below norm or cut-off: ' + list(conc.map((x) => nm(x) + ' (' + cv(x) + ')')) + '.');
+    else if (out.domains.some((x) => x.st[0] === 'good')) s.push('No measure is below its norm or cut-off.');
+    if (out.fallKnown) s.push('Fall-risk screen: ' + out.fallPos + ' of ' + out.fallKnown + ' indicators positive' + (out.fallPos ? ' (' + list(out.fall.filter((x) => x.pos).map((x) => x.tag)) + ')' : '') + '.');
+    out.summary = s;
+    out.overall = dec.length ? 'declining' : imp.length && !conc.length ? 'improving' : imp.length ? 'improving, with limitations' : all.length < 2 ? 'baseline' : 'stable';
+    out.plan = planHint(out, eN, pN);
+    return out;
+  }
+  const list = (a) => (a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
+  function domainConsider(k) {
+    return { strength: 'Progressive lower-limb strengthening; functional sit-to-stand practice.', mobility: 'Gait and balance training; review walking aid and home safety (STEADI).',
+      balance: 'Progressive static and dynamic balance training (for example the Otago programme).', endurance: 'Graded aerobic activity such as walking or stepping bouts.',
+      upper: 'Active and active-assisted range of motion on the limited side.' }[k] || '';
+  }
+  function planHint(o, eN, pN) {
+    if (!o.n) return null;
+    if (o.period.sinceLast > 7) return { kind: 'review', text: 'No session for ' + o.period.sinceLast + ' days. Check in about adherence and barriers.' };
+    if (o.domains.some((x) => x.tr.verdict === 'declined') || (pN && pN.pain >= 4)) return { kind: 'review', text: 'Review before progressing: ' + (pN && pN.pain >= 4 ? 'pain is ' + pN.pain + '/10' : 'a measure has declined') + '.' };
+    if (o.n >= 3 && eN && eN.rpe <= 4 && o.domains.some((x) => ['improved', 'up'].includes(x.tr.verdict))) return { kind: 'progress', text: 'Improving with moderate effort (' + eN.rpe + '/10): the programme may be ready to progress.' };
+    if (eN && eN.rpe >= 7) return { kind: 'review', text: 'Effort is very high (' + eN.rpe + '/10): consider easing the dose.' };
+    return { kind: 'continue', text: 'Continue the current programme and reassess.' };
+  }
+
+  /* ---------- drawing ---------- */
+  const ST = { good: ['good', 'Within norm'], watch: ['watch', 'Borderline'], concern: ['concern', 'Below norm or cut-off'], none: ['none', 'No score'] };
+  const TR = { improved: ['up', '▲'], up: ['up', '▲'], declined: ['down', '▼'], down: ['down', '▼'], stable: ['flat', '■'], baseline: ['flat', '•'], none: ['flat', ''] };
+  const OV = { improving: 'good', 'improving, with limitations': 'watch', stable: 'none', baseline: 'none', declining: 'concern' };
+
+  /* small line chart: one or two series, an optional reference line, first and latest values labelled */
+  function chart(series, opts) {
+    const W = 320, H = 132, pl = 34, pr = 40, pt = 14, pb = 22;
+    const vals = series.flatMap((s) => s.pts.map((p) => p.v)).concat(num(opts.ref) ? [opts.ref] : []).concat(opts.lo != null ? [opts.lo] : []).concat(opts.hi != null ? [opts.hi] : []);
+    if (!vals.length) return '';
+    let lo = Math.min(...vals), hi = Math.max(...vals); if (hi - lo < 1e-9) { lo -= 1; hi += 1; } const padv = (hi - lo) * 0.12; lo -= padv; hi += padv;
+    if (opts.lo != null) lo = Math.min(lo, opts.lo); if (opts.hi != null) hi = Math.max(hi, opts.hi);
+    const ts = series.flatMap((s) => s.pts.map((p) => new Date(p.t).getTime())), t0 = Math.min(...ts), t1 = Math.max(...ts);
+    const X = (t) => (t1 > t0 ? pl + (new Date(t).getTime() - t0) / (t1 - t0) * (W - pl - pr) : (pl + W - pr) / 2), Y = (v) => pt + (hi - v) / (hi - lo) * (H - pt - pb);
+    let g = '<svg class="cr-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(opts.label) + '">';
+    const raw = (hi - lo) / 3, mag = Math.pow(10, Math.floor(Math.log10(raw))), step = [1, 2, 2.5, 5, 10].map((k) => k * mag).find((s) => s >= raw) || raw;
+    const ticks = []; for (let q = Math.ceil(lo / step) * step; q <= hi + 1e-9; q += step) ticks.push(q);
+    for (const q of ticks) g += '<line class="grid" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + Y(q).toFixed(1) + '" y2="' + Y(q).toFixed(1) + '"/><text class="ax" x="' + (pl - 6) + '" y="' + (Y(q) + 4).toFixed(1) + '" text-anchor="end">' + fx(q, step < 1 ? 1 : 0) + '</text>';
+    if (num(opts.ref)) g += '<line class="ref" x1="' + pl + '" x2="' + (W - pr) + '" y1="' + Y(opts.ref).toFixed(1) + '" y2="' + Y(opts.ref).toFixed(1) + '"/><text class="reft" x="' + (pl + 4) + '" y="' + (Y(opts.ref) - 4).toFixed(1) + '">' + esc(opts.refLabel || '') + '</text>';
+    g += '<text class="ax" x="' + pl + '" y="' + (H - 6) + '">' + esc(dstr(t0)) + '</text>' + (t1 > t0 ? '<text class="ax" x="' + (W - pr) + '" y="' + (H - 6) + '" text-anchor="end">' + esc(dstr(t1)) + '</text>' : '');
+    series.forEach((s, i) => {
+      if (!s.pts.length) return;
+      const cls = 's' + i;
+      if (s.pts.length > 1) g += '<polyline class="ln ' + cls + '" points="' + s.pts.map((p) => X(p.t).toFixed(1) + ',' + Y(p.v).toFixed(1)).join(' ') + '"/>';
+      for (const p of s.pts) g += '<circle class="dot ' + cls + '" cx="' + X(p.t).toFixed(1) + '" cy="' + Y(p.v).toFixed(1) + '" r="4"><title>' + esc(dstr(p.t) + ': ' + (s.name ? s.name + ' ' : '') + fx(p.v, opts.dec) + (opts.unit || '')) + '</title></circle>';
+      // latest value at the line's end; with two lines, the higher one is labelled above and the lower one below
+      const lp = s.pts[s.pts.length - 1], other = series[1 - i] && series[1 - i].pts[series[1 - i].pts.length - 1];
+      const dy = series.length > 1 && other ? (lp.v >= other.v ? -7 : 13) : 4;
+      g += '<text class="vl ' + cls + '" x="' + (X(lp.t) + 7).toFixed(1) + '" y="' + (Y(lp.v) + dy).toFixed(1) + '">' + esc(fx(lp.v, opts.dec)) + '</text>';
+    });
+    return g + '</svg>';
+  }
+
+  function render(el, pid, opts) {
+    const o = analyze(pid, opts);
+    const P = o.person, who = [num(P.age) ? 'Age ' + P.age : 'Age not entered', P.sex === 'F' ? 'female' : P.sex === 'M' ? 'male' : 'sex not entered'].join(', ');
+    let h = '<div class="cr" lang="en" dir="ltr">';
+    h += '<header class="cr-head"><div><p class="cr-kicker">Clinician report' + (o.example ? ' · example data (invented)' : '') + '</p><h1>' + esc(pid) + '</h1><p class="cr-sub">' + esc(who) + '</p></div>' +
+      (o.n ? '<span class="cr-badge ' + OV[o.overall] + '">' + esc(o.overall.replace(/^./, (c) => c.toUpperCase())) + '</span>' : '') + '</header>';
+    if (!o.n) { el.innerHTML = h + '<p class="cr-empty">No sessions yet. Results appear here after the first exercise.</p></div>'; return o; }
+
+    // summary and the suggested next step
+    h += '<section class="cr-card cr-summary"><h2>Summary</h2><ul>' + o.summary.map((s) => '<li>' + esc(s) + '</li>').join('') + '</ul>' +
+      (o.plan ? '<p class="cr-plan ' + o.plan.kind + '"><b>' + { progress: 'Consider progressing', review: 'Review', continue: 'Continue' }[o.plan.kind] + '.</b> ' + esc(o.plan.text) + '</p>' : '') + '</section>';
+
+    // priorities and what is working
+    const item = (f) => '<li class="' + f.kind + '"><span class="cr-ic" aria-hidden="true">' + (f.kind === 'work' ? '✓' : '!') + '</span><div><p>' + esc(f.text) +
+      (f.of >= 2 ? ' <span class="cr-seen' + (f.seen === f.of ? ' firm' : '') + '">' + (f.seen === f.of ? 'consistent, ' : '') + f.seen + ' of last ' + f.of + ' sessions</span>' : '') + '</p>' +
+      (f.consider ? '<p class="cr-con"><span>Consider:</span> ' + esc(f.consider) + '</p>' : '') + '</div></li>';
+    h += '<div class="cr-two">';
+    h += '<section class="cr-card"><h2>Needs attention</h2>' + (o.limits.length ? '<ul class="cr-list">' + o.limits.slice(0, 6).map(item).join('') + '</ul>' + (o.limits.length > 6 ? '<p class="cr-more">' + (o.limits.length - 6) + ' more in the sections below.</p>' : '') : '<p class="cr-none">Nothing flagged in the latest sessions.</p>') + '</section>';
+    h += '<section class="cr-card"><h2>What is working</h2>' + (o.working.length ? '<ul class="cr-list">' + o.working.slice(0, 6).map(item).join('') + '</ul>' : '<p class="cr-none">No clear strengths yet. More sessions will show the pattern.</p>') + '</section>';
+    h += '</div>';
+
+    // fall-risk screen
+    h += '<section class="cr-card"><h2>Fall-risk screen <span class="cr-h2s">' + o.fallPos + ' of ' + o.fallKnown + ' positive</span></h2><ul class="cr-fall">' +
+      o.fall.map((x) => '<li class="' + (x.pos === true ? 'pos' : x.pos === false ? 'neg' : 'na') + '"><span class="cr-dot" aria-hidden="true">' + (x.pos === true ? '!' : x.pos === false ? '✓' : '–') + '</span><span class="cr-fn">' + esc(x.name) + '<small>' + esc(x.test) + '</small></span><span class="cr-fv">' + esc(x.val) + '</span></li>').join('') +
+      '</ul><p class="cr-note">Screening indicators from CDC STEADI and Buatois 2008, set in adults 60 and over' + (o.cut.older ? '' : ' (this person is ' + (o.cut.ageKnown ? 'under 60' : 'of unknown age') + ', so interpret with care)') + '. STEADI also asks about falls in the past year, unsteadiness and fear of falling, which this app does not collect.</p></section>';
+
+    // one card per function area
+    h += '<h2 class="cr-sec">Function by area</h2><div class="cr-grid">';
+    for (const dom of o.domains) {
+      const d = dom.d, st = ST[dom.st[0]], tr = TR[dom.tr.verdict] || TR.none, cur = dom.cur;
+      h += '<section class="cr-card cr-dom" data-domain="' + d.key + '"><div class="cr-dh"><h3>' + esc(d.title) + '</h3><span class="cr-chip ' + st[0] + '">' + st[1] + '</span></div>';
+      if (!cur) { h += '<p class="cr-none">Not done yet.</p></section>'; continue; }
+      const v = d.value(cur.m);
+      h += '<div class="cr-kpi"><div><span class="cr-mn">' + esc(d.measure) + '</span><span class="cr-big">' + (num(v) ? fx(v, d.dec) + '<small>' + esc(d.unit) + '</small>' : '<small>no score</small>') + '</span></div>' +
+        (dom.tr.pts.length > 1 ? '<div class="cr-delta ' + tr[0] + '"><b>' + tr[1] + ' ' + (dom.tr.delta > 0 ? '+' : dom.tr.delta < 0 ? '−' : '') + fx(Math.abs(dom.tr.delta), d.dec) + esc(d.unit.trim() === 'of 4' ? '' : d.unit) + '</b><span>since ' + esc(dstr(dom.tr.pts[0].t)) + '</span></div>' : '') + '</div>';
+      h += '<p class="cr-why">' + esc(dom.st[1]) + '. ' + esc(dom.tr.text) + '.</p>';
+      // chart of the primary measure (both sides for the shoulder)
+      const c = o.cut;
+      if (d.key === 'upper') h += chart([{ name: 'L', pts: dom.recs.filter((r) => num(r.m.romL)).map((r) => ({ t: r.t, v: r.m.romL })) }, { name: 'R', pts: dom.recs.filter((r) => num(r.m.romR)).map((r) => ({ t: r.t, v: r.m.romR })) }], { dec: 0, unit: '°', ref: 150, refLabel: '150°', label: 'Active abduction by session, left and right' });
+      if (d.key === 'upper') h += '<p class="cr-legend"><span><i class="s0"></i>Left</span><span><i class="s1"></i>Right</span></p>';
+      else if (d.key === 'mobility' && dom.recs.some((r) => num(r.m.bestGo))) {
+        h += chart([{ name: 'Move', pts: dom.tr.pts.map((p) => ({ t: p.t, v: p.v })) }, { name: 'Go', pts: dom.recs.filter((r) => num(r.m.bestGo)).map((r) => ({ t: r.t, v: r.m.bestGo })) }], { dec: 1, unit: ' s', ref: 12, refLabel: '12 s cut-off (from "Go")', label: 'Timed Up and Go by session' }) +
+          '<p class="cr-legend"><span><i class="s0"></i>Movement time</span><span><i class="s1"></i>From "Go" (stopwatch equivalent)</span></p>';
+      } else if (dom.tr.pts.length) {
+        const ref = d.key === 'strength' ? c.cst30 : d.key === 'mobility' ? 12 : d.key === 'balance' ? 3 : d.key === 'endurance' ? c.tmstInd : null;
+        const rl = d.key === 'strength' ? 'age and sex norm' : d.key === 'mobility' ? '12 s cut-off' : d.key === 'balance' ? 'tandem held (STEADI)' : 'independence threshold';
+        h += chart([{ pts: dom.tr.pts }], { dec: d.dec, unit: d.unit, ref, refLabel: num(ref) ? rl : '', label: d.measure + ' by session', lo: d.key === 'balance' ? 0 : null, hi: d.key === 'balance' ? 4 : null });
+      }
+      // supporting measures from the latest session
+      const sup = support(d.ex, cur.m);
+      if (sup.length) h += '<dl class="cr-sup">' + sup.map(([k, val]) => '<div><dt>' + esc(k) + '</dt><dd>' + esc(val) + '</dd></div>').join('') + '</dl>';
+      const fs = o.findings.filter((f) => f.domain === d.key && !f.primary);
+      if (fs.length) h += '<ul class="cr-list small">' + fs.map(item).join('') + '</ul>';
+      h += '<p class="cr-src">' + esc(sessionsText(dom.recs)) + '</p></section>';
+    }
+    h += '</div>';
+
+    // patient-reported and adherence
+    h += '<div class="cr-two">';
+    h += '<section class="cr-card"><h2>Pain and effort</h2>' + (o.pro.length ? chart([{ name: 'Pain', pts: o.pro.filter((x) => num(x.pain)).map((x) => ({ t: x.t, v: x.pain })) }, { name: 'Effort', pts: o.pro.filter((x) => num(x.rpe)).map((x) => ({ t: x.t, v: x.rpe })) }], { dec: 0, unit: '/10', lo: 0, hi: 10, label: 'Pain and perceived exertion by day' }) +
+      '<p class="cr-legend"><span><i class="s0"></i>Pain</span><span><i class="s1"></i>Effort</span></p>' +
+      '<p class="cr-note">Highest rating each day. Pain: 0 to 10 numeric scale. Effort: Borg CR10 (3 moderate, 5 hard, 7 very hard).</p>' : '<p class="cr-none">No ratings yet. The patient is asked after each exercise and at the end of a session.</p>') + '</section>';
+    h += '<section class="cr-card"><h2>Adherence</h2><p class="cr-adh"><b>' + o.period.active7 + '</b> of the last 7 days · <b>' + o.period.active28 + '</b> of the last 28 days' + (o.period.sinceLast > 1 ? ' · last session ' + o.period.sinceLast + ' days ago' : '') + '</p><div class="cr-cal" aria-label="Sessions over the last 28 days">' +
+      o.calendar.map((x) => '<i class="l' + Math.min(3, x.n ? Math.ceil(x.n / 2) : 0) + '" title="' + esc(new Date(x.day).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ': ' + x.n + ' exercise' + (x.n === 1 ? '' : 's')) + '"></i>').join('') +
+      '</div><p class="cr-note">Each square is a day, oldest first; darker means more exercises that day.</p></section>';
+    h += '</div>';
+
+    // how much to trust it
+    h += '<section class="cr-card"><h2>Data quality</h2><ul class="cr-q">' + o.quality.map((q) => '<li class="' + (q.ok ? 'ok' : 'no') + '"><span class="cr-dot" aria-hidden="true">' + (q.ok ? '✓' : '!') + '</span><span>' + esc(q.title) + ': ' + esc(q.ok ? 'good recording' : q.notes.join('; ')) + '</span></li>').join('') + '</ul>' +
+      '<p class="cr-note">Camera-based measures are not yet validated against clinic measurement. TUG movement time runs from seat-off to seated and reads about 0.5 to 1 s shorter than a stopwatch from "Go". Considerations are prompts for clinical judgement, not prescriptions.</p></section>';
+    h += '</div>';
+    el.innerHTML = h;
+    return o;
+  }
+  function support(ex, m) {
+    const s = [];
+    const add = (k, v, d, u) => { if (num(v)) s.push([k, fx(v, d) + (u || '')]); };
+    if (ex === 'sts') { add('5xSTS', m.fiveStand, 1, ' s'); add('Hands used', m.handsPct, 0, '%'); add('Full stand', m.uprightPct, 0, '%'); add('Controlled sit', m.controlledPct, 0, '%'); }
+    if (ex === 'tug') { add('From "Go"', m.bestGo, 1, ' s'); add('Rise', m.rise, 1, ' s'); add('Turn', m.turn, 1, ' s'); if (num(m.trials)) s.push(['Valid trials', m.validTrials + ' of ' + m.trials]); }
+    if (ex === 'balance') { add('Semi-tandem', m.holdSemi, 1, ' s'); add('Tandem', m.holdTandem, 1, ' s'); add('Single leg', m.holdOne, 1, ' s'); add('Sway (RMS)', m.rms, 1, '°'); }
+    if (ex === 'march') { add('Steps', m.steps, 0); add('Cadence', m.cadence, 0, '/min'); add('Knee lift L', m.liftL, 0, '°'); add('Knee lift R', m.liftR, 0, '°'); }
+    if (ex === 'shoulder') { add('Left', m.romL, 0, '°'); add('Right', m.romR, 0, '°'); add('Trunk lean', m.lean, 0, '°'); add('Good-form reps', m.goodPct, 0, '%'); }
+    return s;
+  }
+  const sessionsText = (recs) => recs.length + ' session' + (recs.length > 1 ? 's' : '') + ', latest ' + dstr(recs[recs.length - 1].t) + '.';
+
+  return { analyze, render, DOMAINS, RULES };
+})();
+if (typeof module !== 'undefined') module.exports = Clinic;
 
 </script>
 <script>
@@ -2806,38 +3247,8 @@ if (typeof module !== 'undefined') module.exports = Report;
 
   /* clinician: phone-friendly report */
   function showCReport() {
-    const id = pid(), P = Report.person(id), all = Report.sessions(id), el = $('crep');
-    const fmtv = (v, row) => (isNum(v) ? D(v.toFixed(row.dec)) + (row.unit || '') : '–');
-    const dates = new Set(all.filter((r) => Date.now() - new Date(r.t).getTime() < 7 * 864e5).map((r) => day(r.t)));
-    const rated = all.filter((r) => isNum(r.rpe) || isNum(r.pain)).pop();
-    const last = all[all.length - 1];
-    let html = '<h1 class="pt-h1">' + esc(id) + '</h1><p class="pt-lead">' + esc([isNum(P.age) ? L('age {a}', { a: D(P.age) }) : '', P.sex === 'F' ? L('female') : P.sex === 'M' ? L('male') : ''].filter(Boolean).join(' · ')) + (id === Report.EXAMPLE ? ' · ' + esc(L('Example data (invented).')) : '') + '</p>' +
-      '<div class="card"><dl class="facts"><div><dt>' + esc(L('Sessions')) + '</dt><dd>' + D(all.length) + '</dd></div><div><dt>' + esc(L('Active days, last 7')) + '</dt><dd>' + D(dates.size) + '</dd></div>' +
-      '<div><dt>' + esc(L('Last session')) + '</dt><dd>' + (last ? esc(new Date(last.t).toLocaleDateString(I18N.lang === 'ar' ? 'ar-SA' : undefined, { day: 'numeric', month: 'short' })) : '–') + '</dd></div>' +
-      '<div><dt>' + esc(L('Effort')) + ' / ' + esc(L('Pain')) + '</dt><dd>' + (rated ? D(isNum(rated.rpe) ? rated.rpe : '–') + ' / ' + D(isNum(rated.pain) ? rated.pain : '–') : '–') + '</dd></div></dl></div>';
-    if (!all.length) html += '<p class="pt-note">' + esc(L('No sessions yet')) + '</p>';
-    for (const k of ORDER) {
-      const recs = Report.sessions(id, k); if (!recs.length) continue;
-      const cur = recs[recs.length - 1], first = recs[0], sc = recs.map((r) => scoreOf(k, r.m)), r0 = document.createElement('div'); ring(r0, sc[sc.length - 1]);
-      html += '<div class="card"><div class="pc-head"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + esc(L(EX[k].name)) + '</span><br><span class="sub">' + esc(L(recs.length === 1 ? '{n} session' : '{n} sessions', { n: D(recs.length) })) + '</span></span><span class="ring small">' + r0.innerHTML + '</span></div>';
-      for (const row of Report.standard(k, cur, P)) {
-        if (row.top) continue;
-        const get = (rec) => (rec && isNum(rec.m[row.key]) ? rec.m[row.key] : NaN), c = get(cur), f0 = get(first), d = c - f0;
-        const series = recs.map(get), lo = Math.min(...series.filter(isNum)), hi = Math.max(...series.filter(isNum));
-        const norm = series.map((v) => (isNum(v) ? (hi > lo ? (row.better === 'down' ? (hi - v) : (v - lo)) / (hi - lo) * 100 : 50) : NaN));
-        const better = isNum(d) && d !== 0 && row.better ? ((d > 0) === (row.better === 'up')) : null;
-        const mean = recs.length < 2 || !isNum(d) ? '' : !row.mcid ? L('No threshold set') : Math.abs(d) >= row.mcid ? '✓ ' + L('Meaningful change') : L('Not yet');
-        html += '<div class="mrow"><span class="ml">' + esc(L(row.label)) + '</span><span class="mv"><b>' + fmtv(c, row) + '</b>' +
-          (row.flag ? '<span class="chip2 ' + (row.flag.ok ? 'ok' : 'no') + '">' + esc(L(row.flag.text)) + '</span>' : '') + '</span>' +
-          (recs.length > 1 ? '<span class="mc">' + esc(L('First')) + ' ' + fmtv(f0, row) + ' → ' + esc(L('Latest')) + ' ' + fmtv(c, row) +
-            (isNum(d) ? ' (<span class="' + (better === true ? 'up' : better === false ? 'down' : '') + '">' + (d > 0 ? '+' : d < 0 ? '−' : '') + D(Math.abs(d).toFixed(row.dec)) + '</span>)' : '') + (mean ? ' · ' + esc(mean) : '') + '</span>' : '') +
-          (recs.length > 1 ? '<span class="pc-trend">' + spark(norm) + '</span>' : '') + '</div>';
-      }
-      if (cur.posWeak) html += '<p class="pt-note warn">' + esc(L('Latest session started without a clear camera view. Check the setup before relying on it.')) + '</p>';
-      html += '</div>';
-    }
-    el.innerHTML = html;
-    show('scr-creport');
+    Clinic.render($('crep'), pid());
+    show('scr-creport'); window.scrollTo(0, 0);
   }
 
   /* ---------- report and history ---------- */
