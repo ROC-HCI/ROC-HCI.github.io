@@ -215,6 +215,9 @@ input.btn { width: 8.5em; cursor: text; }
 .plan { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .plan li { display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; align-items: center; gap: 14px; background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 10px 14px 10px 10px; }
 .plan li.next { border-color: var(--accent); }
+.plan li[data-ex] { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform .08s; }
+.plan li[data-ex]:active { transform: scale(.98); border-color: var(--accent); }
+.plan li[data-ex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .plan li.done { opacity: .75; }
 .plan .ic { width: 76px; height: 70px; border-radius: 12px; background: var(--stage); display: grid; place-items: center; }
 .plan .ic svg { width: 70px; height: 62px; }
@@ -562,7 +565,7 @@ const I18N = (function () {
     "Today's exercises": 'تمارين اليوم', 'Hello, {name}': 'مرحبًا يا {name}',
     'Do them one at a time. The phone will guide you.': 'قم بها واحدًا تلو الآخر، وسيرشدك الهاتف.',
     '{n} left for today. Keep going!': 'بقي {n} لليوم. استمر!', 'You have finished everything for today. Well done!': 'أنهيت جميع تمارين اليوم. أحسنت!',
-    'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Getting ready…': 'جارٍ التجهيز…',
+    'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Tap any exercise to do it now, as often as you like.': 'اضغط على أي تمرين لتبدأه الآن، كلما أردت.', 'Getting ready…': 'جارٍ التجهيز…',
     'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
     'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
     'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
@@ -2501,20 +2504,27 @@ if (typeof module !== 'undefined') module.exports = Report;
   const L = I18N.L, D = I18N.D;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const isNum = (v) => typeof v === 'number' && isFinite(v);
-  const today = () => new Date().toISOString().slice(0, 10);
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const day = (t) => { const d = new Date(t); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); };   // local calendar day
+  const today = () => day(Date.now());
+  /* a "round" is one pass through the plan; finishing it and tapping "Do them again" starts a new round the same day */
+  function roundT() { let t = 0; try { t = +localStorage.getItem('irehab.round.' + pid()) || 0; } catch (e) { /* optional */ } const mid = new Date(); mid.setHours(0, 0, 0, 0); return Math.max(t, mid.getTime()); }
+  function newRound() { skipped = {}; try { localStorage.setItem('irehab.round.' + pid(), String(Date.now())); } catch (e) { /* optional */ } }
   function plan() { try { const p = JSON.parse(localStorage.getItem('irehab.plan.' + pid())); if (Array.isArray(p) && p.length) return ORDER.filter((k) => p.includes(k)); } catch (e) { /* default plan */ } return ORDER.slice(); }
   function setPlan(p) { try { localStorage.setItem('irehab.plan.' + pid(), JSON.stringify(p)); } catch (e) { /* optional */ } }
   let skipped = {};
-  const doneTodayRec = (k) => Report.sessions(pid(), k).some((r) => r.t.slice(0, 10) === today());
+  const doneTodayRec = (k) => { const t0 = roundT(); return Report.sessions(pid(), k).some((r) => new Date(r.t).getTime() >= t0); };
+  const timesToday = (k) => Report.sessions(pid(), k).filter((r) => day(r.t) === today()).length;
   const isDone = (k) => doneTodayRec(k) || skipped[k] === today();
+  const nextAfter = (k) => { const p = plan(), i = p.indexOf(k); return p.slice(i + 1).concat(p.slice(0, i + 1)).find((x) => x !== k && !isDone(x)); };
   const icon = (k) => (k === 'balance' ? PIC.balance('tandem')[1][0] : PIC[k]()[k === 'tug' ? 1 : 2][0]);
   const scoreOf = (k, m) => Report.scoreOf(k, m);
 
   function planList(el, mark) {
     const p = plan(), nextK = p.find((k) => !isDone(k));
     el.innerHTML = p.map((k) => {
-      const d = isDone(k), st = d ? (!doneTodayRec(k) ? ['later', 'Skipped'] : ['done', 'Done ✓']) : k === nextK && mark ? ['next', 'Next'] : ['later', 'To do'];
-      return '<li class="' + (d ? 'done' : k === nextK && mark ? 'next' : '') + '"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + L(EX[k].name) + '</span><br><span class="du">' + L(EX[k].dur) + (EX[k].helper ? ' · ' + L('with a helper') : '') + '</span></span><span class="st ' + st[0] + '">' + L(st[1]) + '</span></li>';
+      const d = isDone(k), n = timesToday(k), st = d ? (!doneTodayRec(k) ? ['later', L('Skipped')] : ['done', L('Done ✓') + (n > 1 ? ' ×' + D(n) : '')]) : k === nextK && mark ? ['next', L('Next')] : ['later', L('To do')];
+      return '<li' + (mark ? ' data-ex="' + k + '" role="button" tabindex="0"' : '') + ' class="' + (d ? 'done' : k === nextK && mark ? 'next' : '') + '"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + L(EX[k].name) + '</span><br><span class="du">' + L(EX[k].dur) + (EX[k].helper ? ' · ' + L('with a helper') : '') + '</span></span><span class="st ' + st[0] + '">' + st[1] + '</span></li>';
     }).join('');
     return nextK;
   }
@@ -2522,7 +2532,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     const nm = (Report.person(pid()).name || '').trim();
     $('hello').textContent = nm ? L('Hello, {name}', { name: nm }) : L("Today's exercises");
     const nextK = planList($('plan'), true), p = plan(), left = p.filter((k) => !isDone(k)).length;
-    $('home-lead').textContent = !left ? L('You have finished everything for today. Well done!') : left === p.length ? L('Do them one at a time. The phone will guide you.') : L('{n} left for today. Keep going!', { n: D(left) });
+    $('home-lead').textContent = (!left ? L('You have finished everything for today. Well done!') : left === p.length ? L('Do them one at a time. The phone will guide you.') : L('{n} left for today. Keep going!', { n: D(left) })) + ' ' + L('Tap any exercise to do it now, as often as you like.');
     $('btn-progress').hidden = !Report.sessions(pid()).length;
     const b = $('btn-start');
     if (!landmarker) { b.disabled = true; b.textContent = L('Getting ready…'); return; }
@@ -2643,7 +2653,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     $('res-next').dataset.label = L('Next time: '); $('res-next').textContent = patientTip(k, m);
     $('rate-block').hidden = false;
     faces($('faces-rpe'), 'rpe', last.rpe, ['Easy', 'Very hard']); faces($('faces-pain'), 'pain', last.pain, ['None', 'Worst']);
-    const nextK = plan().find((x) => x !== k && !isDone(x));
+    const nextK = nextAfter(k);
     $('btn-next').textContent = L(nextK ? 'Next exercise' : 'Finish'); $('btn-next').dataset.act = nextK ? 'next' : 'done';
     $('btn-again').textContent = L('Do this one again'); $('btn-again').dataset.act = 'again';
     show('scr-result');
@@ -2651,23 +2661,23 @@ if (typeof module !== 'undefined') module.exports = Report;
     resultSpeech = [L('Well done!'), L('Your score') + ' ' + Math.round(s) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0], L('How hard was that?')].join(' ');
     say(resultSpeech);
   }
-  function goNext() { const nextK = plan().find((x) => !isDone(x)); if (nextK) openIntro(nextK); else showDone(); }
+  function goNext() { const nextK = nextAfter(exKey); if (nextK) openIntro(nextK); else showDone(); }
 
   function weekDots(el) {
-    const days = new Set(Report.sessions(pid()).map((r) => r.t.slice(0, 10))), fmt = new Intl.DateTimeFormat(I18N.lang === 'ar' ? 'ar-SA' : 'en', { weekday: 'narrow' });
+    const days = new Set(Report.sessions(pid()).map((r) => day(r.t))), fmt = new Intl.DateTimeFormat(I18N.lang === 'ar' ? 'ar-SA' : 'en', { weekday: 'narrow' });
     let n = 0, html = '';
-    for (let i = 6; i >= 0; i--) { const d = new Date(Date.now() - i * 864e5), k = d.toISOString().slice(0, 10), on = days.has(k); if (on) n++; html += '<span><i class="' + (on ? 'on' : '') + (i === 0 ? ' today' : '') + '"></i>' + fmt.format(d) + '</span>'; }
+    for (let i = 6; i >= 0; i--) { const d = new Date(Date.now() - i * 864e5), k = day(d), on = days.has(k); if (on) n++; html += '<span><i class="' + (on ? 'on' : '') + (i === 0 ? ' today' : '') + '"></i>' + fmt.format(d) + '</span>'; }
     el.innerHTML = html; return n;
   }
   function dayScore(date) {
-    const s = plan().map((k) => Report.sessions(pid(), k).filter((r) => r.t.slice(0, 10) === date).pop()).filter(Boolean).map((r) => scoreOf(r.ex, r.m)).filter(isNum);
+    const s = plan().map((k) => Report.sessions(pid(), k).filter((r) => day(r.t) === date).pop()).filter(Boolean).map((r) => scoreOf(r.ex, r.m)).filter(isNum);
     return s.length ? s.reduce((a, b) => a + b, 0) / s.length : NaN;
   }
   function showDone() {
     planList($('done-plan'), false);
     const s = dayScore(today()); ring($('done-ring'), s); stars($('done-stars'), s);
     weekDots($('done-week'));
-    const days = new Set(Report.sessions(pid()).map((r) => r.t.slice(0, 10)));
+    const days = new Set(Report.sessions(pid()).map((r) => day(r.t)));
     $('done-lead').textContent = L('Thank you. Your results are saved on this phone.') + (days.size > 1 ? ' ' + L('You have exercised on {n} days so far.', { n: D(days.size) }) : '');
     show('scr-done'); confetti(true);
     say(L('All done for today. Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.');
@@ -2680,7 +2690,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true" direction="ltr"><polyline class="ln" points="' + v.map((q, i) => x(i).toFixed(1) + ',' + y(q).toFixed(1)).join(' ') + '"/><circle class="pt" cx="' + x(v.length - 1) + '" cy="' + y(v[v.length - 1]) + '" r="3.5"/></svg>';
   }
   function showProgress() {
-    const all = Report.sessions(pid()), dates = [...new Set(all.map((r) => r.t.slice(0, 10)))].sort();
+    const all = Report.sessions(pid()), dates = [...new Set(all.map((r) => day(r.t)))].sort();
     const s = dates.length ? dayScore(dates[dates.length - 1]) : NaN; ring($('prog-ring'), s);
     const n = weekDots($('prog-week')); $('prog-days').textContent = D(n) + ' / ' + D(7) + ' ' + L('days active');
     $('prog-list').innerHTML = plan().map((k) => {
@@ -2702,7 +2712,7 @@ if (typeof module !== 'undefined') module.exports = Report;
   function showCReport() {
     const id = pid(), P = Report.person(id), all = Report.sessions(id), el = $('crep');
     const fmtv = (v, row) => (isNum(v) ? D(v.toFixed(row.dec)) + (row.unit || '') : '–');
-    const dates = new Set(all.filter((r) => Date.now() - new Date(r.t).getTime() < 7 * 864e5).map((r) => r.t.slice(0, 10)));
+    const dates = new Set(all.filter((r) => Date.now() - new Date(r.t).getTime() < 7 * 864e5).map((r) => day(r.t)));
     const rated = all.filter((r) => isNum(r.rpe) || isNum(r.pain)).pop();
     const last = all[all.length - 1];
     let html = '<h1 class="pt-h1">' + esc(id) + '</h1><p class="pt-lead">' + esc([isNum(P.age) ? L('age {a}', { a: D(P.age) }) : '', P.sex === 'F' ? L('female') : P.sex === 'M' ? L('male') : ''].filter(Boolean).join(' · ')) + (id === Report.EXAMPLE ? ' · ' + esc(L('Example data (invented).')) : '') + '</p>' +
@@ -2745,7 +2755,10 @@ if (typeof module !== 'undefined') module.exports = Report;
   $('btn-report').onclick = () => showCReport();
   $('btn-example').onclick = () => { $('pid').value = Report.EXAMPLE; Report.seedExample(); loadPerson(); renderPlanEdit(); showReport(); showCReport(); };
 
-  $('btn-start').onclick = () => { const k = $('btn-start').dataset.ex; if (plan().every(isDone)) { skipped = {}; } openIntro(k || plan()[0]); };
+  $('btn-start').onclick = () => { if (plan().every(isDone)) { newRound(); openIntro(plan()[0]); } else openIntro($('btn-start').dataset.ex || plan()[0]); };
+  const pickEx = (e) => { const li = e.target.closest('li[data-ex]'); if (!li || !landmarker) return; if (plan().every(isDone)) newRound(); openIntro(li.dataset.ex); };
+  $('plan').onclick = pickEx;
+  $('plan').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickEx(e); } };
   $('intro-back').onclick = () => { renderHome(); show('scr-home'); speakHome(); };
   $('helper').onchange = () => { $('btn-ready').disabled = !$('helper').checked; };
   $('btn-ready').onclick = ready;
