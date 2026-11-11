@@ -247,6 +247,15 @@ input.btn { width: 8.5em; cursor: text; }
 .plan .ic .ac { fill: none; stroke: #5ee0d6; stroke-width: 3; stroke-linecap: round; }
 .plan .ic .acf { fill: #5ee0d6; }
 .plan .ic .dimfoot { fill: none; stroke: #eaf2f0; stroke-width: 2.5; stroke-dasharray: 3 3; opacity: .6; }
+.demo { display: grid; gap: 6px; }
+.demo-btn { display: flex; align-items: center; gap: 12px; width: 100%; text-align: start; background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); border-radius: 14px; padding: 12px 14px; font: inherit; font-size: 18px; cursor: pointer; }
+.demo-btn:hover, .demo-btn:focus-visible { border-color: var(--accent); }
+.demo-btn .play { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 18px; }
+.demo-btn b { display: block; }
+.demo-btn small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.demo-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 14px; overflow: hidden; background: #000; }
+.demo-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.demo-note { color: var(--muted); font-size: 13px; margin: 0; }
 .safety { background: var(--warn-soft); color: var(--ink); border-radius: 14px; padding: 12px 14px; font-size: 18px; }
 .safety:empty { display: none; }
 .confirm { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; padding: 14px; font-weight: 700; cursor: pointer; }
@@ -491,6 +500,7 @@ input.btn { width: 8.5em; cursor: text; }
     <div class="titlerow"><h1 class="pt-h1" id="intro-title"></h1><button class="listen" id="intro-listen" data-i18n-label aria-label="Listen"><span aria-hidden="true">🔊</span></button></div>
     <p class="pt-lead" id="intro-what"></p>
     <ol class="howto" id="idle"></ol>
+    <div class="demo" id="intro-demo" hidden></div>
     <div class="safety" id="intro-safety"></div>
     <p class="auto-banner" id="intro-auto" hidden aria-live="polite"></p>
     <div class="actions">
@@ -662,7 +672,8 @@ const I18N = (function () {
     'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Paused.': 'متوقف مؤقتًا.', 'Tap Next exercise when you are ready.': 'اضغط «التمرين التالي» عندما تكون جاهزًا.', 'Please step in front of the camera.': 'من فضلك قف أمام الكاميرا.', 'I cannot see your shoulders. Step back a little.': 'لا أرى كتفيك. تراجع قليلًا إلى الخلف.', 'I cannot see your arms. Step back so your arms are in view.': 'لا أرى ذراعيك. تراجع إلى الخلف حتى تظهر ذراعاك.', 'I cannot see your feet. Step back, or put the phone lower down.': 'لا أرى قدميك. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I cannot see your knees. Step back, or put the phone lower down.': 'لا أرى ركبتيك. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I cannot see your hips. Step back a little.': 'لا أرى وركيك. تراجع قليلًا إلى الخلف.', 'I cannot see your legs clearly. Step back, or put the phone lower down.': 'لا أرى ساقيك بوضوح. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I can see only one leg. Turn to face the camera.': 'أرى ساقًا واحدة فقط. استدر لتواجه الكاميرا.', 'Stand where the camera can see you clearly.': 'قف في مكان تراك فيه الكاميرا بوضوح.', 'Tip: put the phone or laptop lower, about knee to waist height, and step further back.': 'نصيحة: ضع الهاتف أو الحاسوب في مكان أدنى، بين مستوى الركبة والخصر، وابتعد أكثر.', 'If the picture keeps zooming in on your face, turn off Center Stage: open Control Center, choose Video Effects, then turn off Center Stage.': 'إذا ظلت الصورة تقترب من وجهك، أوقف ميزة التأطير التلقائي: افتح مركز التحكم، ثم تأثيرات الفيديو، ثم أوقف Center Stage.', 'If the camera keeps zooming in on your face, turn off Center Stage on this device.': 'إذا ظلت الكاميرا تقترب من وجهك، أوقف ميزة التأطير التلقائي على هذا الجهاز.', 'Starting by itself in {n} seconds. Walk to your spot.': 'سيبدأ تلقائيًا بعد {n} ثانية. اذهب إلى مكانك.', 'Next: {name}, in {n} seconds.': 'التالي: {name}، بعد {n} ثانية.', 'Finishing in {n} seconds.': 'الإنهاء بعد {n} ثانية.', 'Tap the screen to stay here.': 'اضغط على الشاشة للبقاء هنا.', 'How hard was today overall?': 'ما مدى صعوبة تمارين اليوم إجمالًا؟', 'How hard was today overall? Tap a face.': 'ما مدى صعوبة تمارين اليوم إجمالًا؟ اضغط على أحد الوجوه.', 'Latest session started without a clear camera view. Check the setup before relying on it.': 'بدأت آخر جلسة دون رؤية واضحة من الكاميرا. تحقق من الإعداد قبل الاعتماد عليها.', 'Prop the phone up 2 to 3 metres away, about knee to waist height. On a laptop, put it on a chair or low table. After you tap I\'m ready, the app talks you through each exercise and moves on by itself.': 'ضع الهاتف على بعد ٢ إلى ٣ أمتار، بين مستوى الركبة والخصر. إذا كنت تستخدم حاسوبًا محمولًا فضعه على كرسي أو طاولة منخفضة. بعد الضغط على «أنا جاهز» يرشدك التطبيق صوتيًا في كل تمرين وينتقل وحده إلى التالي.', 'Tap any exercise to do it now, as often as you like.': 'اضغط على أي تمرين لتبدأه الآن، كلما أردت.', 'Getting ready…': 'جارٍ التجهيز…',
     'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
     'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
-    'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
+    'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع', 'Watch a demonstration': 'شاهد عرضاً توضيحياً', 'Video by {src}, {len}.': 'فيديو من {src}، {len}.', 'In English.': 'باللغة الإنجليزية.',
+    'Do it the way the drawings show. The video is from YouTube and needs the internet.': 'قم بالتمرين كما في الرسوم. الفيديو من يوتيوب ويحتاج إلى الإنترنت.',
     'Done ✓': 'تم ✓', 'Next': 'التالي', 'To do': 'لم يُنجز', 'Skipped': 'تم تخطيه', 'with a helper': 'بوجود مرافق',
     'This phone cannot run iRehab': 'لا يمكن تشغيل iRehab على هذا الهاتف', 'Please try the latest Chrome (Android) or Safari (iPhone).': 'يرجى استخدام أحدث إصدار من Chrome (أندرويد) أو Safari (آيفون).',
     // exercises
@@ -2739,7 +2750,31 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     $('reps').tHead.innerHTML = '<tr>' + ex.head.map((h) => '<th>' + h + '</th>').join('') + '</tr>';
     resetSession();
   }
-  function show(id) { for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id; window.scrollTo(0, 0); }
+  function show(id) { if (id !== 'scr-intro') closeDemo(); for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id; window.scrollTo(0, 0); }
+
+  /* Demonstration videos. Loaded only when the patient taps, from YouTube's privacy-enhanced domain, so nothing is sent
+     to YouTube unless they choose to watch. The camera session and scoring never involve these. Shoulder raises have
+     no video that matches what is scored (standing, both arms, all the way overhead), so they keep the drawings only. */
+  const DEMO = {
+    sts:     { id: 'qkV0UvjXgcs', src: 'CDC STEADI', len: '2:08' },
+    balance: { id: 'VUq6IgQAVJM', src: 'CDC STEADI', len: '2:06' },
+    tug:     { id: 'tNay64Mab78', src: 'CDC STEADI', len: '1:28' },
+    march:   { id: 'toA-gIyU_WQ', src: 'Knowledge to Action Lab', len: '0:12' },
+  };
+  function renderDemo(k) {
+    const el = $('intro-demo'), d = DEMO[k];
+    el.hidden = !d; if (!d) { el.innerHTML = ''; return; }
+    el.innerHTML = '<button class="demo-btn" id="demo-play" type="button"><span class="play" aria-hidden="true">▶</span><span><b>' + esc(L('Watch a demonstration')) + '</b><small>' +
+      esc(L('Video by {src}, {len}.', { src: d.src, len: D(d.len) })) + (I18N.lang === 'ar' ? ' ' + esc(L('In English.')) : '') + '</small></span></button>';
+    $('demo-play').onclick = () => {
+      cancelAuto(); try { speechSynthesis.cancel(); } catch (e) { /* optional */ }
+      el.innerHTML = '<div class="demo-frame"><iframe src="https://www.youtube-nocookie.com/embed/' + d.id + '?autoplay=1&rel=0&playsinline=1&hl=' + I18N.lang + '" title="' + esc(L('Watch a demonstration')) +
+        '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>' +
+        '<p class="demo-note">' + esc(L('Do it the way the drawings show. The video is from YouTube and needs the internet.')) + '</p>';
+      window.__demoOpened = d.id; try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { /* optional */ }
+    };
+  }
+  function closeDemo() { const el = $('intro-demo'); if (el && el.querySelector('iframe')) renderDemo(exKey); }
   function resetSession() {
     counter = ex.make();
     t0 = null; lastT = null; frames = 0; tracked = 0; sm = {}; live = {}; lastSummary = null;
@@ -3071,7 +3106,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     const p = plan(), i = p.indexOf(k);
     $('intro-step').textContent = L('Exercise {i} of {n}', { i: D(i + 1), n: D(p.length) });
     $('intro-title').textContent = L(EX[k].name); $('intro-what').textContent = L(EX[k].what);
-    renderIdle();
+    renderIdle(); renderDemo(k);
     $('intro-safety').textContent = L(EX[k].helper ? 'Only do this with another person close by. Use your usual walking aid.' : k === 'march' ? 'Stand next to a sturdy chair or counter. Hold it if you need to.' : k === 'sts' ? 'Use a firm chair without wheels, against a wall.' : '');
     $('helper-row').hidden = !EX[k].helper; $('helper').checked = false;
     $('btn-ready').disabled = !!EX[k].helper;
