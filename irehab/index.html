@@ -270,6 +270,31 @@ input.btn { width: 8.5em; cursor: text; }
 .fam-list li.good .ic { color: var(--good); } .fam-list li.watch .ic { color: var(--warn); } .fam-list li.act .ic { color: #c0392b; }
 .fam-plain { margin: 0; padding-inline-start: 22px; display: grid; gap: 8px; font-size: 17px; }
 .fam-text { white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.5 var(--font); background: var(--bg); border-radius: 12px; padding: 12px; margin: 10px 0; max-width: 100%; }
+.su-dots { display: flex; gap: 8px; justify-content: center; }
+.su-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.su-dots i.on { background: var(--accent); width: 28px; border-radius: 999px; }
+.su-page { display: flex; flex-direction: column; gap: 16px; }
+.su-opts { display: grid; gap: 12px; }
+.su-opt { display: flex; align-items: center; gap: 16px; text-align: start; width: 100%; background: var(--surface); color: var(--ink); border: 2px solid var(--line); border-radius: 18px; padding: 12px 16px 12px 12px; font: inherit; cursor: pointer; min-height: var(--tap); }
+.su-opt b { display: block; font-size: 20px; }
+.su-opt small { display: block; color: var(--muted); font-size: 16px; margin-top: 2px; }
+.su-opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.su-opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.su-ic { flex: none; width: 64px; height: 64px; border-radius: 14px; background: var(--stage); display: grid; place-items: center; }
+.su-ic svg { width: 56px; height: 56px; }
+.su-pic { background: var(--stage); border-radius: 18px; padding: 8px; }
+.su-pic svg { display: block; width: 100%; height: auto; max-height: 260px; }
+.su-steps { margin: 0; padding-inline-start: 26px; display: grid; gap: 10px; font-size: 18px; }
+.su-need { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.su-need li { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border-radius: 16px; padding: 12px 14px; font-size: 17px; }
+.su-need li .e { flex: none; font-size: 24px; line-height: 1.1; width: 30px; text-align: center; }
+.su-need li b { display: block; font-size: 18px; }
+.su-lock { display: flex; gap: 14px; align-items: flex-start; background: var(--good-soft); border-radius: 18px; padding: 16px; }
+.su-lock-ic { font-size: 30px; line-height: 1; }
+.su-lock b { font-size: 21px; display: block; }
+.su-lock p { margin: 4px 0 0; font-size: 17px; }
+.su-sum { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; padding: 6px 8px 6px 16px; font-size: 17px; font-weight: 600; }
+.su-sum .linkbtn { font-size: 16px; }
 .safety { background: var(--warn-soft); color: var(--ink); border-radius: 14px; padding: 12px 14px; font-size: 18px; }
 .safety:empty { display: none; }
 .confirm { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; padding: 14px; font-weight: 700; cursor: pointer; }
@@ -503,8 +528,8 @@ input.btn { width: 8.5em; cursor: text; }
     <p class="pt-lead" id="home-lead">Do them one at a time. The phone will guide you.</p>
     <ol class="plan" id="plan"></ol>
     <button class="big secondary" id="btn-progress" data-i18n>My progress</button>
-    <label class="confirm priv" id="priv-row"><input type="checkbox" id="private"><span><span class="pv-t" data-i18n>Private view</span><span class="pv-d" data-i18n>The screen shows a stick figure only, never the camera picture. Nothing is recorded.</span></span></label>
-    <p class="pt-note" id="home-note" data-i18n>Prop the phone up 2 to 3 metres away, about knee to waist height. On a laptop, put it on a chair or low table. After you tap I'm ready, the app talks you through each exercise and moves on by itself.</p>
+    <div class="su-sum" id="home-setup"><span id="home-setup-text"></span><button class="linkbtn" id="btn-resetup" data-i18n>Change set-up</button></div>
+    <p class="pt-note" id="home-note" data-i18n>After you tap I'm ready, the app talks you through each exercise and moves on by itself.</p>
     <p class="pt-fine"><span data-i18n>Research prototype, not a medical device. Video stays on this phone.</span> <button class="linkbtn" id="open-family" data-i18n>For family</button> <button class="linkbtn" id="open-clinic" data-i18n>For clinicians</button></p>
     <div class="actions"><button class="big primary" id="btn-start" disabled>Getting ready…</button></div>
   </section>
@@ -522,6 +547,53 @@ input.btn { width: 8.5em; cursor: text; }
       <label class="confirm" id="helper-row" hidden><input type="checkbox" id="helper"><span data-i18n>Someone is here with me</span></label>
       <button class="big primary" id="btn-ready" data-i18n>I'm ready</button>
       <button class="linkbtn center" id="btn-skip" data-i18n>Skip this one today</button>
+    </div>
+  </section>
+
+  <!-- ================= SET-UP: device, space, privacy and agreement (before any exercise) ================= -->
+  <section class="screen pt" id="scr-setup" hidden>
+    <input type="checkbox" id="private" hidden>
+    <div class="pt-top"><button class="backbtn" id="su-back" data-i18n>‹ Back</button><span class="step" id="su-step"></span>
+      <span class="tools"><button class="pill-btn" id="lang-toggle-s" lang="ar">عربي</button></span></div>
+    <div class="su-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+
+    <div class="su-page" data-page="1">
+      <h1 class="pt-h1" data-i18n>Welcome to iRehab</h1>
+      <p class="pt-lead" data-i18n>Before you start, let's set things up. It takes about two minutes.</p>
+      <h2 class="pt-h2" data-i18n>What will you use?</h2>
+      <div class="su-opts" role="radiogroup" id="su-device">
+        <button class="su-opt" role="radio" data-v="phone"><span class="su-ic" id="ic-phone"></span><span><b data-i18n>Phone</b><small data-i18n>Android or iPhone</small></span></button>
+        <button class="su-opt" role="radio" data-v="tablet"><span class="su-ic" id="ic-tablet"></span><span><b data-i18n>Tablet</b><small data-i18n>iPad or Android tablet</small></span></button>
+        <button class="su-opt" role="radio" data-v="laptop"><span class="su-ic" id="ic-laptop"></span><span><b data-i18n>Laptop or computer</b><small data-i18n>With a built-in or USB camera</small></span></button>
+      </div>
+    </div>
+
+    <div class="su-page" data-page="2" hidden>
+      <h1 class="pt-h1" data-i18n>Set up your space</h1>
+      <div class="pic su-pic" id="su-pic"></div>
+      <h2 class="pt-h2" id="su-place-h"></h2>
+      <ol class="su-steps" id="su-place"></ol>
+      <h2 class="pt-h2" data-i18n>What you need</h2>
+      <ul class="su-need" id="su-need"></ul>
+    </div>
+
+    <div class="su-page" data-page="3" hidden>
+      <h1 class="pt-h1" data-i18n>Your privacy</h1>
+      <div class="su-lock"><span class="su-lock-ic" aria-hidden="true">🔒</span><div>
+        <b data-i18n>Nothing is recorded.</b>
+        <p data-i18n>The camera picture is analysed on this device and never leaves it. There is no account and nothing is uploaded. Only your exercise results are saved, on this device.</p></div></div>
+      <h2 class="pt-h2" data-i18n>How do you want to see yourself?</h2>
+      <div class="su-opts" role="radiogroup" id="su-view">
+        <button class="su-opt" role="radio" data-v="private"><span class="su-ic" id="ic-private"></span><span><b data-i18n>Private view</b><small data-i18n>A stick figure only. The camera picture is never shown on the screen.</small></span></button>
+        <button class="su-opt" role="radio" data-v="normal"><span class="su-ic" id="ic-normal"></span><span><b data-i18n>Normal view</b><small data-i18n>See yourself with the stick figure on top. Helps you check your position.</small></span></button>
+      </div>
+      <div class="safety" data-i18n>Stop if you feel pain, dizziness, chest pain or shortness of breath. iRehab is a research prototype, not a medical device.</div>
+      <label class="confirm" id="su-agree-row"><input type="checkbox" id="su-agree"><span data-i18n>I have set up my space, I understand that nothing is recorded, and I want to continue.</span></label>
+    </div>
+
+    <div class="actions">
+      <button class="big primary" id="su-next" data-i18n>Next</button>
+      <p class="pt-fine"><button class="linkbtn" id="su-clinic" data-i18n>For clinicians</button></p>
     </div>
   </section>
 
@@ -709,6 +781,54 @@ const I18N = (function () {
     'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
     'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
     'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
+    'Welcome to iRehab': 'مرحباً بك في iRehab',
+    'Before you start, let\'s set things up. It takes about two minutes.': 'قبل أن تبدأ، لنجهّز المكان. يستغرق ذلك دقيقتين تقريباً.',
+    'What will you use?': 'ماذا ستستخدم؟',
+    'Phone': 'هاتف',
+    'Android or iPhone': 'أندرويد أو آيفون',
+    'Tablet': 'جهاز لوحي',
+    'iPad or Android tablet': 'آيباد أو جهاز لوحي بنظام أندرويد',
+    'Laptop or computer': 'حاسوب محمول أو مكتبي',
+    'With a built-in or USB camera': 'بكاميرا مدمجة أو خارجية',
+    'Set up your space': 'جهّز المكان',
+    'What you need': 'ما تحتاج إليه',
+    'knee to waist': 'من الركبة إلى الخصر',
+    'Where to put your phone': 'أين تضع هاتفك',
+    'Where to put your tablet': 'أين تضع جهازك اللوحي',
+    'Where to put your laptop': 'أين تضع حاسوبك',
+    'Stand the phone upright, leaning on something steady, such as books on a chair or a shelf.': 'ضع الهاتف واقفاً بشكل عمودي، مستنداً إلى شيء ثابت مثل كتب فوق كرسي أو رف.',
+    'Put it about knee to waist height, 2 to 3 metres from where you will stand.': 'ضعه على ارتفاع بين الركبة والخصر تقريباً، على بعد مترين إلى ثلاثة أمتار من مكان وقوفك.',
+    'Face the screen towards you and turn the volume up.': 'اجعل الشاشة مقابلة لك وارفع الصوت.',
+    'Stand the tablet upright on a stand, or lean it on something steady such as books on a chair.': 'ضع الجهاز اللوحي واقفاً على حامل، أو أسنده إلى شيء ثابت مثل كتب فوق كرسي.',
+    'Put the laptop on a chair or low table, not a desk, so the camera is about knee to waist height.': 'ضع الحاسوب على كرسي أو طاولة منخفضة، وليس على مكتب، لتكون الكاميرا على ارتفاع بين الركبة والخصر تقريباً.',
+    'Tilt the screen back a little until the camera can see you from head to feet.': 'أمِل الشاشة إلى الخلف قليلاً حتى تراك الكاميرا من الرأس إلى القدمين.',
+    'Stand 2 to 3 metres away. Plug it in if the battery is low, and turn the volume up.': 'قف على بعد مترين إلى ثلاثة أمتار. صِله بالشاحن إذا كانت البطارية منخفضة، وارفع الصوت.',
+    'A firm chair': 'كرسي ثابت',
+    'No wheels and no arms, with its back against a wall.': 'بدون عجلات وبدون مساند للذراعين، وظهره مسنود إلى الحائط.',
+    'Clear space': 'مساحة خالية',
+    'About 2 by 2 metres. For the walking test, a straight 3 metre path with room to turn.': 'حوالي مترين في مترين. ولاختبار المشي، ممر مستقيم طوله ٣ أمتار مع مساحة للالتفاف.',
+    'Something sturdy to hold': 'شيء ثابت تمسك به',
+    'A kitchen counter or the back of a heavy chair, within reach.': 'سطح المطبخ أو ظهر كرسي ثقيل، في متناول يدك.',
+    'Good light': 'إضاءة جيدة',
+    'Light in front of you. Avoid a bright window behind you.': 'اجعل الضوء أمامك، وتجنّب وجود نافذة مضيئة خلفك.',
+    'Someone nearby': 'شخص بالقرب منك',
+    'For the balance and walking tests, another person should be close.': 'في اختبارَي التوازن والمشي، يجب أن يكون شخص آخر قريباً منك.',
+    'Comfortable clothes and flat shoes': 'ملابس مريحة وحذاء مسطّح',
+    'Clothes that are not too loose help the camera see your knees.': 'الملابس غير الفضفاضة جداً تساعد الكاميرا على رؤية ركبتيك.',
+    'Your privacy': 'خصوصيتك',
+    'Nothing is recorded.': 'لا يتم تسجيل أي شيء.',
+    'The camera picture is analysed on this device and never leaves it. There is no account and nothing is uploaded. Only your exercise results are saved, on this device.': 'تُحلَّل صورة الكاميرا على هذا الجهاز ولا تغادره أبداً. لا يوجد حساب ولا يُرفع أي شيء. تُحفظ نتائج تمارينك فقط، على هذا الجهاز.',
+    'How do you want to see yourself?': 'كيف تريد أن ترى نفسك؟',
+    'A stick figure only. The camera picture is never shown on the screen.': 'رسم تخطيطي للجسم فقط. لا تظهر صورة الكاميرا على الشاشة أبداً.',
+    'Normal view': 'العرض العادي',
+    'See yourself with the stick figure on top. Helps you check your position.': 'ترى نفسك مع الرسم التخطيطي فوق صورتك. يساعدك على التأكد من وضعيتك.',
+    'Stop if you feel pain, dizziness, chest pain or shortness of breath. iRehab is a research prototype, not a medical device.': 'توقّف إذا شعرت بألم أو دوخة أو ألم في الصدر أو ضيق في التنفس. iRehab نموذج بحثي وليس جهازاً طبياً.',
+    'I have set up my space, I understand that nothing is recorded, and I want to continue.': 'جهّزت المكان، وأفهم أنه لا يتم تسجيل أي شيء، وأرغب في المتابعة.',
+    'Start using iRehab': 'ابدأ استخدام iRehab',
+    'Step {i} of {n}': 'الخطوة {i} من {n}',
+    'Change set-up': 'تغيير الإعداد',
+    'Private view. The screen shows a stick figure only.': 'العرض الخاص. تعرض الشاشة رسماً تخطيطياً فقط.',
+    'After you tap I\'m ready, the app talks you through each exercise and moves on by itself.': 'بعد أن تضغط على «أنا جاهز»، يرشدك التطبيق بالصوت في كل تمرين وينتقل إلى التالي تلقائياً.',
     'Private view': 'عرض خاص',
     'The screen shows a stick figure only, never the camera picture. Nothing is recorded.': 'تعرض الشاشة رسماً تخطيطياً للجسم فقط، ولا تعرض صورة الكاميرا أبداً. لا يتم تسجيل أي شيء.',
     'Private view. Not recorded.': 'عرض خاص. لا يوجد تسجيل.',
@@ -3514,14 +3634,118 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   }
   $('sound-toggle').onclick = () => { $('voice').checked = !$('voice').checked; syncSound(); try { localStorage.setItem('irehab.sound', $('voice').checked ? '1' : '0'); } catch (e) { /* optional */ } if ($('voice').checked) say('Sound on'); };
   $('voice').onchange = syncSound;
-  $('private').onchange = () => { syncPrivate(); try { localStorage.setItem('irehab.private', privateView() ? '1' : '0'); } catch (e) { /* optional */ }
-    say(privateView() ? 'Private view on. The screen shows a stick figure only.' : 'Private view off.'); };
-  try { if (localStorage.getItem('irehab.private') === '1') $('private').checked = true; } catch (e) { /* default off */ }
-  syncPrivate();
+
+  /* ---------- set-up: device, space, privacy and agreement, shown before the first exercise ---------- */
+  const SETUP_KEY = 'irehab.setup';
+  function getSetup() { try { const v = JSON.parse(localStorage.getItem(SETUP_KEY)); return v && v.consentAt ? v : null; } catch (e) { return null; } }
+  let setupMem = null;   // keeps the set-up for this visit if storage is blocked
+  const setup = () => getSetup() || setupMem;
+  function guessDevice() {
+    const ua = navigator.userAgent || '', touch = (navigator.maxTouchPoints || 0) > 1, short = Math.min(screen.width, screen.height);
+    if (/iPad/.test(ua) || (/Macintosh/.test(ua) && touch) || (/Android/.test(ua) && !/Mobile/.test(ua))) return 'tablet';
+    if (/Mobi|iPhone|Android/.test(ua) || (touch && short < 600)) return 'phone';
+    return 'laptop';
+  }
+  const su = { page: 1, device: null, view: 'private' };
+  const ICON = (() => {
+    const w = (b) => '<svg viewBox="0 0 64 64" aria-hidden="true">' + b + '</svg>', st = 'fill="none" stroke="#eaf2f0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"', ac = 'fill="none" stroke="#5ee0d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+    const fig = (x, c) => '<g ' + (c || st) + '><circle cx="' + x + '" cy="17" r="5"/><path d="M' + x + ' 22v17M' + (x - 9) + ' 28h18M' + x + ' 39l-6 14M' + x + ' 39l6 14"/></g>';
+    return {
+      phone: w('<rect ' + st + ' x="20" y="8" width="24" height="46" rx="4"/><circle fill="#5ee0d6" cx="32" cy="14" r="2"/>'),
+      tablet: w('<rect ' + st + ' x="12" y="10" width="40" height="44" rx="4"/><circle fill="#5ee0d6" cx="32" cy="15" r="2"/>'),
+      laptop: w('<rect ' + st + ' x="14" y="14" width="36" height="24" rx="2"/><path ' + st + ' d="M8 46h48l-4-6H12z"/><circle fill="#5ee0d6" cx="32" cy="18" r="2"/>'),
+      private: w(fig(32, ac)),
+      normal: w('<rect fill="#3d5652" x="10" y="8" width="44" height="48" rx="6"/>' + fig(32, ac)),
+    };
+  })();
+  /* side view of the room for the chosen device: the device at knee to waist height, 2 to 3 m from the person, chair behind */
+  function setupPic(dev) {
+    const G = 100, P = 'fill="none" stroke="#eaf2f0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"', A = 'fill="none" stroke="#5ee0d6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"';
+    const D = 'fill="none" stroke="#eaf2f0" stroke-width="1.2" opacity=".7"', T = 'fill="#eaf2f0" font-size="9" font-weight="600" text-anchor="middle" font-family="system-ui, sans-serif"';
+    const lowChair = (x) => '<path ' + P + ' opacity=".55" d="M' + (x - 10) + ' ' + (G - 22) + 'h20M' + (x - 8) + ' ' + (G - 22) + 'v22M' + (x + 8) + ' ' + (G - 22) + 'v22M' + (x + 10) + ' ' + (G - 22) + 'v-18"/>';
+    const books = (x) => '<path ' + P + ' opacity=".55" d="M' + (x - 9) + ' ' + (G - 22) + 'h18v-6h-18zM' + (x - 7) + ' ' + (G - 28) + 'h14v-5h-14z"/>';
+    let dv;
+    if (dev === 'laptop') dv = lowChair(26) + '<path ' + A + ' d="M18 ' + (G - 22) + 'h16M19 ' + (G - 22) + 'l4 -20"/><circle fill="#5ee0d6" cx="22" cy="' + (G - 38) + '" r="1.6"/>';
+    else dv = lowChair(26) + books(26) + '<rect ' + A + ' x="' + (dev === 'tablet' ? 18 : 21) + '" y="' + (G - 53) + '" width="' + (dev === 'tablet' ? 13 : 9) + '" height="' + (dev === 'tablet' ? 20 : 20) + '" rx="2" transform="rotate(-8 26 ' + (G - 43) + ')"/><circle fill="#5ee0d6" cx="25" cy="' + (G - 49) + '" r="1.5"/>';
+    const person = '<g ' + P + '><circle cx="118" cy="' + (G - 62) + '" r="6"/><path d="M118 ' + (G - 56) + 'v26M109 ' + (G - 48) + 'l9 -3 9 3M118 ' + (G - 30) + 'l-5 30M118 ' + (G - 30) + 'l5 30"/></g>';
+    const seat = '<path ' + P + ' opacity=".45" d="M138 ' + (G - 50) + 'v28h-14M138 ' + (G - 22) + 'v22M126 ' + (G - 22) + 'v22"/>';
+    const wall = '<path fill="none" stroke="#eaf2f0" stroke-width="2" opacity=".35" d="M146 12V' + G + '"/>';
+    const view = '<path fill="#5ee0d6" opacity=".10" d="M28 ' + (G - 42) + 'L142 10V' + G + 'z"/>';
+    const dim = '<path ' + D + ' d="M30 ' + (G + 10) + 'H112"/><path ' + D + ' d="M30 ' + (G + 6) + 'v8M112 ' + (G + 6) + 'v8"/><text ' + T + ' x="71" y="' + (G + 8) + '">2–3 m</text>';
+    const hgt = '<path ' + D + ' d="M8 ' + G + 'V' + (G - 42) + 'M5 ' + (G - 42) + 'h6"/><text ' + T.replace('middle', 'start').replace('font-size="9"', 'font-size="7.5"') + ' x="38" y="' + (G - 30) + '">↕ ' + esc(L('knee to waist')) + '</text>';
+    return '<svg viewBox="0 0 150 116" style="direction:ltr" role="img" aria-label="' + esc(L('Set up your space')) + '">' + view + '<path stroke="#eaf2f0" stroke-width="1.5" opacity=".4" d="M2 ' + G + 'H148"/>' + wall + seat + dv + person + dim + hgt + '</svg>';
+  }
+  const PLACE = {
+    phone: ['Stand the phone upright, leaning on something steady, such as books on a chair or a shelf.', 'Put it about knee to waist height, 2 to 3 metres from where you will stand.', 'Face the screen towards you and turn the volume up.'],
+    tablet: ['Stand the tablet upright on a stand, or lean it on something steady such as books on a chair.', 'Put it about knee to waist height, 2 to 3 metres from where you will stand.', 'Face the screen towards you and turn the volume up.'],
+    laptop: ['Put the laptop on a chair or low table, not a desk, so the camera is about knee to waist height.', 'Tilt the screen back a little until the camera can see you from head to feet.', 'Stand 2 to 3 metres away. Plug it in if the battery is low, and turn the volume up.'],
+  };
+  const PLACE_H = { phone: 'Where to put your phone', tablet: 'Where to put your tablet', laptop: 'Where to put your laptop' };
+  const NEED = [['🪑', 'A firm chair', 'No wheels and no arms, with its back against a wall.'],
+    ['📏', 'Clear space', 'About 2 by 2 metres. For the walking test, a straight 3 metre path with room to turn.'],
+    ['🤚', 'Something sturdy to hold', 'A kitchen counter or the back of a heavy chair, within reach.'],
+    ['💡', 'Good light', 'Light in front of you. Avoid a bright window behind you.'],
+    ['🧑‍🤝‍🧑', 'Someone nearby', 'For the balance and walking tests, another person should be close.'],
+    ['👟', 'Comfortable clothes and flat shoes', 'Clothes that are not too loose help the camera see your knees.']];
+  function suRadio(group, v) { for (const b of $(group).querySelectorAll('.su-opt')) b.setAttribute('aria-checked', String(b.dataset.v === v)); }
+  function suRender() {
+    const n = su.page, prev = setup();
+    for (const pg of document.querySelectorAll('#scr-setup .su-page')) pg.hidden = +pg.dataset.page !== n;
+    document.querySelectorAll('#scr-setup .su-dots i').forEach((d, i) => d.classList.toggle('on', i === n - 1));
+    $('su-step').textContent = L('Step {i} of {n}', { i: D(n), n: D(3) });
+    $('su-back').hidden = n === 1 && !prev;
+    for (const k of Object.keys(ICON)) { const el = $('ic-' + k); if (el) el.innerHTML = ICON[k]; }
+    suRadio('su-device', su.device); suRadio('su-view', su.view);
+    if (n === 2) {
+      $('su-pic').innerHTML = setupPic(su.device);
+      $('su-place-h').textContent = L(PLACE_H[su.device]);
+      $('su-place').innerHTML = PLACE[su.device].map((t) => '<li>' + esc(L(t)) + '</li>').join('');
+      $('su-need').innerHTML = NEED.map((x) => '<li><span class="e" aria-hidden="true">' + x[0] + '</span><span><b>' + esc(L(x[1])) + '</b>' + esc(L(x[2])) + '</span></li>').join('');
+    }
+    const last = n === 3;
+    $('su-next').textContent = L(last ? 'Start using iRehab' : 'Next');
+    $('su-next').disabled = (n === 1 && !su.device) || (last && !$('su-agree').checked);
+  }
+  function suSpeak() {
+    const n = su.page;
+    if (n === 1) say(L('Welcome to iRehab') + '. ' + L("Before you start, let's set things up. It takes about two minutes.") + ' ' + L('What will you use?'));
+    else if (n === 2) say(L(PLACE_H[su.device]) + '. ' + PLACE[su.device].map(L).join(' ') + ' ' + L('What you need') + ': ' + NEED.map((x) => L(x[1])).join(', ') + '.');
+    else say(L('Nothing is recorded.') + ' ' + L('The camera picture is analysed on this device and never leaves it. There is no account and nothing is uploaded. Only your exercise results are saved, on this device.') + ' ' + L('How do you want to see yourself?'));
+  }
+  function openSetup(page) {
+    const prev = setup();
+    su.page = page || 1; su.device = prev ? prev.device : guessDevice(); su.view = prev ? (prev.private ? 'private' : 'normal') : 'private';
+    $('su-agree').checked = false;
+    suRender(); show('scr-setup');
+  }
+  function suGo(n) { su.page = n; suRender(); window.scrollTo(0, 0); suSpeak(); }
+  $('su-device').onclick = (e) => { const b = e.target.closest('.su-opt'); if (!b) return; su.device = b.dataset.v; suRender(); };
+  $('su-view').onclick = (e) => { const b = e.target.closest('.su-opt'); if (!b) return; su.view = b.dataset.v; suRender();
+    say(su.view === 'private' ? 'Private view. The screen shows a stick figure only.' : 'Normal view.'); };
+  $('su-agree').onchange = suRender;
+  $('su-back').onclick = () => { if (su.page > 1) suGo(su.page - 1); else { renderHome(); show('scr-home'); } };
+  $('su-next').onclick = () => {
+    if (su.page < 3) return suGo(su.page + 1);
+    if (!$('su-agree').checked) return;
+    const rec = { v: 1, device: su.device, private: su.view === 'private', consentAt: new Date().toISOString() };
+    setupMem = rec; try { localStorage.setItem(SETUP_KEY, JSON.stringify(rec)); } catch (e) { /* kept for this visit */ }
+    applySetup(); renderHome(); show('scr-home'); speakHome();
+  };
+  $('su-clinic').onclick = () => { guided = false; renderPlanEdit(); show('scr-clinic'); };
+  $('btn-resetup').onclick = () => openSetup(1);
+  $('lang-toggle-s').onclick = () => { relang(I18N.lang === 'ar' ? 'en' : 'ar'); };
+  function applySetup() {
+    const s = setup();
+    $('private').checked = !!(s && s.private); syncPrivate();
+    const dn = { phone: 'Phone', tablet: 'Tablet', laptop: 'Laptop or computer' };
+    $('home-setup-text').textContent = s ? L(dn[s.device]) + ' · ' + L(s.private ? 'Private view' : 'Normal view') : '';
+    $('home-setup').hidden = !s;
+  }
+  applySetup();
   try { if (localStorage.getItem('irehab.sound') === '0') $('voice').checked = false; } catch (e) { /* default on */ }
   function relang(l) {
     I18N.setLang(l);
-    for (const b of [$('lang-toggle'), $('lang-toggle-c')]) { b.textContent = I18N.lang === 'ar' ? 'English' : 'عربي'; b.lang = I18N.lang === 'ar' ? 'en' : 'ar'; }
+    for (const b of [$('lang-toggle'), $('lang-toggle-c'), $('lang-toggle-s')]) { b.textContent = I18N.lang === 'ar' ? 'English' : 'عربي'; b.lang = I18N.lang === 'ar' ? 'en' : 'ar'; }
     for (const b of $('seg').children) b.textContent = L(EX[b.dataset.ex].name);
     syncSound(); renderPlanEdit(); $('count-label').textContent = L(ex.countLabel);
     const vis = [...document.querySelectorAll('.screen')].find((s) => !s.hidden);
@@ -3529,6 +3753,8 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     else if (vis.id === 'scr-intro') openIntro(exKey);
     else if (vis.id === 'scr-progress') showProgress();
     else if (vis.id === 'scr-family') showFamily();
+    else if (vis.id === 'scr-setup') suRender();
+    if (typeof applySetup === 'function') applySetup();
     else if (vis.id === 'scr-creport') showCReport();
     else if (vis.id === 'scr-done') showDone();
   }
@@ -3539,7 +3765,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   loadPerson();
   renderExercise();
   relang(I18N.lang);
-  show('scr-home');
+  if (setup()) show('scr-home'); else openSetup(1);
   initTracker();
 })();
 
