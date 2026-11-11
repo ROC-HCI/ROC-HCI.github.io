@@ -256,6 +256,20 @@ input.btn { width: 8.5em; cursor: text; }
 .demo-frame { position: relative; width: 100%; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 14px; overflow: hidden; background: #000; }
 .demo-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .demo-note { color: var(--muted); font-size: 13px; margin: 0; }
+.confirm.priv { font-weight: 400; }
+.confirm.priv .pv-t { display: block; font-weight: 700; }
+.confirm.priv .pv-d { display: block; color: var(--muted); font-size: 15px; margin-top: 2px; }
+.priv-badge { position: absolute; top: 10px; inset-inline-end: 10px; z-index: 3; background: rgba(0,0,0,.6); color: #fff; font-size: 14px; font-weight: 600; padding: 6px 10px; border-radius: 999px; }
+.fam-status { display: flex; align-items: center; gap: 14px; font-size: 20px; font-weight: 700; }
+.fam-status .dot { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; color: #fff; }
+.fam-status.good .dot { background: var(--good); } .fam-status.watch .dot { background: var(--warn); } .fam-status.act .dot { background: #c0392b; } .fam-status.none .dot { background: var(--muted); }
+.fam-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.fam-list li { display: flex; gap: 12px; align-items: flex-start; background: var(--surface); border-radius: 16px; padding: 14px; font-size: 18px; border-inline-start: 6px solid var(--line); }
+.fam-list li.good { border-color: var(--good); } .fam-list li.watch { border-color: var(--warn); } .fam-list li.act { border-color: #c0392b; }
+.fam-list .ic { flex: none; width: 28px; text-align: center; font-weight: 700; }
+.fam-list li.good .ic { color: var(--good); } .fam-list li.watch .ic { color: var(--warn); } .fam-list li.act .ic { color: #c0392b; }
+.fam-plain { margin: 0; padding-inline-start: 22px; display: grid; gap: 8px; font-size: 17px; }
+.fam-text { white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.5 var(--font); background: var(--bg); border-radius: 12px; padding: 12px; margin: 10px 0; max-width: 100%; }
 .safety { background: var(--warn-soft); color: var(--ink); border-radius: 14px; padding: 12px 14px; font-size: 18px; }
 .safety:empty { display: none; }
 .confirm { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; padding: 14px; font-weight: 700; cursor: pointer; }
@@ -489,8 +503,9 @@ input.btn { width: 8.5em; cursor: text; }
     <p class="pt-lead" id="home-lead">Do them one at a time. The phone will guide you.</p>
     <ol class="plan" id="plan"></ol>
     <button class="big secondary" id="btn-progress" data-i18n>My progress</button>
+    <label class="confirm priv" id="priv-row"><input type="checkbox" id="private"><span><span class="pv-t" data-i18n>Private view</span><span class="pv-d" data-i18n>The screen shows a stick figure only, never the camera picture. Nothing is recorded.</span></span></label>
     <p class="pt-note" id="home-note" data-i18n>Prop the phone up 2 to 3 metres away, about knee to waist height. On a laptop, put it on a chair or low table. After you tap I'm ready, the app talks you through each exercise and moves on by itself.</p>
-    <p class="pt-fine"><span data-i18n>Research prototype, not a medical device. Video stays on this phone.</span> <button class="linkbtn" id="open-clinic" data-i18n>For clinicians</button></p>
+    <p class="pt-fine"><span data-i18n>Research prototype, not a medical device. Video stays on this phone.</span> <button class="linkbtn" id="open-family" data-i18n>For family</button> <button class="linkbtn" id="open-clinic" data-i18n>For clinicians</button></p>
     <div class="actions"><button class="big primary" id="btn-start" disabled>Getting ready…</button></div>
   </section>
 
@@ -510,6 +525,25 @@ input.btn { width: 8.5em; cursor: text; }
     </div>
   </section>
 
+  <!-- ================= FAMILY: plain summary to read or share ================= -->
+  <section class="screen pt" id="scr-family" hidden>
+    <div class="pt-top"><button class="backbtn" id="fam-back" data-i18n>‹ Back</button><button class="listen" id="fam-listen" data-i18n-label aria-label="Listen"><span aria-hidden="true">🔊</span></button></div>
+    <h1 class="pt-h1" data-i18n>For family</h1>
+    <p class="pt-lead" id="fam-lead"></p>
+    <div class="card fam-status" id="fam-status"></div>
+    <ul class="fam-list" id="fam-list"></ul>
+    <div class="card"><h2 class="pt-h2" data-i18n>How you can help</h2><ul class="fam-plain" id="fam-help"></ul></div>
+    <div class="card"><h2 class="pt-h2" data-i18n>Contact the clinic if</h2><ul class="fam-plain" id="fam-call"></ul></div>
+    <div class="card"><h2 class="pt-h2" data-i18n>Send this summary</h2>
+      <p class="pt-note" data-i18n>Only the text below is sent, to the person you choose. Nothing is sent unless you tap Share.</p>
+      <pre class="fam-text" id="fam-text" dir="auto"></pre>
+      <button class="big primary" id="fam-share" data-i18n>Share</button>
+      <button class="linkbtn center" id="fam-copy" data-i18n>Copy the text</button>
+      <p class="pt-note center" id="fam-done" aria-live="polite"></p>
+    </div>
+    <p class="pt-fine" data-i18n>Research prototype, not a medical device. This summary is not medical advice.</p>
+  </section>
+
   <!-- ================= LIVE (patient and clinician) ================= -->
   <section class="screen live" id="scr-live" hidden>
     <div class="livebar"><span id="live-title"></span><span class="clock" id="clock">0:00</span></div>
@@ -517,6 +551,7 @@ input.btn { width: 8.5em; cursor: text; }
       <video id="video" playsinline muted></video>
       <canvas id="canvas" width="1280" height="720"></canvas>
       <div class="count" id="count" hidden><small id="count-label">Reps</small><span id="count-n">0</span><small id="count-goal"></small></div>
+      <div class="priv-badge" id="priv-badge" hidden><span aria-hidden="true">🔒</span> <span data-i18n>Private view. Not recorded.</span></div>
       <div class="guide" id="guide" hidden><span id="guide-text"></span></div>
       <p class="guide-tip" id="guide-tip" hidden></p>
       <div class="countdown" id="countdown" hidden></div>
@@ -576,6 +611,7 @@ input.btn { width: 8.5em; cursor: text; }
     <div class="pt-top"><button class="backbtn" id="prog-back" data-i18n>‹ Back</button><button class="listen" id="prog-listen" data-i18n-label aria-label="Listen"><span aria-hidden="true">🔊</span></button></div>
     <h1 class="pt-h1" data-i18n>My progress</h1>
     <div class="card hero-card"><div class="ring" id="prog-ring"></div><div><p class="kicker" data-i18n>This week</p><div class="week" id="prog-week"></div><p class="pt-note" id="prog-days"></p></div></div>
+    <button class="big secondary" id="prog-family" data-i18n>Share with family</button>
     <div id="prog-list" class="cards"></div>
     <div class="card"><h2 class="pt-h2" data-i18n>How your body is doing</h2><div id="prog-body"></div><p class="pt-note" data-i18n>Scores describe how well each movement was done (range, pace, control). They are not a measure of muscle strength.</p></div>
   </section>
@@ -672,7 +708,53 @@ const I18N = (function () {
     'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Paused.': 'متوقف مؤقتًا.', 'Tap Next exercise when you are ready.': 'اضغط «التمرين التالي» عندما تكون جاهزًا.', 'Please step in front of the camera.': 'من فضلك قف أمام الكاميرا.', 'I cannot see your shoulders. Step back a little.': 'لا أرى كتفيك. تراجع قليلًا إلى الخلف.', 'I cannot see your arms. Step back so your arms are in view.': 'لا أرى ذراعيك. تراجع إلى الخلف حتى تظهر ذراعاك.', 'I cannot see your feet. Step back, or put the phone lower down.': 'لا أرى قدميك. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I cannot see your knees. Step back, or put the phone lower down.': 'لا أرى ركبتيك. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I cannot see your hips. Step back a little.': 'لا أرى وركيك. تراجع قليلًا إلى الخلف.', 'I cannot see your legs clearly. Step back, or put the phone lower down.': 'لا أرى ساقيك بوضوح. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I can see only one leg. Turn to face the camera.': 'أرى ساقًا واحدة فقط. استدر لتواجه الكاميرا.', 'Stand where the camera can see you clearly.': 'قف في مكان تراك فيه الكاميرا بوضوح.', 'Tip: put the phone or laptop lower, about knee to waist height, and step further back.': 'نصيحة: ضع الهاتف أو الحاسوب في مكان أدنى، بين مستوى الركبة والخصر، وابتعد أكثر.', 'If the picture keeps zooming in on your face, turn off Center Stage: open Control Center, choose Video Effects, then turn off Center Stage.': 'إذا ظلت الصورة تقترب من وجهك، أوقف ميزة التأطير التلقائي: افتح مركز التحكم، ثم تأثيرات الفيديو، ثم أوقف Center Stage.', 'If the camera keeps zooming in on your face, turn off Center Stage on this device.': 'إذا ظلت الكاميرا تقترب من وجهك، أوقف ميزة التأطير التلقائي على هذا الجهاز.', 'Starting by itself in {n} seconds. Walk to your spot.': 'سيبدأ تلقائيًا بعد {n} ثانية. اذهب إلى مكانك.', 'Next: {name}, in {n} seconds.': 'التالي: {name}، بعد {n} ثانية.', 'Finishing in {n} seconds.': 'الإنهاء بعد {n} ثانية.', 'Tap the screen to stay here.': 'اضغط على الشاشة للبقاء هنا.', 'How hard was today overall?': 'ما مدى صعوبة تمارين اليوم إجمالًا؟', 'How hard was today overall? Tap a face.': 'ما مدى صعوبة تمارين اليوم إجمالًا؟ اضغط على أحد الوجوه.', 'Latest session started without a clear camera view. Check the setup before relying on it.': 'بدأت آخر جلسة دون رؤية واضحة من الكاميرا. تحقق من الإعداد قبل الاعتماد عليها.', 'Prop the phone up 2 to 3 metres away, about knee to waist height. On a laptop, put it on a chair or low table. After you tap I\'m ready, the app talks you through each exercise and moves on by itself.': 'ضع الهاتف على بعد ٢ إلى ٣ أمتار، بين مستوى الركبة والخصر. إذا كنت تستخدم حاسوبًا محمولًا فضعه على كرسي أو طاولة منخفضة. بعد الضغط على «أنا جاهز» يرشدك التطبيق صوتيًا في كل تمرين وينتقل وحده إلى التالي.', 'Tap any exercise to do it now, as often as you like.': 'اضغط على أي تمرين لتبدأه الآن، كلما أردت.', 'Getting ready…': 'جارٍ التجهيز…',
     'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
     'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
-    'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع', 'Watch a demonstration': 'شاهد عرضاً توضيحياً', 'Video by {src}, {len}.': 'فيديو من {src}، {len}.', 'In English.': 'باللغة الإنجليزية.',
+    'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
+    'Private view': 'عرض خاص',
+    'The screen shows a stick figure only, never the camera picture. Nothing is recorded.': 'تعرض الشاشة رسماً تخطيطياً للجسم فقط، ولا تعرض صورة الكاميرا أبداً. لا يتم تسجيل أي شيء.',
+    'Private view. Not recorded.': 'عرض خاص. لا يوجد تسجيل.',
+    'Private view on. The screen shows a stick figure only.': 'تم تفعيل العرض الخاص. تعرض الشاشة رسماً تخطيطياً فقط.',
+    'Private view off.': 'تم إيقاف العرض الخاص.',
+    'For family': 'للعائلة',
+    'Share with family': 'شارك مع العائلة',
+    'A simple summary of how the home exercises are going. Read it together, or send it to a family member.': 'ملخص بسيط عن سير التمارين المنزلية. اقرأوه معاً، أو أرسله إلى أحد أفراد العائلة.',
+    'How you can help': 'كيف يمكنك المساعدة',
+    'Contact the clinic if': 'تواصل مع العيادة إذا',
+    'Send this summary': 'أرسل هذا الملخص',
+    'Only the text below is sent, to the person you choose. Nothing is sent unless you tap Share.': 'يُرسل النص أدناه فقط، إلى الشخص الذي تختاره. لا يُرسل أي شيء إلا إذا ضغطت على مشاركة.',
+    'Share': 'مشاركة',
+    'Copy the text': 'انسخ النص',
+    'Shared.': 'تمت المشاركة.',
+    'Copied. Paste it into WhatsApp or a message.': 'تم النسخ. الصقه في واتساب أو في رسالة.',
+    'Could not copy. Press and hold the text to copy it.': 'تعذّر النسخ. اضغط مطولاً على النص لنسخه.',
+    'Research prototype, not a medical device. This summary is not medical advice.': 'نموذج بحثي وليس جهازاً طبياً. هذا الملخص ليس نصيحة طبية.',
+    'Going well': 'الأمور تسير جيداً',
+    'Some things to keep an eye on': 'بعض الأمور تحتاج إلى متابعة',
+    'Needs attention': 'يحتاج إلى اهتمام',
+    'Not started yet': 'لم يبدأ بعد',
+    'Help set up the phone: 2 to 3 metres away, about knee to waist height, with the whole body in view.': 'ساعد في وضع الهاتف: على بعد مترين إلى ثلاثة أمتار، بارتفاع الركبة إلى الخصر تقريباً، بحيث يظهر الجسم كاملاً.',
+    'Stay close during the walking and balance exercises.': 'ابقَ قريباً أثناء تمارين المشي والتوازن.',
+    'A reminder at the same time each day helps. A few minutes is enough.': 'التذكير في الوقت نفسه كل يوم مفيد. دقائق قليلة تكفي.',
+    'Pain is 7 or more out of 10, or keeps rising.': 'الألم ٧ من ١٠ أو أكثر، أو يستمر في الازدياد.',
+    'There has been a fall or a near fall.': 'حدث سقوط أو كاد أن يحدث.',
+    'There is dizziness, chest pain or shortness of breath during exercise.': 'ظهرت دوخة أو ألم في الصدر أو ضيق في التنفس أثناء التمرين.',
+    'The exercises suddenly become much harder.': 'أصبحت التمارين فجأة أصعب بكثير.',
+    'Home exercise summary': 'ملخص التمارين المنزلية',
+    'Sent from iRehab, a research prototype. Not medical advice.': 'مُرسل من iRehab، نموذج بحثي. ليس نصيحة طبية.',
+    'No exercises have been done yet.': 'لم يتم إجراء أي تمرين بعد.',
+    'Exercised on {n} of the last 7 days.': 'عدد أيام التمرين خلال آخر ٧ أيام: {n}.',
+    'Exercised on {n} of the last 7 days. A gentle reminder may help.': 'عدد أيام التمرين خلال آخر ٧ أيام: {n}. قد يفيد تذكير لطيف.',
+    'No exercise in the last 7 days. Days since the last session: {n}.': 'لا يوجد تمرين خلال آخر ٧ أيام. عدد الأيام منذ آخر جلسة: {n}.',
+    'No pain rating has been given yet.': 'لم يُسجَّل تقييم للألم بعد.',
+    'Pain was rated {n} out of 10 at the last session. Please contact the clinic.': 'كان تقييم الألم {n} من ١٠ في آخر جلسة. يُرجى التواصل مع العيادة.',
+    'Pain has gone up from {a} to {b} out of 10. Ask how it feels today.': 'ارتفع الألم من {a} إلى {b} من ١٠. اسأل عن الشعور اليوم.',
+    'Pain was rated {n} out of 10 at the last session. Ask how it feels today.': 'كان تقييم الألم {n} من ١٠ في آخر جلسة. اسأل عن الشعور اليوم.',
+    'Pain is low ({n} out of 10).': 'الألم منخفض ({n} من ١٠).',
+    'The last session felt very hard ({n} out of 10).': 'كانت آخر جلسة صعبة جداً ({n} من ١٠).',
+    'Getting better: {ex}.': 'في تحسّن: {ex}.',
+    'Getting harder: {ex}. Mention this to the clinic.': 'أصبح أصعب: {ex}. أخبر العيادة بذلك.',
+    'Holding steady compared with the first sessions.': 'المستوى ثابت مقارنة بالجلسات الأولى.',
+    'Balance or walking looked unsteady in the last checks. Stay close on stairs and in the bathroom, and mention it to the clinic.': 'بدا التوازن أو المشي غير ثابت في آخر الفحوصات. ابقَ قريباً عند الدرج وفي الحمّام، وأخبر العيادة بذلك.',
+    'The camera could not see clearly in some sessions. Help with setting up the phone would make the results more reliable.': 'لم تتمكن الكاميرا من الرؤية بوضوح في بعض الجلسات. المساعدة في وضع الهاتف تجعل النتائج أكثر دقة.', 'Watch a demonstration': 'شاهد عرضاً توضيحياً', 'Video by {src}, {len}.': 'فيديو من {src}، {len}.', 'In English.': 'باللغة الإنجليزية.',
     'Do it the way the drawings show. The video is from YouTube and needs the internet.': 'قم بالتمرين كما في الرسوم. الفيديو من يوتيوب ويحتاج إلى الإنترنت.',
     'Done ✓': 'تم ✓', 'Next': 'التالي', 'To do': 'لم يُنجز', 'Skipped': 'تم تخطيه', 'with a helper': 'بوجود مرافق',
     'This phone cannot run iRehab': 'لا يمكن تشغيل iRehab على هذا الهاتف', 'Please try the latest Chrome (Android) or Safari (iPhone).': 'يرجى استخدام أحدث إصدار من Chrome (أندرويد) أو Safari (آيفون).',
@@ -2243,7 +2325,34 @@ const Clinic = (function () {
   }
   const sessionsText = (recs) => recs.length + ' session' + (recs.length > 1 ? 's' : '') + ', latest ' + dstr(recs[recs.length - 1].t) + '.';
 
-  return { analyze, render, DOMAINS, RULES };
+
+  /* Plain-language summary for a family member or home helper. Returns items as [level, template, vars] so the app can
+     translate them; `ex` in vars is a list of exercise keys. Levels: good, watch, act, info. No clinical terms. */
+  function family(pid, opts) {
+    const a = analyze(pid, opts), items = [];
+    if (!a.n) return { n: 0, level: 'none', items: [['info', 'No exercises have been done yet.', {}]] };
+    const P = a.period;
+    if (P.active7 >= 3) items.push(['good', 'Exercised on {n} of the last 7 days.', { n: P.active7 }]);
+    else if (P.active7 >= 1) items.push(['watch', 'Exercised on {n} of the last 7 days. A gentle reminder may help.', { n: P.active7 }]);
+    else items.push(['act', 'No exercise in the last 7 days. Days since the last session: {n}.', { n: P.sinceLast }]);
+    const pr = a.pro || [], p0 = pr.find((x) => num(x.pain)), pN = [...pr].reverse().find((x) => num(x.pain)), eN = [...pr].reverse().find((x) => num(x.rpe));
+    if (!pN) items.push(['info', 'No pain rating has been given yet.', {}]);
+    else if (pN.pain >= 7) items.push(['act', 'Pain was rated {n} out of 10 at the last session. Please contact the clinic.', { n: pN.pain }]);
+    else if (p0 !== pN && pN.pain - p0.pain >= 2) items.push(['watch', 'Pain has gone up from {a} to {b} out of 10. Ask how it feels today.', { a: p0.pain, b: pN.pain }]);
+    else if (pN.pain >= 4) items.push(['watch', 'Pain was rated {n} out of 10 at the last session. Ask how it feels today.', { n: pN.pain }]);
+    else items.push(['good', 'Pain is low ({n} out of 10).', { n: pN.pain }]);
+    if (eN && eN.rpe >= 7) items.push(['watch', 'The last session felt very hard ({n} out of 10).', { n: eN.rpe }]);
+    const imp = a.domains.filter((x) => x.tr.verdict === 'improved').map((x) => x.d.ex), dec = a.domains.filter((x) => x.tr.verdict === 'declined').map((x) => x.d.ex);
+    if (imp.length) items.push(['good', 'Getting better: {ex}.', { ex: imp }]);
+    if (dec.length) items.push(['watch', 'Getting harder: {ex}. Mention this to the clinic.', { ex: dec }]);
+    if (!imp.length && !dec.length && a.domains.some((x) => x.tr.verdict === 'stable')) items.push(['info', 'Holding steady compared with the first sessions.', {}]);
+    if (a.fallPos >= 1) items.push(['watch', 'Balance or walking looked unsteady in the last checks. Stay close on stairs and in the bathroom, and mention it to the clinic.', {}]);
+    const now = (opts && opts.now) || Date.now();
+    if (R.sessions(pid).some((r) => r.posWeak && now - new Date(r.t).getTime() < 7 * DAY)) items.push(['info', 'The camera could not see clearly in some sessions. Help with setting up the phone would make the results more reliable.', {}]);
+    const level = items.some((i) => i[0] === 'act') ? 'act' : items.some((i) => i[0] === 'watch') ? 'watch' : 'good';
+    return { n: a.n, level, items, last: P.last, sinceLast: P.sinceLast };
+  }
+  return { analyze, render, family, DOMAINS, RULES };
 })();
 if (typeof module !== 'undefined') module.exports = Clinic;
 
@@ -2847,6 +2956,14 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     if (guided) showResult(saved);
   }
 
+  /* Private view: only a stick figure is ever drawn; the camera picture is not shown and video files cannot be loaded. */
+  function privateView() { return $('private').checked; }
+  function syncPrivate() {
+    const on = privateView();
+    $('priv-badge').hidden = !on; document.body.classList.toggle('private', on);
+    const f = $('lbl-file'); if (f) f.hidden = on;
+  }
+
   /* ---------- frame loop ---------- */
   function loop() {
     if (!running) return;
@@ -2857,10 +2974,13 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     const W = video.videoWidth, H = video.videoHeight;
     if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; $('stage').style.aspectRatio = W + ' / ' + H; }
     const mirror = source === 'camera';
-    ctx.save();
-    if (mirror) { ctx.translate(W, 0); ctx.scale(-1, 1); }
-    ctx.drawImage(video, 0, 0, W, H);
-    ctx.restore();
+    if (privateView()) { ctx.fillStyle = '#101c1b'; ctx.fillRect(0, 0, W, H); }   // private view: the camera picture is never drawn
+    else {
+      ctx.save();
+      if (mirror) { ctx.translate(W, 0); ctx.scale(-1, 1); }
+      ctx.drawImage(video, 0, 0, W, H);
+      ctx.restore();
+    }
 
     const ts = Math.max(tsLast + 1, performance.now()); tsLast = ts;
     let res;
@@ -2963,7 +3083,15 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   const BONES = [[11, 12], [11, 13], [13, 15], [12, 14], [14, 16], [11, 23], [12, 24], [23, 24], [23, 25], [25, 27], [24, 26], [26, 28]];
   function drawSkeleton(lms, W, H, mirror, f) {
     const P = (i) => ({ x: (mirror ? 1 - lms[i].x : lms[i].x) * W, y: lms[i].y * H, v: lms[i].visibility == null ? 1 : lms[i].visibility });
-    const lw = Math.max(3, W / 260);
+    const pv = privateView(), lw = Math.max(3, W / 260) * (pv ? 2 : 1);
+    if (pv) {   // with no camera picture, give the figure a head so it reads as a person
+      const n = P(0), a = P(11), b = P(12);
+      if (a.v >= 0.5 && b.v >= 0.5) {
+        const sw = Math.hypot(a.x - b.x, a.y - b.y), r = Math.max(lw * 2, Math.min(sw * 0.36, H * 0.09));
+        const cx = n.v >= 0.5 ? n.x : (a.x + b.x) / 2, cy = n.v >= 0.5 ? n.y : Math.min(a.y, b.y) - r * 1.6;
+        ctx.lineWidth = lw; ctx.strokeStyle = 'rgba(94, 224, 214, .95)'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.2832); ctx.stroke();
+      }
+    }
     ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.strokeStyle = 'rgba(94, 224, 214, .95)';
     for (const [a, b] of BONES) {
       const p = P(a), q = P(b);
@@ -3312,6 +3440,51 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   $('btn-home').onclick = () => { renderHome(); show('scr-home'); speakHome(); };
   $('btn-progress').onclick = showProgress; $('btn-done-progress').onclick = showProgress;
   $('prog-back').onclick = () => { renderHome(); show('scr-home'); };
+
+  /* ---------- family summary ---------- */
+  const FAM_MARK = { good: '✓', watch: '!', act: '!!', info: '•' }, FAM_EMOJI = { good: '✅', watch: '⚠️', act: '❗', info: 'ℹ️' };
+  const FAM_HEAD = { good: 'Going well', watch: 'Some things to keep an eye on', act: 'Needs attention', none: 'Not started yet' };
+  const FAM_HELP = ['Help set up the phone: 2 to 3 metres away, about knee to waist height, with the whole body in view.',
+    'Stay close during the walking and balance exercises.', 'A reminder at the same time each day helps. A few minutes is enough.'];
+  const FAM_CALL = ['Pain is 7 or more out of 10, or keeps rising.', 'There has been a fall or a near fall.',
+    'There is dizziness, chest pain or shortness of breath during exercise.', 'The exercises suddenly become much harder.'];
+  let famFrom = 'scr-home', famSpeech = '';
+  function famLine(it) {
+    const v = Object.assign({}, it[2]);
+    for (const k of Object.keys(v)) v[k] = Array.isArray(v[k]) ? v[k].map((e) => L(EX[e].name)).join(I18N.lang === 'ar' ? '، ' : ', ') : D(v[k]);
+    return L(it[1], v);
+  }
+  function showFamily() {
+    const f = Clinic.family(pid()), lines = f.items.map(famLine);
+    const when = new Date().toLocaleDateString(I18N.lang === 'ar' ? 'ar-SA-u-ca-gregory' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    $('fam-lead').textContent = L('A simple summary of how the home exercises are going. Read it together, or send it to a family member.');
+    $('fam-status').className = 'card fam-status ' + f.level;
+    $('fam-status').innerHTML = '<span class="dot" aria-hidden="true">' + (f.level === 'good' ? '✓' : f.level === 'none' ? '…' : '!') + '</span><span>' + esc(L(FAM_HEAD[f.level])) + '</span>';
+    $('fam-list').innerHTML = f.items.map((it, i) => '<li class="' + it[0] + '"><span class="ic" aria-hidden="true">' + FAM_MARK[it[0]] + '</span><span>' + esc(lines[i]) + '</span></li>').join('');
+    $('fam-help').innerHTML = FAM_HELP.map((t) => '<li>' + esc(L(t)) + '</li>').join('');
+    $('fam-call').innerHTML = FAM_CALL.map((t) => '<li>' + esc(L(t)) + '</li>').join('');
+    $('fam-text').textContent = L('Home exercise summary') + ' (' + when + ')\n' + L(FAM_HEAD[f.level]) + '\n\n' + f.items.map((it, i) => FAM_EMOJI[it[0]] + ' ' + lines[i]).join('\n') +
+      '\n\n' + L('Sent from iRehab, a research prototype. Not medical advice.');
+    $('fam-done').textContent = ''; $('fam-share').hidden = !navigator.share;
+    famSpeech = L(FAM_HEAD[f.level]) + '. ' + lines.join(' ');
+    show('scr-family');
+  }
+  function famCopied(ok) { $('fam-done').textContent = L(ok ? 'Copied. Paste it into WhatsApp or a message.' : 'Could not copy. Press and hold the text to copy it.'); }
+  async function famCopy() {
+    const t = $('fam-text').textContent; window.__famCopied = t;
+    try { await navigator.clipboard.writeText(t); famCopied(true); }
+    catch (e) { try { const r = document.createRange(); r.selectNodeContents($('fam-text')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); famCopied(document.execCommand('copy')); } catch (e2) { famCopied(false); } }
+  }
+  $('fam-share').onclick = async () => {
+    const t = $('fam-text').textContent; window.__famShared = t;
+    try { await navigator.share({ text: t }); $('fam-done').textContent = L('Shared.'); }
+    catch (e) { if (!e || e.name !== 'AbortError') famCopy(); }   // sharing not possible here: fall back to copying
+  };
+  $('fam-copy').onclick = famCopy;
+  $('fam-listen').onclick = () => say(famSpeech);
+  $('fam-back').onclick = () => { if (famFrom === 'scr-progress') showProgress(); else { renderHome(); show('scr-home'); } };
+  $('open-family').onclick = () => { famFrom = 'scr-home'; showFamily(); };
+  $('prog-family').onclick = () => { famFrom = 'scr-progress'; showFamily(); };
   $('intro-listen').onclick = speakIntro; $('res-listen').onclick = () => say(resultSpeech); $('prog-listen').onclick = () => showProgress();
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.face'); if (!b) return;
@@ -3341,6 +3514,10 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   }
   $('sound-toggle').onclick = () => { $('voice').checked = !$('voice').checked; syncSound(); try { localStorage.setItem('irehab.sound', $('voice').checked ? '1' : '0'); } catch (e) { /* optional */ } if ($('voice').checked) say('Sound on'); };
   $('voice').onchange = syncSound;
+  $('private').onchange = () => { syncPrivate(); try { localStorage.setItem('irehab.private', privateView() ? '1' : '0'); } catch (e) { /* optional */ }
+    say(privateView() ? 'Private view on. The screen shows a stick figure only.' : 'Private view off.'); };
+  try { if (localStorage.getItem('irehab.private') === '1') $('private').checked = true; } catch (e) { /* default off */ }
+  syncPrivate();
   try { if (localStorage.getItem('irehab.sound') === '0') $('voice').checked = false; } catch (e) { /* default on */ }
   function relang(l) {
     I18N.setLang(l);
@@ -3351,6 +3528,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     if (!vis || vis.id === 'scr-home') renderHome();
     else if (vis.id === 'scr-intro') openIntro(exKey);
     else if (vis.id === 'scr-progress') showProgress();
+    else if (vis.id === 'scr-family') showFamily();
     else if (vis.id === 'scr-creport') showCReport();
     else if (vis.id === 'scr-done') showDone();
   }
