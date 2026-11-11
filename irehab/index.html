@@ -252,7 +252,7 @@ input.btn { width: 8.5em; cursor: text; }
 /* live screen: the phone stands 2 to 3 m away, so everything is readable from across a room */
 .live { height: 100dvh; display: flex; flex-direction: column; background: #000; color: #fff; }
 .livebar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px max(14px, env(safe-area-inset-right, 0px)) 10px max(14px, env(safe-area-inset-left, 0px)); font: 700 18px var(--font); }
-.livebar .clock { font: 700 18px var(--mono); font-variant-numeric: tabular-nums; }
+.livebar .clock { position: static; background: none; padding: 0; font: 700 18px var(--mono); font-variant-numeric: tabular-nums; }
 .live .stage { flex: 1; min-height: 0; border-radius: 0; aspect-ratio: auto; max-height: none; width: 100%; background: #000; border: 6px solid transparent; transition: border-color .2s; }
 .live .stage.ok { border-color: #2fbf71; }
 .live .stage.bad { border-color: #f0a851; }
@@ -274,7 +274,6 @@ input.btn { width: 8.5em; cursor: text; }
 .res-big b { display: block; font-size: clamp(56px, 16vw, 84px); line-height: 1; color: var(--ink); }
 .pt .wins { font-size: 19px; }
 .tip { margin: 0; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 19px; }
-.tip::before { content: "Next time: "; font-weight: 700; }
 .tip:empty { display: none; }
 /* the main action sits in a bar pinned to the bottom of the screen, always in reach of the thumb */
 .actions { position: sticky; bottom: 0; z-index: 5; display: flex; flex-direction: column; gap: 10px; margin-top: auto;
@@ -292,6 +291,87 @@ input.btn { width: 8.5em; cursor: text; }
 .faces-scale { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); margin-top: -6px; }
 .rate-block { display: flex; flex-direction: column; gap: 10px; }
 
+/* tools, score, stars, confetti, progress and clinician cards */
+.tools { display: flex; gap: 8px; }
+.pill-btn { border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 8px 14px; min-height: 44px; font: 700 16px var(--font); cursor: pointer; }
+.pill-btn[aria-pressed="false"] { color: var(--muted); }
+.big.secondary { background: var(--surface); color: var(--accent); border-color: var(--accent); }
+.titlerow { display: flex; align-items: center; gap: 12px; justify-content: space-between; }
+.titlerow.center { justify-content: center; }
+.listen { flex: none; width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--line); background: var(--surface); font-size: 22px; cursor: pointer; }
+.listen.on { border-color: var(--accent); background: var(--accent-soft); }
+.scorebox { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.kicker { margin: 0; font-weight: 700; color: var(--muted); font-size: 16px; text-transform: uppercase; letter-spacing: .06em; }
+.ring { width: 150px; height: 150px; }
+.ring svg { width: 100%; height: 100%; }
+.ring .bgc { fill: none; stroke: var(--line); stroke-width: 12; }
+.ring .fgc { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease-out; }
+.ring .num { font: 800 40px var(--font); fill: var(--ink); }
+.ring .sub { font: 600 13px var(--font); fill: var(--muted); }
+.ring text { stroke: none; paint-order: normal; }
+.ring.small { width: 72px; height: 72px; }
+.stars { font-size: 40px; letter-spacing: 6px; line-height: 1; color: #f2b01e; }
+.stars .off { color: var(--line); }
+.pb { margin: 0; background: #fff3c4; color: #7a5200; border-radius: 999px; padding: 6px 16px; font-weight: 800; font-size: 18px; }
+.change { margin: 0; text-align: center; font-weight: 600; font-size: 18px; color: var(--muted); }
+.res-big { font-size: 20px; }
+.res-big b { font-size: clamp(40px, 12vw, 60px); }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+.week { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 100%; }
+.week span { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+.week i { width: 22px; height: 22px; border-radius: 50%; background: var(--line); display: block; }
+.week i.on { background: var(--good); }
+.week i.today { outline: 2px solid var(--accent); outline-offset: 2px; }
+.card { background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.cards { display: flex; flex-direction: column; gap: 12px; }
+.hero-card { flex-direction: row; align-items: center; gap: 16px; }
+.hero-card .ring { width: 120px; height: 120px; flex: none; }
+.hero-card > div:last-child { min-width: 0; flex: 1; }
+.pc-head { display: grid; grid-template-columns: 60px minmax(0, 1fr) 72px; gap: 12px; align-items: center; }
+.pc-head .ic { width: 60px; height: 56px; border-radius: 12px; background: var(--stage); display: grid; place-items: center; }
+.pc-head .ic svg { width: 56px; height: 50px; }
+.pc-head .ic .fg { fill: none; stroke: #eaf2f0; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.pc-head .ic .ch, .pc-head .ic .dim, .pc-head .ic .dimline, .pc-head .ic .tx { display: none; }
+.pc-head .ic .ac { fill: none; stroke: #5ee0d6; stroke-width: 3; } .pc-head .ic .acf { fill: #5ee0d6; }
+.pc-head .nm { font-weight: 800; font-size: 19px; line-height: 1.2; }
+.pc-head .sub { color: var(--muted); font-size: 16px; }
+.pc-trend { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 16px; font-weight: 600; }
+.pc-trend svg { width: 120px; height: 34px; flex: none; }
+.pc-trend .ln { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.pc-trend .pt { fill: var(--accent); }
+.up { color: var(--good); } .down { color: var(--warn); }
+.mrow { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.mrow .ml { font-weight: 700; font-size: 16px; }
+.mrow .mv { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.mrow .mv b { font-size: 28px; }
+.mrow .mc { font-size: 15px; color: var(--muted); }
+.chip2 { display: inline-block; border-radius: 999px; padding: 3px 10px; font-size: 14px; font-weight: 700; }
+.chip2.ok { background: var(--good-soft); color: var(--good); } .chip2.no { background: var(--warn-soft); color: var(--warn); }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.facts div { background: var(--bg); border-radius: 12px; padding: 10px; }
+.facts dt { font-size: 14px; color: var(--muted); } .facts dd { margin: 0; font-weight: 800; font-size: 22px; }
+#prog-body svg.body { width: 100%; height: auto; }
+#prog-body .sil circle, #prog-body .sil path { fill: var(--sil); }
+#prog-body .sil .limb { fill: none; stroke: var(--sil); stroke-width: 15; stroke-linecap: round; }
+#prog-body .sil .leg { stroke-width: 18; }
+#prog-body .reg { stroke: var(--surface); stroke-width: 2; }
+#prog-body .b-strong { fill: var(--st-good); background: var(--st-good); } #prog-body .b-build { fill: var(--st-warn); background: var(--st-warn); }
+#prog-body .b-focus { fill: var(--st-serious); background: var(--st-serious); }
+#prog-body .reg.b-none { fill: var(--surface); stroke: var(--muted); stroke-dasharray: 3 3; stroke-width: 1.5; }
+#prog-body .lead { stroke: var(--muted); stroke-width: 1; fill: none; }
+#prog-body .bl { font: 700 12px var(--font); fill: var(--ink); } #prog-body .bv { font: 12px var(--font); fill: var(--muted); }
+#prog-body .mob, #prog-body .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 15px; color: var(--muted); }
+#prog-body .legend > span { display: inline-flex; gap: 6px; align-items: center; }
+#prog-body .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; flex: none; }
+#prog-body .dot.b-none { background: var(--surface); border: 1.5px dashed var(--muted); }
+/* right-to-left (Arabic) */
+[dir="rtl"] .live .count { left: auto; right: 14px; }
+[dir="rtl"] .howto .num { left: auto; right: 10px; }
+[dir="rtl"] .wins li { padding: 10px 40px 10px 12px; } [dir="rtl"] .wins li::before { left: auto; right: 14px; }
+[dir="rtl"] .plan li { padding: 10px 10px 10px 14px; }
+.tip::before { content: attr(data-label); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .ring .fgc { transition: none; } }
+
 /* clinician area keeps the dense desktop layout */
 .clin { min-height: 100dvh; }
 .clin h2 { margin: 6px 0 0; }
@@ -299,33 +379,35 @@ input.btn { width: 8.5em; cursor: text; }
 </style>
 </head>
 <body>
+<canvas id="confetti" aria-hidden="true"></canvas>
 <div class="app">
 
   <!-- ================= PATIENT: today's exercises ================= -->
   <section class="screen pt" id="scr-home">
     <div class="pt-top">
       <span class="brand">iRehab</span>
-      <button class="linkbtn" id="open-clinic">For clinicians</button>
+      <span class="tools"><button class="pill-btn" id="sound-toggle" aria-pressed="true"><span class="ico" aria-hidden="true">🔊</span> <span id="sound-label">Sound on</span></button><button class="pill-btn" id="lang-toggle" lang="ar">عربي</button></span>
     </div>
     <h1 class="pt-h1" id="hello">Today's exercises</h1>
     <p class="pt-lead" id="home-lead">Do them one at a time. The phone will guide you.</p>
     <ol class="plan" id="plan"></ol>
-    <p class="pt-note" id="home-note">Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.</p>
-    <p class="pt-fine">Research prototype, not a medical device. Video stays on this phone.</p>
+    <button class="big secondary" id="btn-progress" data-i18n>My progress</button>
+    <p class="pt-note" id="home-note" data-i18n>Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.</p>
+    <p class="pt-fine"><span data-i18n>Research prototype, not a medical device. Video stays on this phone.</span> <button class="linkbtn" id="open-clinic" data-i18n>For clinicians</button></p>
     <div class="actions"><button class="big primary" id="btn-start" disabled>Getting ready…</button></div>
   </section>
 
   <!-- ================= PATIENT: how to do it ================= -->
   <section class="screen pt" id="scr-intro" hidden>
-    <div class="pt-top"><button class="backbtn" id="intro-back" aria-label="Back to today's exercises">‹ Back</button><span class="step" id="intro-step"></span></div>
-    <h1 class="pt-h1" id="intro-title"></h1>
+    <div class="pt-top"><button class="backbtn" id="intro-back" data-i18n>‹ Back</button><span class="step" id="intro-step"></span></div>
+    <div class="titlerow"><h1 class="pt-h1" id="intro-title"></h1><button class="listen" id="intro-listen" data-i18n-label aria-label="Listen"><span aria-hidden="true">🔊</span></button></div>
     <p class="pt-lead" id="intro-what"></p>
     <ol class="howto" id="idle"></ol>
     <div class="safety" id="intro-safety"></div>
     <div class="actions">
-      <label class="confirm" id="helper-row" hidden><input type="checkbox" id="helper"><span>Someone is here with me</span></label>
-      <button class="big primary" id="btn-ready">I'm ready</button>
-      <button class="linkbtn center" id="btn-skip">Skip this one today</button>
+      <label class="confirm" id="helper-row" hidden><input type="checkbox" id="helper"><span data-i18n>Someone is here with me</span></label>
+      <button class="big primary" id="btn-ready" data-i18n>I'm ready</button>
+      <button class="linkbtn center" id="btn-skip" data-i18n>Skip this one today</button>
     </div>
   </section>
 
@@ -345,20 +427,25 @@ input.btn { width: 8.5em; cursor: text; }
       <dl class="stats" id="live-stats"></dl>
       <p class="note" id="scope"></p>
     </div>
-    <button class="big stop" id="btn-finish" disabled>Stop</button>
+    <button class="big stop" id="btn-finish" disabled data-i18n>Stop</button>
   </section>
 
   <!-- ================= PATIENT: well done ================= -->
   <section class="screen pt" id="scr-result" hidden>
-    <div class="cheer" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 25l7 7 13-15"/></svg></div>
-    <h1 class="pt-h1 center" id="res-title">Well done!</h1>
+    <div class="titlerow center"><h1 class="pt-h1 center" id="res-title">Well done!</h1><button class="listen" id="res-listen" data-i18n-label aria-label="Listen"><span aria-hidden="true">🔊</span></button></div>
+    <div class="scorebox" id="res-scorebox">
+      <div class="ring" id="res-ring"></div>
+      <div class="stars" id="res-stars" aria-hidden="true"></div>
+      <p class="pb" id="res-pb" hidden data-i18n>New personal best!</p>
+      <p class="change" id="res-change"></p>
+    </div>
     <p class="res-big" id="res-big"></p>
     <ul class="wins" id="res-wins"></ul>
     <p class="tip" id="res-next"></p>
     <div class="rate-block" id="rate-block">
-      <h2 class="pt-h2">How hard was that?</h2>
+      <h2 class="pt-h2" data-i18n>How hard was that?</h2>
       <div class="faces" id="faces-rpe" role="group" aria-label="How hard was that"></div>
-      <h2 class="pt-h2">Any pain?</h2>
+      <h2 class="pt-h2" data-i18n>Any pain?</h2>
       <div class="faces" id="faces-pain" role="group" aria-label="Pain"></div>
     </div>
     <div class="actions">
@@ -369,54 +456,72 @@ input.btn { width: 8.5em; cursor: text; }
 
   <!-- ================= PATIENT: all done ================= -->
   <section class="screen pt" id="scr-done" hidden>
-    <div class="cheer" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 25l7 7 13-15"/></svg></div>
-    <h1 class="pt-h1 center">All done for today</h1>
+    <h1 class="pt-h1 center" data-i18n>All done for today</h1>
+    <div class="scorebox"><p class="kicker" data-i18n>Today's score</p><div class="ring" id="done-ring"></div><div class="stars" id="done-stars" aria-hidden="true"></div></div>
     <p class="pt-lead center" id="done-lead"></p>
+    <div class="week" id="done-week"></div>
     <ol class="plan" id="done-plan"></ol>
-    <div class="actions"><button class="big primary" id="btn-home">Back to start</button></div>
+    <div class="actions"><button class="big primary" id="btn-done-progress" data-i18n>See my progress</button><button class="linkbtn center" id="btn-home" data-i18n>Back to start</button></div>
+  </section>
+
+  <!-- ================= PATIENT: my progress ================= -->
+  <section class="screen pt" id="scr-progress" hidden>
+    <div class="pt-top"><button class="backbtn" id="prog-back" data-i18n>‹ Back</button><button class="listen" id="prog-listen" data-i18n-label aria-label="Listen"><span aria-hidden="true">🔊</span></button></div>
+    <h1 class="pt-h1" data-i18n>My progress</h1>
+    <div class="card hero-card"><div class="ring" id="prog-ring"></div><div><p class="kicker" data-i18n>This week</p><div class="week" id="prog-week"></div><p class="pt-note" id="prog-days"></p></div></div>
+    <div id="prog-list" class="cards"></div>
+    <div class="card"><h2 class="pt-h2" data-i18n>How your body is doing</h2><div id="prog-body"></div><p class="pt-note" data-i18n>Scores describe how well each movement was done (range, pace, control). They are not a measure of muscle strength.</p></div>
+  </section>
+
+  <!-- ================= CLINICIAN: phone-friendly report ================= -->
+  <section class="screen pt" id="scr-creport" hidden>
+    <div class="pt-top"><button class="backbtn" id="crep-back" data-i18n>‹ Back</button><span class="step" data-i18n>Clinician report</span></div>
+    <div id="crep"></div>
+    <div class="actions"><button class="big secondary" id="btn-detail" data-i18n>Detailed tables and data tools (English)</button></div>
   </section>
 
   <!-- ================= CLINICIAN ================= -->
   <section class="screen clin" id="scr-clinic" hidden>
     <div class="wrap">
       <header>
-        <button class="btn" id="close-clinic">‹ Patient view</button>
-        <h1>iRehab Motion Check: clinician</h1>
+        <button class="btn" id="close-clinic" data-i18n>Patient view</button>
+        <h1 data-i18n>iRehab: clinician</h1>
+        <button class="btn" id="lang-toggle-c" lang="ar">عربي</button>
         <span class="pill" id="status">Loading tracker…</span>
       </header>
       <div class="panel">
-        <h2>Participant</h2>
+        <h2 data-i18n>Participant</h2>
         <div class="controls">
-          <label class="check">ID <input class="btn" id="pid" value="P001" maxlength="24" autocomplete="off"></label>
-          <label class="check">Age <input class="btn" id="age" type="number" min="18" max="110" inputmode="numeric" style="width:4.6em"></label>
-          <label class="check">Sex <select class="btn" id="sex"><option value="">Not set</option><option value="F">Female</option><option value="M">Male</option></select></label>
-          <label class="check">First name shown to patient <input class="btn" id="pname" maxlength="24" autocomplete="off" placeholder="optional"></label>
+          <label class="check"><span data-i18n>ID</span> <input class="btn" id="pid" value="P001" maxlength="24" autocomplete="off"></label>
+          <label class="check"><span data-i18n>Age</span> <input class="btn" id="age" type="number" min="18" max="110" inputmode="numeric" style="width:4.6em"></label>
+          <label class="check"><span data-i18n>Sex</span> <select class="btn" id="sex"><option value="" data-i18n>Not set</option><option value="F" data-i18n>Female</option><option value="M" data-i18n>Male</option></select></label>
+          <label class="check"><span data-i18n>First name shown to patient</span> <input class="btn" id="pname" maxlength="24" autocomplete="off" placeholder="optional"></label>
         </div>
-        <h2>Exercises in the daily plan</h2>
+        <h2 data-i18n>Exercises in the daily plan</h2>
         <div class="controls" id="plan-edit"></div>
-        <h2>Options</h2>
+        <h2 data-i18n>Options</h2>
         <div class="controls">
-          <label class="check"><input type="checkbox" id="voice" checked> Voice instructions</label>
-          <label class="check"><input type="checkbox" id="show-tech"> Show live measurements during exercises</label>
+          <label class="check"><input type="checkbox" id="voice" checked> <span data-i18n>Voice instructions</span></label>
+          <label class="check"><input type="checkbox" id="show-tech"> <span data-i18n>Show live measurements during exercises</span></label>
         </div>
       </div>
       <div class="panel">
-        <h2>Run or analyse a single exercise</h2>
+        <h2 data-i18n>Run or analyse a single exercise</h2>
         <div class="controls">
           <div class="seg" role="group" aria-label="Exercise" id="seg"></div>
           <select class="btn" id="stance" aria-label="Balance stance" hidden>
             <option value="two">1. Feet together</option><option value="semi">2. Semi-tandem</option><option value="tandem">3. Tandem (heel to toe)</option><option value="one">4. One leg</option>
           </select>
-          <button class="btn primary" id="btn-cam" disabled>Start camera</button>
-          <label class="btn" id="lbl-file" for="file">Analyse a video file</label>
+          <button class="btn primary" id="btn-cam" disabled data-i18n>Start camera</button>
+          <label class="btn" id="lbl-file" for="file" data-i18n>Analyse a video file</label>
           <input type="file" id="file" accept="video/*" hidden>
           <span class="spacer"></span>
-          <button class="btn" id="btn-report">Progress report</button>
-          <button class="btn" id="btn-example">Example report</button>
+          <button class="btn" id="btn-report" data-i18n>Progress report</button>
+          <button class="btn" id="btn-example" data-i18n>Example report</button>
         </div>
       </div>
-      <div class="panel" id="report" hidden></div>
-      <div class="panel" id="summary" hidden>
+      <div class="panel" id="report" hidden dir="ltr" lang="en"></div>
+      <div class="panel" id="summary" hidden dir="ltr" lang="en">
         <div class="sumhead">
           <h2>All measurements from this session</h2>
           <button class="btn" id="btn-copy">Copy summary</button>
@@ -425,7 +530,7 @@ input.btn { width: 8.5em; cursor: text; }
         <dl class="stats" id="sum-stats"></dl>
         <p class="note">Angles are image-plane estimates, typically within 5 to 10 degrees. Compare sessions recorded with the same camera position. This is not a strength grade, a diagnosis or a fall-risk assessment.</p>
       </div>
-      <div class="panel" id="logpanel">
+      <div class="panel" id="logpanel" dir="ltr" lang="en">
         <h2 id="log-title">Log of the last session</h2>
         <div class="tablebox"><table id="reps"><thead></thead><tbody></tbody></table></div>
         <p class="empty" id="reps-empty">Entries appear here as they are completed.</p>
@@ -446,6 +551,193 @@ const MPV = (function () { const exports = {}; "use strict";Object.definePropert
   return exports; })();
 </script>
 <script>
+/* Language layer: English is written inline in the app; this maps English text to Arabic.
+   L(text, vars) translates (falls back to English), D(text) converts digits for display,
+   setLang switches language, direction and every [data-i18n] element. Arabic should be reviewed by a native speaker. */
+const I18N = (function () {
+  let lang = 'en';
+  try { const s = localStorage.getItem('irehab.lang'); if (s === 'ar' || s === 'en') lang = s; } catch (e) { /* default English */ }
+  const AR = {
+    // home
+    "Today's exercises": 'تمارين اليوم', 'Hello, {name}': 'مرحبًا يا {name}',
+    'Do them one at a time. The phone will guide you.': 'قم بها واحدًا تلو الآخر، وسيرشدك الهاتف.',
+    '{n} left for today. Keep going!': 'بقي {n} لليوم. استمر!', 'You have finished everything for today. Well done!': 'أنهيت جميع تمارين اليوم. أحسنت!',
+    'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Getting ready…': 'جارٍ التجهيز…',
+    'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
+    'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
+    'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
+    'Done ✓': 'تم ✓', 'Next': 'التالي', 'To do': 'لم يُنجز', 'Skipped': 'تم تخطيه', 'with a helper': 'بوجود مرافق',
+    'This phone cannot run iRehab': 'لا يمكن تشغيل iRehab على هذا الهاتف', 'Please try the latest Chrome (Android) or Safari (iPhone).': 'يرجى استخدام أحدث إصدار من Chrome (أندرويد) أو Safari (آيفون).',
+    // exercises
+    'Shoulder elevation': 'رفع الذراعين', 'Sit to stand': 'الجلوس والوقوف', 'Marching in place': 'المشي في المكان', 'Standing balance': 'التوازن وقوفًا', 'Timed Up and Go': 'اختبار القيام والمشي',
+    'About 1 minute': 'حوالي دقيقة', '30 seconds': '٣٠ ثانية', '2 minutes': 'دقيقتان', 'About 2 minutes': 'حوالي دقيقتين',
+    'Raise both arms out to the side, then lower them. 10 times. You can sit or stand.': 'ارفع ذراعيك إلى الجانبين ثم أنزلهما، ١٠ مرات. يمكنك الجلوس أو الوقوف.',
+    'Stand up and sit down as many times as you safely can in 30 seconds.': 'قف ثم اجلس أكبر عدد ممكن من المرات بأمان خلال ٣٠ ثانية.',
+    'March on the spot for 2 minutes, lifting your knees. Hold a chair if you need to.': 'امشِ في مكانك لمدة دقيقتين مع رفع ركبتيك. أمسك بكرسي إذا احتجت.',
+    'Stand up, walk to a line 3 metres away, turn around, walk back and sit down. Twice.': 'قم من الكرسي، وامشِ إلى خط على بُعد ٣ أمتار، ثم استدر وعُد واجلس. مرتين.',
+    'Stand still in four positions, 10 seconds each. Each one is a little harder.': 'قف ثابتًا في أربع وضعيات، ١٠ ثوانٍ لكل منها. كل وضعية أصعب قليلًا من التي قبلها.',
+    'Only do this with another person close by. Use your usual walking aid.': 'قم بهذا التمرين فقط بوجود شخص قريب منك. استخدم أداة المشي المعتادة.',
+    'Stand next to a sturdy chair or counter. Hold it if you need to.': 'قف بجانب كرسي أو طاولة ثابتة، وأمسك بها إذا احتجت.',
+    'Use a firm chair without wheels, against a wall.': 'استخدم كرسيًا ثابتًا بلا عجلات، مُسندًا إلى الحائط.',
+    'Someone is here with me': 'يوجد شخص معي الآن', "I'm ready": 'أنا جاهز', 'Skip this one today': 'تخطَّ هذا التمرين اليوم', '‹ Back': 'رجوع ›',
+    'Exercise {i} of {n}': 'التمرين {i} من {n}',
+    'The camera is blocked. Tap Allow when the phone asks, or turn on camera access for this website in your phone settings. Then tap I\'m ready again.': 'الكاميرا محظورة. اضغط «سماح» عندما يطلب الهاتف ذلك، أو فعّل إذن الكاميرا لهذا الموقع من إعدادات الهاتف، ثم اضغط «أنا جاهز» مرة أخرى.',
+    // picture captions
+    'Face the camera': 'واجه الكاميرا', 'Arms down': 'الذراعان للأسفل', 'Raise out to the side': 'ارفعهما إلى الجانبين', 'Lower slowly, repeat': 'أنزلهما ببطء وكرّر',
+    'Chair side-on to the camera': 'الكرسي جانبيًا للكاميرا', 'Sit, arms crossed': 'اجلس واضمم ذراعيك', 'Stand up fully': 'قف تمامًا', 'Sit slowly, repeat': 'اجلس ببطء وكرّر',
+    'Face the camera, support nearby': 'واجه الكاميرا وبقربك ما تستند إليه', 'Lift one knee': 'ارفع ركبة واحدة', 'Then the other': 'ثم الأخرى', 'Aim for hip height': 'حاول الوصول إلى مستوى الورك',
+    'Chair, line, camera': 'الكرسي، الخط، الكاميرا', 'Stand, walk to the line': 'قف وامشِ إلى الخط', 'Turn around': 'استدر', 'Walk back, sit down': 'عُد واجلس',
+    'Face the camera, a support nearby': 'واجه الكاميرا وبقربك ما تستند إليه', 'Feet together': 'القدمان متلاصقتان', 'One foot half a step forward': 'قدم أمام الأخرى بنصف خطوة',
+    'Heel to toe': 'الكعب أمام أصابع القدم', 'One leg': 'على قدم واحدة', '10 seconds each': '١٠ ثوانٍ لكل وضعية',
+    // live
+    'Stop': 'إيقاف', 'Step in front of the camera': 'قف أمام الكاميرا', 'Good. Stay there.': 'ممتاز. ابقَ مكانك.', 'Step back so I can see all of you': 'ابتعد قليلًا حتى أراك كاملًا',
+    'Reps': 'مرات', 'Stands': 'وقفات', 'Steps': 'خطوات', 'Seconds': 'ثوانٍ', 'of {n}': 'من {n}', 'Stage {i} of 4': 'الوضعية {i} من ٤',
+    'Okay. Put the phone down, 2 to 3 metres away, and stand where it can see you.': 'حسنًا. ضع الهاتف على بُعد مترين إلى ثلاثة أمتار، وقف حيث يمكنه رؤيتك.',
+    'Please step in front of the camera.': 'من فضلك قف أمام الكاميرا.', 'Please step back so I can see all of you, from head to feet.': 'من فضلك ابتعد قليلًا حتى أراك كاملًا من الرأس إلى القدمين.',
+    'Good. Starting in 3, 2, 1.': 'ممتاز. نبدأ بعد ثلاثة، اثنان، واحد.',
+    'Raise both arms out to the side, then lower them slowly. Ten times.': 'ارفع ذراعيك إلى الجانبين، ثم أنزلهما ببطء. عشر مرات.',
+    'Arms across your chest. Stand up and sit down as many times as you can. Go.': 'ضع ذراعيك على صدرك. قف واجلس أكبر عدد ممكن من المرات. ابدأ.',
+    'March on the spot. Lift your knees. Two minutes. Go.': 'امشِ في مكانك. ارفع ركبتيك. لمدة دقيقتين. ابدأ.',
+    'Sit in the chair and wait until I say go.': 'اجلس على الكرسي وانتظر حتى أقول انطلق.',
+    'Stand with your feet together and keep still.': 'قف وقدماك متلاصقتان وابقَ ثابتًا.',
+    'Feet together. Keep still.': 'القدمان متلاصقتان. ابقَ ثابتًا.', 'Now put one foot half a step forward. Keep still.': 'الآن ضع إحدى قدميك أمام الأخرى بنصف خطوة. ابقَ ثابتًا.',
+    'Now put one foot right in front of the other, heel to toe. Keep still.': 'الآن ضع إحدى قدميك أمام الأخرى مباشرة، والكعب ملاصق لأصابع القدم. ابقَ ثابتًا.',
+    'Now stand on one leg. Keep still.': 'الآن قف على قدم واحدة. ابقَ ثابتًا.',
+    'All four done. Excellent!': 'أنجزت الوضعيات الأربع. ممتاز!', 'All four done. Excellent.': 'أنجزت الوضعيات الأربع. ممتاز.',
+    'Well done. That is enough for today.': 'أحسنت. يكفي هذا لليوم.', 'Well done. You can relax now.': 'أحسنت. يمكنك الاسترخاء الآن.',
+    'Let us try that one again.': 'لنحاول هذه مرة أخرى.', 'Stop. Two minutes. Well done.': 'توقف. انتهت الدقيقتان. أحسنت.', 'Stop. Well done.': 'توقف. أحسنت.', 'Stopped.': 'تم الإيقاف.',
+    'Step back so I can see all of you.': 'ابتعد قليلًا حتى أراك كاملًا.',
+    'Good rep': 'تكرار ممتاز', 'Raise higher, aim for shoulder height': 'ارفع أعلى، حتى مستوى الكتف', 'Keep your trunk upright': 'حافظ على استقامة جذعك',
+    'Left arm is lower': 'الذراع اليسرى أخفض', 'Right arm is lower': 'الذراع اليمنى أخفض', 'Keep your elbows straighter': 'اجعل مرفقيك أكثر استقامة',
+    'Try to stand without using your hands': 'حاول الوقوف دون استخدام يديك', 'Stand all the way up': 'قف باستقامة كاملة', 'Sit down slowly, with control': 'اجلس ببطء وتحكّم',
+    'Lift your knees higher': 'ارفع ركبتيك أعلى', 'Keep your trunk steady': 'حافظ على ثبات جذعك', 'Good step': 'خطوة جيدة',
+    'Ready. Raise both arms out to the side.': 'جاهز. ارفع ذراعيك إلى الجانبين.', 'Up. Now sit back down with control.': 'أحسنت. الآن اجلس بتحكّم.',
+    'Ready. Stand up fully, then sit back down.': 'جاهز. قف تمامًا ثم اجلس.', 'Sit down on the chair to begin.': 'اجلس على الكرسي للبدء.',
+    'Ready. March for 2 minutes. Lift one knee, then the other.': 'جاهز. امشِ في مكانك دقيقتين. ارفع ركبة ثم الأخرى.',
+    'Get ready. Wait for Go.': 'استعد. انتظر كلمة انطلق.', 'Ready': 'استعد', 'GO': 'انطلق', 'Go': 'انطلق', 'Timing. Walk to the line.': 'بدأ التوقيت. امشِ إلى الخط.',
+    'Turned. Walk back to the chair.': 'أحسنت. عُد إلى الكرسي.', 'Turn and sit down.': 'استدر واجلس.',
+    'That was too short to be a full trial. Sit and wait for Ready.': 'كانت المحاولة قصيرة جدًا. اجلس وانتظر كلمة استعد.', 'Hold': 'اثبت',
+    'Stand still with your feet together.': 'قف ثابتًا وقدماك متلاصقتان.', 'Put one foot half a step ahead and hold still.': 'ضع قدمًا أمام الأخرى بنصف خطوة واثبت.',
+    'Stand heel to toe and hold still.': 'قف والكعب أمام أصابع القدم واثبت.', 'Lift one foot off the floor and hold still.': 'ارفع قدمًا عن الأرض واثبت.',
+    'Session finished.': 'انتهت الجلسة.', 'Get into position': 'اتخذ وضعك',
+    // result
+    'Well done!': 'أحسنت!', "Let's try that again": 'لنحاول مرة أخرى', 'I could not see enough movement to count.': 'لم أتمكن من رؤية حركة كافية للعدّ.',
+    'Make sure the phone can see you from head to feet, then try again.': 'تأكد أن الهاتف يراك من الرأس إلى القدمين، ثم حاول مرة أخرى.', 'Try again': 'حاول مرة أخرى',
+    'How hard was that?': 'ما مدى صعوبة التمرين؟', 'Any pain?': 'هل شعرت بألم؟', 'Easy': 'سهل', 'Very hard': 'صعب جدًا', 'None': 'لا ألم', 'Worst': 'أسوأ ألم',
+    'Next exercise': 'التمرين التالي', 'Finish': 'إنهاء', 'Do this one again': 'أعِد هذا التمرين', 'Next time: ': 'في المرة القادمة: ',
+    'Your score': 'نتيجتك', 'out of 100': 'من ١٠٠', 'New personal best!': 'رقم قياسي شخصي جديد!',
+    '{n} points higher than last time': 'أعلى بـ {n} نقطة من المرة السابقة', 'Same score as last time. Steady work!': 'نفس نتيجة المرة السابقة. عمل ثابت!',
+    'A little lower than last time. Some days are harder. Keep going!': 'أقل قليلًا من المرة السابقة. بعض الأيام أصعب. استمر!',
+    'Your first score. Next time, try to beat it!': 'هذه أول نتيجة لك. حاول أن تتفوق عليها في المرة القادمة!',
+    '{n} raises': '{n} رفعات', '{n} stands in 30 seconds': '{n} وقفات في ٣٠ ثانية', '{n} stands': '{n} وقفات', '{n} steps': '{n} خطوة',
+    '{x} seconds, your best time': '{x} ثانية، أفضل وقت لك', '{i} of 4 positions held': 'ثبتّ في {i} من ٤ وضعيات',
+    '{n} more stands than last time.': '{n} وقفات أكثر من المرة السابقة.', '{n} more steps than last time.': '{n} خطوة أكثر من المرة السابقة.',
+    '{x} seconds faster than last time.': 'أسرع بـ {x} ثانية من المرة السابقة.', '{n} more positions than last time.': '{n} وضعيات أكثر من المرة السابقة.',
+    'Your arms went {x}° higher than last time.': 'ارتفعت ذراعاك {x}° أكثر من المرة السابقة.', '{n} more raises than last time.': '{n} رفعات أكثر من المرة السابقة.',
+    'You completed the session. Turning up and doing the work is what builds recovery.': 'أكملت الجلسة. المواظبة على التمارين هي ما يبني التعافي.',
+    'raises': 'رفعات', 'stands in 30 seconds': 'وقفات في ٣٠ ثانية', 'stands': 'وقفات', 'steps': 'خطوة', 'seconds, your best time': 'ثانية، أفضل وقت لك', 'of 4 positions held': 'من ٤ وضعيات ثبتّ فيها',
+    'Tap Start when you are ready.': 'اضغط «ابدأ» عندما تكون جاهزًا.', "Tick the box when someone is with you, then tap I'm ready.": 'ضع علامة في المربع عندما يكون معك أحد، ثم اضغط «أنا جاهز».',
+    "Tap I'm ready when you are set up.": 'اضغط «أنا جاهز» عندما تكون مستعدًا.',
+    'Stop. Two minutes.': 'توقف. انتهت الدقيقتان.', 'Ready. Stand, walk to the line, turn, walk back and sit down.': 'استعد. قف وامشِ إلى الخط، ثم استدر وعُد واجلس.',
+    'The pose tracker could not start in this browser. Try a current version of Chrome, Edge or Safari.': 'تعذّر تشغيل متتبّع الحركة في هذا المتصفح. جرّب أحدث إصدار من Chrome أو Edge أو Safari.',
+    'Camera access was blocked. Allow the camera for this page, or use a recorded video file.': 'تم حظر الوصول إلى الكاميرا. اسمح باستخدام الكاميرا لهذه الصفحة، أو استخدم ملف فيديو مسجّلًا.',
+    'This video could not be played. Try an MP4 recorded on a phone.': 'تعذّر تشغيل هذا الفيديو. جرّب ملف MP4 مسجّلًا بالهاتف.',
+    'No person in view. Step back until your whole body is visible.': 'لا يوجد أحد في الصورة. ابتعد حتى يظهر جسمك كاملًا.',
+    // done
+    'All done for today': 'انتهيت من تمارين اليوم', 'Thank you. Your results are saved on this phone.': 'شكرًا لك. نتائجك محفوظة على هذا الهاتف.',
+    'You have exercised on {n} days so far.': 'مارست التمارين في {n} أيام حتى الآن.', "Today's score": 'نتيجة اليوم', 'See my progress': 'اطّلع على تقدّمي', 'Back to start': 'العودة إلى البداية',
+    'All done for today. Thank you.': 'انتهيت من تمارين اليوم. شكرًا لك.',
+    // progress
+    'This week': 'هذا الأسبوع', 'days active': 'أيام نشاط', 'Latest score': 'آخر نتيجة', 'Not done yet': 'لم يُنجز بعد', 'Score over time': 'النتيجة عبر الوقت',
+    'Up {n} points since your first time': 'ارتفعت {n} نقطة منذ أول مرة', 'Down {n} points since your first time': 'انخفضت {n} نقطة منذ أول مرة', 'Same as your first time': 'مثل أول مرة',
+    'How your body is doing': 'كيف حال جسمك', 'Strong': 'قوي', 'Building': 'يتحسن', 'Focus area': 'يحتاج تركيزًا', 'Not measured yet': 'لم يُقَس بعد',
+    'Right shoulder': 'الكتف الأيمن', 'Left shoulder': 'الكتف الأيسر', 'Trunk control': 'ثبات الجذع', 'Right hip lift': 'رفع الورك الأيمن', 'Left hip lift': 'رفع الورك الأيسر',
+    'Legs: standing up': 'الساقان: الوقوف', 'Walking mobility': 'القدرة على المشي',
+    'Scores describe how well each movement was done (range, pace, control). They are not a measure of muscle strength.': 'تصف النتائج جودة أداء كل حركة (المدى، السرعة، التحكم)، وليست مقياسًا لقوة العضلات.',
+    'Your progress so far': 'تقدّمك حتى الآن', '{n} sessions': '{n} جلسات', '{n} session': 'جلسة واحدة', 'Here is how you are doing.': 'هذا هو مستوى تقدّمك.',
+    // praise and tips (from the scoring domains)
+    'Your arms reached high, well above shoulder level.': 'وصلت ذراعاك إلى ارتفاع جيد، أعلى بكثير من مستوى الكتف.', 'Your left and right arms moved evenly.': 'تحركت ذراعاك اليمنى واليسرى بشكل متوازن.',
+    'You kept your body upright while lifting.': 'حافظت على استقامة جسمك أثناء الرفع.', 'You kept a steady pace right to the end.': 'حافظت على وتيرة ثابتة حتى النهاية.',
+    'Almost every rep was done with good form.': 'أديت كل التكرارات تقريبًا بشكل صحيح.', 'Try to raise your arms a little higher each session.': 'حاول أن ترفع ذراعيك أعلى قليلًا في كل جلسة.',
+    'Give your lower arm a little extra attention.': 'أعطِ الذراع الأخفض اهتمامًا إضافيًا.', 'Try to keep your body still and let the arms do the work.': 'حاول أن تُبقي جسمك ثابتًا ودع الذراعين تقومان بالعمل.',
+    'Take your time. Rest when you need to, then carry on.': 'خذ وقتك. استرح عند الحاجة ثم تابع.', 'Watch the picture guide once more before you start.': 'شاهد الصور الإرشادية مرة أخرى قبل أن تبدأ.',
+    'You stood up and sat down at a good, brisk pace.': 'وقفت وجلست بوتيرة جيدة ونشيطة.', 'You stood up without needing your hands.': 'وقفت دون الحاجة إلى يديك.',
+    'You stood all the way up every time.': 'وقفت باستقامة كاملة في كل مرة.', 'You lowered yourself into the chair with control.': 'جلست على الكرسي بتحكّم.',
+    'No need to rush. Speed will come as your legs get stronger.': 'لا داعي للعجلة. ستأتي السرعة مع تقوّي ساقيك.', 'Next time, try a few stands with your arms crossed.': 'في المرة القادمة، جرّب بعض الوقفات وذراعاك متقاطعتان.',
+    'Finish each stand tall, with knees straight.': 'أنهِ كل وقفة مستقيمًا وركبتاك مفرودتان.', 'Lower yourself slowly instead of dropping into the chair.': 'انزل ببطء بدلًا من السقوط على الكرسي.',
+    'You lifted your knees nice and high.': 'رفعت ركبتيك عاليًا بشكل رائع.', 'Both legs did equal work.': 'عملت الساقان بشكل متساوٍ.', 'You kept up a lively rhythm.': 'حافظت على إيقاع نشيط.',
+    'Your body stayed steady while you marched.': 'بقي جسمك ثابتًا أثناء المشي.', 'Most of your steps reached the target height.': 'وصلت معظم خطواتك إلى الارتفاع المطلوب.',
+    'Try to bring each knee a little higher.': 'حاول أن ترفع كل ركبة أعلى قليلًا.', 'Give your lower knee a little extra lift.': 'ارفع الركبة الأخفض قليلًا أكثر.',
+    'A steady rhythm matters more than speed. It will build.': 'الإيقاع الثابت أهم من السرعة، وسيتحسن مع الوقت.', 'Stand tall and hold a support if it helps you stay steady.': 'قف مستقيمًا وأمسك بما تستند إليه إذا ساعدك على الثبات.',
+    'Aim each knee toward hip height.': 'حاول رفع كل ركبة نحو مستوى الورك.',
+    'You got up, walked and sat back down smoothly and quickly.': 'قمت ومشيت وجلست بسلاسة وسرعة.', 'Your trials were consistent with each other.': 'كانت محاولاتك متقاربة.',
+    'Walk at a pace that feels safe. Your time will improve with practice.': 'امشِ بوتيرة تشعر معها بالأمان. سيتحسن وقتك مع التمرين.',
+    'You held your balance for a long time.': 'حافظت على توازنك لفترة طويلة.', 'You stood very still with little sway.': 'وقفت ثابتًا جدًا مع تمايل قليل.',
+    'Try to hold a few seconds longer next time, with a support in reach.': 'حاول أن تثبت بضع ثوانٍ أطول في المرة القادمة، مع وجود ما تستند إليه قريبًا منك.',
+    'Pick a spot on the wall to look at. It helps you stay still.': 'انظر إلى نقطة ثابتة على الحائط، فهذا يساعدك على الثبات.',
+    // clinician
+    'Patient view': 'واجهة المريض', 'iRehab: clinician': 'iRehab: للأخصائيين', 'Participant': 'المشارك', 'ID': 'الرمز', 'Age': 'العمر', 'Sex': 'الجنس',
+    'Not set': 'غير محدد', 'Female': 'أنثى', 'Male': 'ذكر', 'First name shown to patient': 'الاسم الأول الظاهر للمريض', 'Exercises in the daily plan': 'تمارين الخطة اليومية',
+    'Options': 'الخيارات', 'Voice instructions': 'التعليمات الصوتية', 'Show live measurements during exercises': 'عرض القياسات أثناء التمارين',
+    'Run or analyse a single exercise': 'تشغيل أو تحليل تمرين واحد', 'Start camera': 'تشغيل الكاميرا', 'Analyse a video file': 'تحليل ملف فيديو',
+    'Progress report': 'تقرير التقدم', 'Example report': 'تقرير مثال', 'Clinician report': 'تقرير الأخصائي', 'Detailed tables and data tools (English)': 'جداول تفصيلية وأدوات البيانات (بالإنجليزية)',
+    'Sessions': 'الجلسات', 'Active days, last 7': 'أيام النشاط خلال آخر ٧ أيام', 'Last session': 'آخر جلسة', 'Effort': 'الجهد', 'Pain': 'الألم',
+    'First': 'الأول', 'Latest': 'الأحدث', 'Meaningful change': 'تغير ذو دلالة سريرية', 'Not yet': 'ليس بعد', 'No threshold set': 'لا يوجد حد معتمد', 'No sessions yet': 'لا توجد جلسات بعد',
+    'Back': 'رجوع', 'age {a}': 'العمر {a}', 'female': 'أنثى', 'male': 'ذكر', 'Example data (invented).': 'بيانات مثال (مختلقة).',
+    'Active shoulder abduction range, left (best)': 'مدى إبعاد الكتف النشط، يسار (الأفضل)', 'Active shoulder abduction range, right (best)': 'مدى إبعاد الكتف النشط، يمين (الأفضل)',
+    'Side-to-side difference in range': 'الفرق بين الجانبين في المدى', '30-Second Chair Stand (30CST), primary': 'الوقوف من الكرسي خلال ٣٠ ثانية (30CST)، أساسي',
+    'Five Times Sit to Stand (5xSTS), secondary': 'الجلوس والوقوف ٥ مرات (5xSTS)، ثانوي', 'SPPB chair-stand points (0 to 4)': 'نقاط الوقوف من الكرسي في SPPB (٠ إلى ٤)',
+    '2-Minute Step Test (right-knee steps to target height)': 'اختبار الخطوات لمدة دقيقتين (2MST)',
+    'Timed Up and Go, best valid movement time (seat-off to seated), primary': 'اختبار القيام والمشي: أفضل زمن حركة صالح، أساسي',
+    'Timed Up and Go, best time from the spoken "Go", secondary': 'اختبار القيام والمشي: أفضل زمن من كلمة «انطلق»، ثانوي',
+    '4-Stage Balance Test: stages held 10 s (0 to 4)': 'اختبار التوازن ذو المراحل الأربع (٠ إلى ٤)', 'Tandem stance hold (max 10 s)': 'الوقوف الترادفي (حتى ١٠ ثوانٍ)',
+    'Single-leg stance hold (max 30 s)': 'الوقوف على قدم واحدة', 'SPPB balance points (0 to 4)': 'نقاط التوازن في SPPB (٠ إلى ٤)',
+    'Perceived exertion after the session (Borg CR10, 0 to 10)': 'الجهد المُدرك بعد الجلسة (٠ إلى ١٠)', 'Pain during the session (0 to 10)': 'الألم أثناء الجلسة (٠ إلى ١٠)',
+    'Within the age average': 'ضمن المتوسط للعمر', 'Slower than the age average': 'أبطأ من المتوسط للعمر', 'Above the 15 s cut-off': 'فوق حد ١٥ ثانية',
+    'Under the 15 s cut-off': 'تحت حد ١٥ ثانية', 'Under the 12 s cut-off': 'تحت حد ١٢ ثانية', 'At or above the 12 s cut-off': 'عند حد ١٢ ثانية أو أعلى',
+    'Below average for age and sex': 'أقل من المتوسط للعمر والجنس', 'At or above average': 'عند المتوسط أو أعلى', 'Fewer than 5 stands completed': 'أقل من ٥ وقفات',
+    'Session shorter than 30 s': 'الجلسة أقصر من ٣٠ ثانية', 'Session shorter than 2 minutes: not a valid score': 'الجلسة أقصر من دقيقتين: النتيجة غير صالحة',
+    'At or above the independence threshold': 'عند حد الاستقلالية أو أعلى', 'Below the independence threshold': 'تحت حد الاستقلالية', 'Tandem held for 10 s': 'ثبات ترادفي لمدة ١٠ ثوانٍ',
+    'Tandem not held for 10 s': 'لم يثبت ترادفيًا ١٠ ثوانٍ', 'Tandem not yet attempted': 'لم تُجرَّب الوقفة الترادفية بعد', 'No valid trial': 'لا توجد محاولة صالحة', 'Trials inconsistent, repeat': 'المحاولات غير متسقة، أعد الاختبار',
+  };
+  const DIG = '٠١٢٣٤٥٦٧٨٩';
+  const D = (v) => (lang !== 'ar' || v == null ? String(v) : String(v).replace(/[0-9]/g, (d) => DIG[d]).replace(/(\d|[٠-٩])\.(?=[٠-٩])/g, '$1٫'));
+  const PAT = [
+    [/^(\d+)\. (.+)$/, (m) => D(m[1]) + '. ' + L(m[2])],
+    [/^Time: ([\d.]+) seconds$/, (m) => 'الوقت: ' + D(m[1]) + ' ثانية'],
+    [/^([\d.]+) seconds$/, (m) => D(m[1]) + ' ثانية'],
+    [/^Hold still for (\d+) seconds\.$/, (m) => 'ابقَ ثابتًا لمدة ' + D(m[1]) + ' ثوانٍ.'],
+    [/^Held the full (\d+) seconds$/, (m) => 'ثبتّ لمدة ' + D(m[1]) + ' ثوانٍ كاملة'],
+    [/^Ended early: .*$/, () => 'انتهى مبكرًا'],
+    [/^Stopped at (\d+) seconds\.$/, (m) => 'توقفت عند ' + D(m[1]) + ' ثوانٍ.'],
+    [/^Well done\. (.+)$/, (m) => 'أحسنت. ' + L(m[1])],
+    [/^Let us try that one again\. (.+)$/, (m) => 'لنحاول هذه مرة أخرى. ' + L(m[1])],
+    [/^Check: (.+)$/, (m) => 'تحقّق: ' + m[1]],
+  ];
+  function L(s, vars) {
+    if (s == null) return '';
+    let out = String(s);
+    if (lang === 'ar') {
+      if (AR[out] != null) out = AR[out];
+      else for (const [re, f] of PAT) { const m = out.match(re); if (m) { out = f(m); break; } }
+    }
+    if (vars) out = out.replace(/\{(\w+)\}/g, (_, k) => (vars[k] != null ? vars[k] : ''));
+    return out;
+  }
+  function apply(root) {
+    for (const el of (root || document).querySelectorAll('[data-i18n]')) { if (el.dataset.en == null) el.dataset.en = el.textContent.trim(); el.textContent = L(el.dataset.en); }
+    for (const el of (root || document).querySelectorAll('[data-i18n-label]')) { if (el.dataset.enLabel == null) el.dataset.enLabel = el.getAttribute('aria-label') || ''; el.setAttribute('aria-label', L(el.dataset.enLabel)); }
+  }
+  function setLang(l) {
+    lang = l === 'ar' ? 'ar' : 'en';
+    try { localStorage.setItem('irehab.lang', lang); } catch (e) { /* optional */ }
+    document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    apply();
+  }
+  return { L, D, apply, setLang, get lang() { return lang; }, AR };
+})();
+if (typeof module !== 'undefined') module.exports = I18N;
+
 /* iRehab scoring core: pure functions, no DOM. Units: landmark x is scaled by the frame
    aspect ratio so distances are in frame heights and angles are true image-plane angles. */
 const Core = (function () {
@@ -1277,12 +1569,14 @@ const Report = (function () {
   }
 
   /* Body map. The figure faces the reader, so the person's left is on the reader's right. */
-  function bodyMap(reg) {
+  // T translates labels, Dg formats digits (both optional, for the Arabic patient view)
+  function bodyMap(reg, T, Dg) {
+    T = T || ((s) => s); Dg = Dg || ((s) => String(s));
     const g = (k) => reg[k], cls = (k) => 'b-' + band(g(k));
-    const lab = (x, y, anchor, name, k) => '<text x="' + x + '" y="' + y + '" text-anchor="' + anchor + '" class="bl">' + name + '</text><text x="' + x + '" y="' + (y + 12) +
-      '" text-anchor="' + anchor + '" class="bv">' + (num(g(k)) ? Math.round(g(k)) + ' · ' + BAND[band(g(k))] : BAND.none) + '</text>';
+    const lab = (x, y, anchor, name, k) => '<text x="' + x + '" y="' + y + '" text-anchor="' + anchor + '" class="bl">' + T(name) + '</text><text x="' + x + '" y="' + (y + 12) +
+      '" text-anchor="' + anchor + '" class="bv">' + (num(g(k)) ? Dg(Math.round(g(k))) + ' · ' + T(BAND[band(g(k))]) : T(BAND.none)) + '</text>';
     const lead = (x1, y1, x2, y2) => '<path class="lead" d="M' + x1 + ' ' + y1 + 'L' + x2 + ' ' + y2 + '"/>';
-    return '<svg class="body" viewBox="0 0 340 330" role="img" aria-label="Body map of movement scores">' +
+    return '<svg class="body" viewBox="0 0 340 330" role="img" aria-label="Body map of movement scores" direction="ltr">' +
       '<g class="sil"><circle cx="170" cy="36" r="17"/><path d="M140 66h60a12 12 0 0 1 12 12l-8 78h-68l-8-78a12 12 0 0 1 12-12z"/>' +
       '<path class="limb" d="M136 76L120 150"/><path class="limb" d="M204 76L220 150"/><path class="limb leg" d="M156 160L152 276"/><path class="limb leg" d="M184 160L188 276"/></g>' +
       '<ellipse class="reg ' + cls('trunk') + '" cx="170" cy="112" rx="17" ry="27"/>' +
@@ -1296,10 +1590,10 @@ const Report = (function () {
       lead(198, 218, 240, 214) + lab(244, 212, 'start', 'Legs: standing up', 'legs') +
       lead(134, 286, 100, 280) + lab(96, 278, 'end', 'Standing balance', 'balance') +
       '</svg>' +
-      '<div class="mob"><span class="dot b-' + band(g('mobility')) + '"></span><span><b>Walking mobility</b> (Timed Up and Go): ' +
-      (num(g('mobility')) ? Math.round(g('mobility')) + ' · ' + BAND[band(g('mobility'))] : BAND.none) + '</span></div>' +
-      '<div class="legend">' + ['strong', 'build', 'focus', 'none'].map((b) => '<span><span class="dot b-' + b + '"></span>' + BAND[b] +
-        ({ strong: ' (80 to 100)', build: ' (50 to 79)', focus: ' (under 50)', none: '' }[b]) + '</span>').join('') + '</div>';
+      '<div class="mob"><span class="dot b-' + band(g('mobility')) + '"></span><span><b>' + T('Walking mobility') + '</b> (' + T('Timed Up and Go') + '): ' +
+      (num(g('mobility')) ? Dg(Math.round(g('mobility'))) + ' · ' + T(BAND[band(g('mobility'))]) : T(BAND.none)) + '</span></div>' +
+      '<div class="legend">' + ['strong', 'build', 'focus', 'none'].map((b) => '<span><span class="dot b-' + b + '"></span>' + T(BAND[b]) +
+        ({ strong: ' (' + Dg(80) + '–' + Dg(100) + ')', build: ' (' + Dg(50) + '–' + Dg(79) + ')', focus: ' (<' + Dg(50) + ')', none: '' }[b]) + '</span>').join('') + '</div>';
   }
 
   /* Line chart of one or two series across sessions, with a dashed baseline at the first session. */
@@ -1478,7 +1772,8 @@ const Report = (function () {
   }
 
   function rateLatest(pid, ex, key, v) { const s = sessions(pid, ex), last = s[s.length - 1]; if (last) update(last.id, pid, { [key]: v }); }
-  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest };
+  const scoreOf = (ex, m) => overall(DEF[ex].score(m).d);   // 0 to 100 movement-quality score for one session
+  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest, bodyMap, latestRegions, scoreOf, band };
 })();
 if (typeof module !== 'undefined') module.exports = Report;
 
@@ -1520,13 +1815,34 @@ if (typeof module !== 'undefined') module.exports = Report;
   function showCue(text, kind) {
     const c = $('cue');
     if (!text) { c.hidden = true; return; }
-    c.hidden = false; c.textContent = text; c.className = 'cue' + (kind ? ' ' + kind : '');
+    c.hidden = false; c.textContent = I18N.L(text); c.className = 'cue' + (kind ? ' ' + kind : '');
   }
-  function say(text) {
-    if (!$('voice').checked || !('speechSynthesis' in window)) return;
-    try { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(text)); } catch (e) { /* voice is optional */ }
-  }
-  const setCount = (v) => { $('count-n').textContent = v; };
+  /* Speech. Browsers only allow speech after the first tap, drop an utterance spoken right after cancel(), and
+     (Chrome) stop utterances that are garbage-collected mid-sentence; all three are handled here. */
+  const Speech = (function () {
+    const ok = 'speechSynthesis' in window; let voices = [], unlocked = false; const keep = [];
+    const load = () => { try { voices = speechSynthesis.getVoices() || []; } catch (e) { /* none yet */ } };
+    if (ok) { load(); try { speechSynthesis.addEventListener('voiceschanged', load); } catch (e) { speechSynthesis.onvoiceschanged = load; } }
+    const pick = () => { const pref = I18N.lang === 'ar' ? ['ar-sa', 'ar'] : ['en-us', 'en-gb', 'en'];
+      for (const p of pref) { const v = voices.find((x) => (x.lang || '').toLowerCase().replace('_', '-').startsWith(p)); if (v) return v; } return null; };
+    function speak(text) {
+      if (!ok || !text || !$('voice').checked) return;
+      try {
+        const u = new SpeechSynthesisUtterance(text); u.lang = I18N.lang === 'ar' ? 'ar-SA' : 'en-US'; u.rate = 0.95;
+        const v = pick(); if (v) u.voice = v;
+        keep.push(u); if (keep.length > 12) keep.shift();
+        if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); setTimeout(() => { try { speechSynthesis.speak(u); } catch (e) { /* optional */ } }, 120); }
+        else speechSynthesis.speak(u);
+        if (speechSynthesis.paused) speechSynthesis.resume();
+      } catch (e) { /* speech is optional */ }
+    }
+    function unlock() { if (unlocked || !ok) return; unlocked = true; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { /* optional */ } }
+    return { speak, unlock, hasVoice: () => !!pick() };
+  })();
+  document.addEventListener('pointerdown', () => Speech.unlock(), true);
+  document.addEventListener('keydown', () => Speech.unlock(), true);
+  function say(text) { Speech.speak(I18N.L(text)); }
+  const setCount = (v) => { $('count-n').textContent = I18N.D(v); };
 
   /* Validity of a timed interval [a, b]: no frame stall over 250 ms inside it, tracking never lost inside it. */
   function validity(a, b) {
@@ -1786,7 +2102,7 @@ if (typeof module !== 'undefined') module.exports = Report;
           if (guided) {
             // 4-Stage Balance Test: move on after each 10-second hold, stop at the first stage not held
             const i = this.order.indexOf(r.mode), nxt = this.order[i + 1];
-            if (r.cue.ok && nxt) { counter.setMode(nxt, this.target(nxt)); $('stance').value = nxt; showCue(this.tell[nxt], 'good'); say('Well done. ' + this.tell[nxt]); $('count-goal').textContent = 'Stage ' + (i + 2) + ' of 4'; }
+            if (r.cue.ok && nxt) { counter.setMode(nxt, this.target(nxt)); $('stance').value = nxt; showCue(this.tell[nxt], 'good'); say('Well done. ' + this.tell[nxt]); $('count-goal').textContent = I18N.L('Stage {i} of 4', { i: I18N.D(i + 2) }); }
             else { live.autoStopAt = t + 1.5; showCue(r.cue.ok ? 'All four done. Excellent!' : 'Well done. That is enough for today.', 'good'); say(r.cue.ok ? 'All four done. Excellent.' : 'Well done. You can relax now.'); }
           } else { showCue(r.cue.text, r.cue.ok ? 'good' : 'fix'); say(r.cue.ok ? 'Done. Well held.' : 'Stopped at ' + r.dur.toFixed(0) + ' seconds.'); }
         }
@@ -1908,12 +2224,12 @@ if (typeof module !== 'undefined') module.exports = Report;
     if (exKey === 'balance') {
       const st = (k) => PIC.balance(k)[1][0].replace(/<text[^>]*>[^<]*<\/text>/g, '');   // captions carry the words
       $('idle').innerHTML = [[PIC.balance('two')[0][0], 'Face the camera, a support nearby'], [st('two'), 'Feet together'], [st('semi'), 'One foot half a step forward'], [st('tandem'), 'Heel to toe']]
-        .map((p, i) => '<li class="pic"><span class="num">' + (i + 1) + '</span>' + p[0] + '<span>' + p[1] + '</span></li>').join('') +
-        '<li class="pic"><span class="num">5</span>' + st('one') + '<span>One leg</span></li><li class="pic"><span class="num">⏱</span>' + PIC.balance('two')[2][0] + '<span>10 seconds each</span></li>';
+        .map((p, i) => '<li class="pic"><span class="num">' + I18N.D(i + 1) + '</span>' + p[0] + '<span>' + I18N.L(p[1]) + '</span></li>').join('') +
+        '<li class="pic"><span class="num">' + I18N.D(5) + '</span>' + st('one') + '<span>' + I18N.L('One leg') + '</span></li><li class="pic"><span class="num">⏱</span>' + PIC.balance('two')[2][0] + '<span>' + I18N.L('10 seconds each') + '</span></li>';
       return;
     }
     const pics = PIC[exKey]();
-    $('idle').innerHTML = pics.map((p, i) => '<li class="pic"><span class="num">' + (i + 1) + '</span>' + p[0] + '<span>' + p[1] + '</span></li>').join('');
+    $('idle').innerHTML = pics.map((p, i) => '<li class="pic"><span class="num">' + I18N.D(i + 1) + '</span>' + p[0] + '<span>' + I18N.L(p[1]) + '</span></li>').join('');
   }
 
   /* ---------- tracker setup: everything is embedded, nothing is fetched ---------- */
@@ -1946,7 +2262,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     } catch (e) {
       console.error(e);
       $('status').textContent = 'Tracker failed to load'; $('status').className = 'pill err';
-      $('btn-start').textContent = 'This phone cannot run iRehab'; $('home-note').textContent = 'Please try the latest Chrome (Android) or Safari (iPhone).';
+      $('btn-start').textContent = I18N.L('This phone cannot run iRehab'); $('home-note').textContent = I18N.L('Please try the latest Chrome (Android) or Safari (iPhone).');
       showCue('The pose tracker could not start in this browser. Try a current version of Chrome, Edge or Safari.', 'fix');
     }
   }
@@ -1959,7 +2275,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     renderIdle();
     $('scope').textContent = ex.scope;
     $('gauges').innerHTML = ex.gauges(); $('live-stats').innerHTML = ex.stats();
-    $('count-label').textContent = ex.countLabel;
+    $('count-label').textContent = I18N.L(ex.countLabel);
     $('reps').tHead.innerHTML = '<tr>' + ex.head.map((h) => '<th>' + h + '</th>').join('') + '</tr>';
     resetSession();
   }
@@ -1977,7 +2293,7 @@ if (typeof module !== 'undefined') module.exports = Report;
       const portrait = innerHeight > innerWidth;   // a phone propped upright: ask for an upright picture so the person fills the screen
       stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: portrait ? 720 : 1280 }, height: { ideal: portrait ? 1280 : 720 }, facingMode: 'user' }, audio: false });
     } catch (e) {
-      if (guided) { show('scr-intro'); $('intro-safety').textContent = 'The camera is blocked. Tap Allow when the phone asks, or turn on camera access for this website in your phone settings. Then tap I\'m ready again.'; }
+      if (guided) { show('scr-intro'); $('intro-safety').textContent = I18N.L('The camera is blocked. Tap Allow when the phone asks, or turn on camera access for this website in your phone settings. Then tap I\'m ready again.'); say($('intro-safety').textContent); }
       else showCue('Camera access was blocked. Allow the camera for this page, or use a recorded video file.', 'fix');
       return;
     }
@@ -1996,10 +2312,10 @@ if (typeof module !== 'undefined') module.exports = Report;
   function begin() {
     resetSession();
     running = true;
-    show('scr-live'); $('live-title').textContent = ex.name;
+    show('scr-live'); $('live-title').textContent = L(ex.name);
     $('tech').hidden = !$('show-tech').checked;
     $('count').hidden = !!guided; $('guide').hidden = true; $('countdown').hidden = true; $('stage').className = 'stage';
-    $('count-goal').textContent = guided && ex.goal ? 'of ' + ex.goal : guided && exKey === 'balance' ? 'Stage 1 of 4' : '';
+    $('count-goal').textContent = guided && ex.goal ? I18N.L('of {n}', { n: I18N.D(ex.goal) }) : guided && exKey === 'balance' ? I18N.L('Stage {i} of 4', { i: I18N.D(1) }) : '';
     $('btn-finish').disabled = false; $('btn-cam').disabled = true;
     live.phase = guided ? 'position' : 'run';
     showCue(guided ? '' : source === 'camera' ? 'Get into position' : '', '');
@@ -2059,7 +2375,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     if (dt > 0.25) live.q.gaps.push([mediaT - (t0 == null ? mediaT : t0), dt]);   // stalled frames: anything over 250 ms
     if (t0 === null) t0 = mediaT;
     const t = mediaT - t0;
-    $('clock').textContent = clockStr(t);
+    $('clock').textContent = I18N.D(clockStr(t));
     $('s-fps').textContent = fmt(1 / dt, 0, ' fps');
 
     const lms = res.landmarks && res.landmarks[0];
@@ -2089,7 +2405,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     const ok = !!lms && f.ok && inView(lms);
     if (live.phase === 'position') {
       $('stage').className = 'stage ' + (ok ? 'ok' : 'bad'); $('guide').hidden = false;
-      $('guide-text').textContent = !lms ? 'Step in front of the camera' : ok ? 'Good. Stay there.' : 'Step back so I can see all of you';
+      $('guide-text').textContent = I18N.L(!lms ? 'Step in front of the camera' : ok ? 'Good. Stay there.' : 'Step back so I can see all of you');
       if (!ok) { live.okSince = null; if (!live.posSaid || mediaT - live.posSaid > 8) { live.posSaid = mediaT; say(!lms ? 'Please step in front of the camera.' : 'Please step back so I can see all of you, from head to feet.'); } return; }
       if (live.okSince == null) live.okSince = mediaT;
       if (mediaT - live.okSince >= 1.0) { live.phase = 'countdown'; live.goAt = null; live.cdEnd = mediaT + 3.2; say('Good. Starting in 3, 2, 1.'); }
@@ -2097,7 +2413,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     }
     // countdown
     const left = live.cdEnd - mediaT;
-    $('guide').hidden = true; $('countdown').hidden = false; $('countdown').textContent = Math.max(1, Math.ceil(left - 0.2));
+    $('guide').hidden = true; $('countdown').hidden = false; $('countdown').textContent = I18N.D(Math.max(1, Math.ceil(left - 0.2)));
     if (left > 0) return;
     $('countdown').hidden = true; $('stage').className = 'stage'; $('count').hidden = false;
     counter = ex.make(); t0 = mediaT; frames = 0; tracked = 0; sm = {}; live.smooth = null; live.q = { gaps: [], lost: [] };
@@ -2182,82 +2498,239 @@ if (typeof module !== 'undefined') module.exports = Report;
 
   /* ---------- patient flow ---------- */
   const ORDER = ['shoulder', 'sts', 'march', 'balance', 'tug'];
+  const L = I18N.L, D = I18N.D;
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const isNum = (v) => typeof v === 'number' && isFinite(v);
   const today = () => new Date().toISOString().slice(0, 10);
   function plan() { try { const p = JSON.parse(localStorage.getItem('irehab.plan.' + pid())); if (Array.isArray(p) && p.length) return ORDER.filter((k) => p.includes(k)); } catch (e) { /* default plan */ } return ORDER.slice(); }
   function setPlan(p) { try { localStorage.setItem('irehab.plan.' + pid(), JSON.stringify(p)); } catch (e) { /* optional */ } }
   let skipped = {};
-  const isDone = (k) => Report.sessions(pid(), k).some((r) => r.t.slice(0, 10) === today()) || skipped[k] === today();
-  const icon = (k) => (k === 'balance' ? PIC.balance('tandem')[1][0] : PIC[k]()[k === 'sts' ? 2 : k === 'tug' ? 1 : 2][0]);
+  const doneTodayRec = (k) => Report.sessions(pid(), k).some((r) => r.t.slice(0, 10) === today());
+  const isDone = (k) => doneTodayRec(k) || skipped[k] === today();
+  const icon = (k) => (k === 'balance' ? PIC.balance('tandem')[1][0] : PIC[k]()[k === 'tug' ? 1 : 2][0]);
+  const scoreOf = (k, m) => Report.scoreOf(k, m);
+
   function planList(el, mark) {
     const p = plan(), nextK = p.find((k) => !isDone(k));
     el.innerHTML = p.map((k) => {
-      const d = isDone(k), st = d ? (skipped[k] === today() && !Report.sessions(pid(), k).some((r) => r.t.slice(0, 10) === today()) ? ['later', 'Skipped'] : ['done', 'Done ✓']) : k === nextK && mark ? ['next', 'Next'] : ['later', 'To do'];
-      return '<li class="' + (d ? 'done' : k === nextK && mark ? 'next' : '') + '"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + EX[k].name + '</span><br><span class="du">' + EX[k].dur + (EX[k].helper ? ' · with a helper' : '') + '</span></span><span class="st ' + st[0] + '">' + st[1] + '</span></li>';
+      const d = isDone(k), st = d ? (!doneTodayRec(k) ? ['later', 'Skipped'] : ['done', 'Done ✓']) : k === nextK && mark ? ['next', 'Next'] : ['later', 'To do'];
+      return '<li class="' + (d ? 'done' : k === nextK && mark ? 'next' : '') + '"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + L(EX[k].name) + '</span><br><span class="du">' + L(EX[k].dur) + (EX[k].helper ? ' · ' + L('with a helper') : '') + '</span></span><span class="st ' + st[0] + '">' + L(st[1]) + '</span></li>';
     }).join('');
     return nextK;
   }
   function renderHome() {
     const nm = (Report.person(pid()).name || '').trim();
-    $('hello').textContent = nm ? 'Hello, ' + nm : "Today's exercises";
+    $('hello').textContent = nm ? L('Hello, {name}', { name: nm }) : L("Today's exercises");
     const nextK = planList($('plan'), true), p = plan(), left = p.filter((k) => !isDone(k)).length;
-    $('home-lead').textContent = !left ? 'You have finished everything for today. Well done!' : left === p.length ? 'Do them one at a time. The phone will guide you.' : left + ' left for today. Keep going!';
+    $('home-lead').textContent = !left ? L('You have finished everything for today. Well done!') : left === p.length ? L('Do them one at a time. The phone will guide you.') : L('{n} left for today. Keep going!', { n: D(left) });
+    $('btn-progress').hidden = !Report.sessions(pid()).length;
     const b = $('btn-start');
-    if (!landmarker) { b.disabled = true; b.textContent = 'Getting ready…'; return; }
-    b.disabled = false; b.textContent = !left ? 'Do them again' : left === p.length ? 'Start' : 'Continue';
+    if (!landmarker) { b.disabled = true; b.textContent = L('Getting ready…'); return; }
+    b.disabled = false; b.textContent = L(!left ? 'Do them again' : left === p.length ? 'Start' : 'Continue');
     b.dataset.ex = nextK || p[0];
   }
+  function speakHome() { say($('hello').textContent + '. ' + $('home-lead').textContent + ' ' + L('Tap Start when you are ready.')); }
+
   function openIntro(k) {
     if (exKey !== k) { exKey = k; renderExercise(); }
     const p = plan(), i = p.indexOf(k);
-    $('intro-step').textContent = 'Exercise ' + (i + 1) + ' of ' + p.length;
-    $('intro-title').textContent = EX[k].name; $('intro-what').textContent = EX[k].what;
+    $('intro-step').textContent = L('Exercise {i} of {n}', { i: D(i + 1), n: D(p.length) });
+    $('intro-title').textContent = L(EX[k].name); $('intro-what').textContent = L(EX[k].what);
     renderIdle();
-    $('intro-safety').textContent = EX[k].helper ? 'Only do this with another person close by. Use your usual walking aid.' : k === 'march' ? 'Stand next to a sturdy chair or counter. Hold it if you need to.' : k === 'sts' ? 'Use a firm chair without wheels, against a wall.' : '';
+    $('intro-safety').textContent = L(EX[k].helper ? 'Only do this with another person close by. Use your usual walking aid.' : k === 'march' ? 'Stand next to a sturdy chair or counter. Hold it if you need to.' : k === 'sts' ? 'Use a firm chair without wheels, against a wall.' : '');
     $('helper-row').hidden = !EX[k].helper; $('helper').checked = false;
     $('btn-ready').disabled = !!EX[k].helper;
     show('scr-intro');
+    speakIntro();
+  }
+  function speakIntro() {
+    const k = exKey;
+    say([L(EX[k].name), L(EX[k].what), $('intro-safety').textContent, L(EX[k].helper ? 'Tick the box when someone is with you, then tap I\'m ready.' : 'Tap I\'m ready when you are set up.')].filter(Boolean).join(' '));
   }
   async function ready() {
     guided = true;
     if (exKey === 'balance') $('stance').value = 'two';
-    say('Okay. Put the phone down, 2 to 3 metres away, and stand where it can see you.');   // also unlocks speech on iPhone
+    say('Okay. Put the phone down, 2 to 3 metres away, and stand where it can see you.');
     await startCamera();
   }
-  const FACES = [[0, 'None', '#2f9e5b', 6], [2, '', '#7bbf4a', 3], [4, '', '#c9c23a', 0], [6, '', '#e0a800', -3], [8, '', '#e9762b', -6], [10, 'Worst', '#d9534f', -8]];
+
+  /* faces for effort and pain */
+  const FACES = [[0, '#2f9e5b', 6], [2, '#7bbf4a', 3], [4, '#c9c23a', 0], [6, '#e0a800', -3], [8, '#e9762b', -6], [10, '#d9534f', -8]];
   function faces(el, key, val, words) {
-    el.innerHTML = FACES.map(([v, l, c, smile], i) => '<button class="face" data-k="' + key + '" data-v="' + v + '" aria-pressed="' + (val === v) + '" aria-label="' + v + ' out of 10">' +
+    el.innerHTML = FACES.map(([v, c, smile], i) => '<button class="face" data-k="' + key + '" data-v="' + v + '" aria-pressed="' + (val === v) + '" aria-label="' + D(v) + ' / ' + D(10) + '">' +
       '<svg viewBox="0 0 40 40"><circle class="fc" cx="20" cy="20" r="18" fill="' + c + '"/><circle cx="14" cy="16" r="2.2"/><circle cx="26" cy="16" r="2.2"/>' +
-      '<path class="ft" d="M12 ' + (27 - smile / 2) + ' Q20 ' + (27 + smile) + ' 28 ' + (27 - smile / 2) + '"/></svg>' + (i === 0 ? words[0] : i === 5 ? words[1] : '&nbsp;') + '</button>').join('');
+      '<path class="ft" d="M12 ' + (27 - smile / 2) + ' Q20 ' + (27 + smile) + ' 28 ' + (27 - smile / 2) + '"/></svg>' + (i === 0 ? L(words[0]) : i === 5 ? L(words[1]) : '&nbsp;') + '</button>').join('');
   }
+
+  /* score ring, stars, confetti */
+  function ring(el, score) {
+    const v = Math.max(0, Math.min(100, Math.round(isNum(score) ? score : 0))), c = 2 * Math.PI * 52;
+    const col = v >= 80 ? '#2fbf71' : v >= 50 ? '#e0a800' : '#ec835a';
+    el.innerHTML = '<svg viewBox="0 0 120 120" role="img" aria-label="' + esc(L('Your score')) + ' ' + D(v) + '"><circle class="bgc" cx="60" cy="60" r="52"/>' +
+      '<circle class="fgc" cx="60" cy="60" r="52" stroke="' + col + '" stroke-dasharray="' + c.toFixed(1) + '" stroke-dashoffset="' + c.toFixed(1) + '" transform="rotate(-90 60 60)"/>' +
+      '<text class="num" x="60" y="66" text-anchor="middle">' + D(v) + '</text><text class="sub" x="60" y="88" text-anchor="middle">' + esc(L('out of 100')) + '</text></svg>';
+    setTimeout(() => { const f = el.querySelector('.fgc'); if (f) f.style.strokeDashoffset = (c * (1 - v / 100)).toFixed(1); }, 40);
+  }
+  const nStars = (s) => (s >= 80 ? 3 : s >= 50 ? 2 : 1);
+  function stars(el, s) { const n = nStars(s); el.innerHTML = '★'.repeat(n) + '<span class="off">' + '★'.repeat(3 - n) + '</span>'; }
+  function confetti(big) {
+    window.__confetti = (window.__confetti || 0) + 1;
+    try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) { /* animate */ }
+    const cv = $('confetti'), dpr = Math.min(2, window.devicePixelRatio || 1), W = cv.width = innerWidth * dpr, H = cv.height = innerHeight * dpr, g = cv.getContext('2d');
+    const cols = ['#2fbf71', '#f2b01e', '#2a78d6', '#eb6834', '#5ee0d6', '#d94f8a'];
+    const P = Array.from({ length: big ? 170 : 110 }, () => ({ x: W * Math.random(), y: -H * 0.3 * Math.random(), vx: (Math.random() - 0.5) * 5 * dpr, vy: (2 + Math.random() * 4) * dpr,
+      r: (5 + Math.random() * 6) * dpr, c: cols[Math.floor(Math.random() * cols.length)], a: Math.random() * 6, va: (Math.random() - 0.5) * 0.3 }));
+    let n = 0;
+    (function step() {
+      g.clearRect(0, 0, W, H);
+      for (const p of P) { p.x += p.vx; p.y += p.vy; p.vy += 0.07 * dpr; p.a += p.va; g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = p.c; g.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); g.restore(); }
+      if (++n < 160) setTimeout(step, 16); else g.clearRect(0, 0, W, H);
+    })();
+  }
+
+  /* what the patient reads after an exercise */
+  function headline(k, m) {
+    if (k === 'shoulder') return [D(m.reps), L('raises')];
+    if (k === 'sts') return isNum(m.cst30) ? [D(m.cst30), L('stands in 30 seconds')] : [D(m.reps), L('stands')];
+    if (k === 'march') return [D(m.steps), L('steps')];
+    if (k === 'tug') { const b = isNum(m.best) ? m.best : m.bestAny; return [isNum(b) ? D(b.toFixed(1)) : '…', L('seconds, your best time')]; }
+    return [D(m.stage || 0), L('of 4 positions held')];
+  }
+  function improvement(k, m, pm) {
+    if (!pm) return '';
+    const n = (v) => (isNum(v) ? v : 0);
+    if (k === 'sts') { const d = n(isNum(m.cst30) ? m.cst30 : m.reps) - n(isNum(pm.cst30) ? pm.cst30 : pm.reps); return d > 0 ? L('{n} more stands than last time.', { n: D(d) }) : ''; }
+    if (k === 'march') { const d = n(m.steps) - n(pm.steps); return d > 0 ? L('{n} more steps than last time.', { n: D(d) }) : ''; }
+    if (k === 'tug') { const a = isNum(m.best) ? m.best : m.bestAny, b = isNum(pm.best) ? pm.best : pm.bestAny; return isNum(a) && isNum(b) && b - a >= 0.3 ? L('{x} seconds faster than last time.', { x: D((b - a).toFixed(1)) }) : ''; }
+    if (k === 'balance') { const d = n(m.stage) - n(pm.stage); return d > 0 ? L('{n} more positions than last time.', { n: D(d) }) : ''; }
+    const a = (n(m.romL) + n(m.romR)) / 2, b = (n(pm.romL) + n(pm.romR)) / 2;
+    if (a - b >= 3) return L('Your arms went {x}° higher than last time.', { x: D(Math.round(a - b)) });
+    return n(m.reps) > n(pm.reps) ? L('{n} more raises than last time.', { n: D(n(m.reps) - n(pm.reps)) }) : '';
+  }
+  function patientWins(k, m, pm) {
+    const out = [], imp = improvement(k, m, pm); if (imp) out.push(imp);
+    const def = Report.DEF[k], d = def.score(m).d;
+    Object.entries(d).filter((e) => isNum(e[1]) && e[1] >= 80 && def.praise[e[0]]).sort((a, b) => b[1] - a[1]).slice(0, 2).forEach((e) => out.push(L(def.praise[e[0]])));
+    if (!out.length) out.push(L('You completed the session. Turning up and doing the work is what builds recovery.'));
+    return out.slice(0, 3);
+  }
+  function patientTip(k, m) {
+    const def = Report.DEF[k], w = Object.entries(def.score(m).d).filter((e) => isNum(e[1]) && e[0] !== 'Consistency' && def.focus[e[0]]).sort((a, b) => a[1] - b[1])[0];
+    return w && w[1] < 80 ? L(def.focus[w[0]]) : '';
+  }
+  let resultSpeech = '';
   function showResult(saved) {
     const k = exKey, recs = Report.sessions(pid(), k), last = recs[recs.length - 1];
+    $('res-pb').hidden = true; $('res-change').textContent = '';
     if (!saved || !last) {
-      $('res-title').textContent = "Let's try that again"; $('res-big').innerHTML = 'I could not see enough movement to count.';
-      $('res-wins').innerHTML = '<li>Make sure the phone can see you from head to feet, then try again.</li>'; $('res-next').textContent = '';
-      $('rate-block').hidden = true; $('btn-next').textContent = 'Try again'; $('btn-next').dataset.act = 'again'; $('btn-again').textContent = 'Skip this one today'; $('btn-again').dataset.act = 'skip';
-      show('scr-result'); say("Let's try that again."); return;
+      $('res-scorebox').hidden = true;
+      $('res-title').textContent = L("Let's try that again"); $('res-big').innerHTML = esc(L('I could not see enough movement to count.'));
+      $('res-wins').innerHTML = '<li>' + esc(L('Make sure the phone can see you from head to feet, then try again.')) + '</li>'; $('res-next').textContent = '';
+      $('rate-block').hidden = true; $('btn-next').textContent = L('Try again'); $('btn-next').dataset.act = 'again'; $('btn-again').textContent = L('Skip this one today'); $('btn-again').dataset.act = 'skip';
+      show('scr-result'); resultSpeech = L("Let's try that again") + '. ' + L('Make sure the phone can see you from head to feet, then try again.'); say(resultSpeech); return;
     }
-    const r = Report.render(document.createElement('div'), pid(), k) || { wins: [], next: '' };
-    const best = last.m.best != null ? last.m.best : last.m.bestAny;
-    const h = k === 'tug' ? [best != null ? best.toFixed(1) : '…', 'seconds, your best time'] : Report.DEF[k].headline(last.m);   // patients never see clinician wording
-    $('res-title').textContent = 'Well done!';
-    $('res-big').innerHTML = '<b>' + h[0] + '</b>' + h[1];
-    $('res-wins').innerHTML = r.wins.map((w) => '<li>' + w.replace(/[<>&]/g, '') + '</li>').join('');
-    $('res-next').textContent = r.next && !/^Keep doing|trials/.test(r.next) ? r.next : '';
+    const m = last.m, s = scoreOf(k, m), prevs = recs.slice(0, -1), prev = prevs[prevs.length - 1];
+    const ps = prevs.map((r) => scoreOf(k, r.m)).filter(isNum), pb = ps.length > 0 && s > Math.max(...ps) + 0.5;
+    $('res-scorebox').hidden = false; ring($('res-ring'), s); stars($('res-stars'), s); $('res-pb').hidden = !pb;
+    let ch;
+    if (!prev) ch = L('Your first score. Next time, try to beat it!');
+    else { const d = Math.round(s - scoreOf(k, prev.m)); ch = d > 0 ? L('{n} points higher than last time', { n: D(d) }) : d === 0 ? L('Same score as last time. Steady work!') : L('A little lower than last time. Some days are harder. Keep going!'); }
+    $('res-change').textContent = ch;
+    $('res-title').textContent = L('Well done!');
+    const h = headline(k, m); $('res-big').innerHTML = '<b>' + esc(h[0]) + '</b>' + esc(h[1]);
+    const wins = patientWins(k, m, prev ? prev.m : null);
+    $('res-wins').innerHTML = wins.map((w) => '<li>' + esc(w) + '</li>').join('');
+    $('res-next').dataset.label = L('Next time: '); $('res-next').textContent = patientTip(k, m);
     $('rate-block').hidden = false;
     faces($('faces-rpe'), 'rpe', last.rpe, ['Easy', 'Very hard']); faces($('faces-pain'), 'pain', last.pain, ['None', 'Worst']);
     const nextK = plan().find((x) => x !== k && !isDone(x));
-    $('btn-next').textContent = nextK ? 'Next exercise' : 'Finish'; $('btn-next').dataset.act = nextK ? 'next' : 'done';
-    $('btn-again').textContent = 'Do this one again'; $('btn-again').dataset.act = 'again';
+    $('btn-next').textContent = L(nextK ? 'Next exercise' : 'Finish'); $('btn-next').dataset.act = nextK ? 'next' : 'done';
+    $('btn-again').textContent = L('Do this one again'); $('btn-again').dataset.act = 'again';
     show('scr-result');
-    say('Well done. ' + (r.wins[0] || ''));
+    confetti(pb || !prev);
+    resultSpeech = [L('Well done!'), L('Your score') + ' ' + Math.round(s) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0], L('How hard was that?')].join(' ');
+    say(resultSpeech);
   }
   function goNext() { const nextK = plan().find((x) => !isDone(x)); if (nextK) openIntro(nextK); else showDone(); }
+
+  function weekDots(el) {
+    const days = new Set(Report.sessions(pid()).map((r) => r.t.slice(0, 10))), fmt = new Intl.DateTimeFormat(I18N.lang === 'ar' ? 'ar-SA' : 'en', { weekday: 'narrow' });
+    let n = 0, html = '';
+    for (let i = 6; i >= 0; i--) { const d = new Date(Date.now() - i * 864e5), k = d.toISOString().slice(0, 10), on = days.has(k); if (on) n++; html += '<span><i class="' + (on ? 'on' : '') + (i === 0 ? ' today' : '') + '"></i>' + fmt.format(d) + '</span>'; }
+    el.innerHTML = html; return n;
+  }
+  function dayScore(date) {
+    const s = plan().map((k) => Report.sessions(pid(), k).filter((r) => r.t.slice(0, 10) === date).pop()).filter(Boolean).map((r) => scoreOf(r.ex, r.m)).filter(isNum);
+    return s.length ? s.reduce((a, b) => a + b, 0) / s.length : NaN;
+  }
   function showDone() {
     planList($('done-plan'), false);
+    const s = dayScore(today()); ring($('done-ring'), s); stars($('done-stars'), s);
+    weekDots($('done-week'));
     const days = new Set(Report.sessions(pid()).map((r) => r.t.slice(0, 10)));
-    $('done-lead').textContent = 'Thank you. Your results are saved on this phone.' + (days.size > 1 ? ' You have exercised on ' + days.size + ' days so far.' : '');
-    show('scr-done'); say('All done for today. Thank you.');
+    $('done-lead').textContent = L('Thank you. Your results are saved on this phone.') + (days.size > 1 ? ' ' + L('You have exercised on {n} days so far.', { n: D(days.size) }) : '');
+    show('scr-done'); confetti(true);
+    say(L('All done for today. Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.');
+  }
+
+  /* patient: my progress */
+  function spark(vals) {
+    const v = vals.filter(isNum); if (v.length < 2) return '';
+    const W = 120, H = 34, x = (i) => 4 + i * (W - 8) / (v.length - 1), y = (q) => H - 4 - Math.max(0, Math.min(100, q)) / 100 * (H - 8);
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true" direction="ltr"><polyline class="ln" points="' + v.map((q, i) => x(i).toFixed(1) + ',' + y(q).toFixed(1)).join(' ') + '"/><circle class="pt" cx="' + x(v.length - 1) + '" cy="' + y(v[v.length - 1]) + '" r="3.5"/></svg>';
+  }
+  function showProgress() {
+    const all = Report.sessions(pid()), dates = [...new Set(all.map((r) => r.t.slice(0, 10)))].sort();
+    const s = dates.length ? dayScore(dates[dates.length - 1]) : NaN; ring($('prog-ring'), s);
+    const n = weekDots($('prog-week')); $('prog-days').textContent = D(n) + ' / ' + D(7) + ' ' + L('days active');
+    $('prog-list').innerHTML = plan().map((k) => {
+      const recs = Report.sessions(pid(), k);
+      if (!recs.length) return '<div class="card"><div class="pc-head"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + esc(L(EX[k].name)) + '</span><br><span class="sub">' + esc(L('Not done yet')) + '</span></span><span></span></div></div>';
+      const sc = recs.map((r) => scoreOf(k, r.m)), last = recs[recs.length - 1], h = headline(k, last.m), d = Math.round(sc[sc.length - 1] - sc[0]);
+      const tr = recs.length < 2 ? '' : d > 0 ? '<span class="up">' + esc(L('Up {n} points since your first time', { n: D(d) })) + '</span>' : d < 0 ? '<span class="down">' + esc(L('Down {n} points since your first time', { n: D(-d) })) + '</span>' : esc(L('Same as your first time'));
+      const r = document.createElement('div'); ring(r, sc[sc.length - 1]);
+      return '<div class="card"><div class="pc-head"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + esc(L(EX[k].name)) + '</span><br><span class="sub">' + esc(h[0] + ' ' + h[1]) + ' · ' + esc(L(recs.length === 1 ? '{n} session' : '{n} sessions', { n: D(recs.length) })) + '</span></span>' +
+        '<span class="ring small">' + r.innerHTML + '</span></div>' + (recs.length > 1 ? '<div class="pc-trend">' + spark(sc) + '<span>' + tr + '</span></div>' : '') + '</div>';
+    }).join('');
+    for (const f of $('prog-list').querySelectorAll('.ring.small .fgc')) { const c = 2 * Math.PI * 52, v = +f.closest('svg').querySelector('.num').textContent.replace(/[٠-٩]/g, (x) => '٠١٢٣٤٥٦٧٨٩'.indexOf(x)); setTimeout(() => { f.style.strokeDashoffset = (c * (1 - v / 100)).toFixed(1); }, 40); }
+    $('prog-body').innerHTML = Report.bodyMap(Report.latestRegions(pid()), L, D);
+    show('scr-progress');
+    say(L('My progress') + '. ' + L('Here is how you are doing.') + ' ' + n + ' / 7 ' + L('days active') + '.');
+  }
+
+  /* clinician: phone-friendly report */
+  function showCReport() {
+    const id = pid(), P = Report.person(id), all = Report.sessions(id), el = $('crep');
+    const fmtv = (v, row) => (isNum(v) ? D(v.toFixed(row.dec)) + (row.unit || '') : '–');
+    const dates = new Set(all.filter((r) => Date.now() - new Date(r.t).getTime() < 7 * 864e5).map((r) => r.t.slice(0, 10)));
+    const rated = all.filter((r) => isNum(r.rpe) || isNum(r.pain)).pop();
+    const last = all[all.length - 1];
+    let html = '<h1 class="pt-h1">' + esc(id) + '</h1><p class="pt-lead">' + esc([isNum(P.age) ? L('age {a}', { a: D(P.age) }) : '', P.sex === 'F' ? L('female') : P.sex === 'M' ? L('male') : ''].filter(Boolean).join(' · ')) + (id === Report.EXAMPLE ? ' · ' + esc(L('Example data (invented).')) : '') + '</p>' +
+      '<div class="card"><dl class="facts"><div><dt>' + esc(L('Sessions')) + '</dt><dd>' + D(all.length) + '</dd></div><div><dt>' + esc(L('Active days, last 7')) + '</dt><dd>' + D(dates.size) + '</dd></div>' +
+      '<div><dt>' + esc(L('Last session')) + '</dt><dd>' + (last ? esc(new Date(last.t).toLocaleDateString(I18N.lang === 'ar' ? 'ar-SA' : undefined, { day: 'numeric', month: 'short' })) : '–') + '</dd></div>' +
+      '<div><dt>' + esc(L('Effort')) + ' / ' + esc(L('Pain')) + '</dt><dd>' + (rated ? D(isNum(rated.rpe) ? rated.rpe : '–') + ' / ' + D(isNum(rated.pain) ? rated.pain : '–') : '–') + '</dd></div></dl></div>';
+    if (!all.length) html += '<p class="pt-note">' + esc(L('No sessions yet')) + '</p>';
+    for (const k of ORDER) {
+      const recs = Report.sessions(id, k); if (!recs.length) continue;
+      const cur = recs[recs.length - 1], first = recs[0], sc = recs.map((r) => scoreOf(k, r.m)), r0 = document.createElement('div'); ring(r0, sc[sc.length - 1]);
+      html += '<div class="card"><div class="pc-head"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + esc(L(EX[k].name)) + '</span><br><span class="sub">' + esc(L(recs.length === 1 ? '{n} session' : '{n} sessions', { n: D(recs.length) })) + '</span></span><span class="ring small">' + r0.innerHTML + '</span></div>';
+      for (const row of Report.standard(k, cur, P)) {
+        if (row.top) continue;
+        const get = (rec) => (rec && isNum(rec.m[row.key]) ? rec.m[row.key] : NaN), c = get(cur), f0 = get(first), d = c - f0;
+        const series = recs.map(get), lo = Math.min(...series.filter(isNum)), hi = Math.max(...series.filter(isNum));
+        const norm = series.map((v) => (isNum(v) ? (hi > lo ? (row.better === 'down' ? (hi - v) : (v - lo)) / (hi - lo) * 100 : 50) : NaN));
+        const better = isNum(d) && d !== 0 && row.better ? ((d > 0) === (row.better === 'up')) : null;
+        const mean = recs.length < 2 || !isNum(d) ? '' : !row.mcid ? L('No threshold set') : Math.abs(d) >= row.mcid ? '✓ ' + L('Meaningful change') : L('Not yet');
+        html += '<div class="mrow"><span class="ml">' + esc(L(row.label)) + '</span><span class="mv"><b>' + fmtv(c, row) + '</b>' +
+          (row.flag ? '<span class="chip2 ' + (row.flag.ok ? 'ok' : 'no') + '">' + esc(L(row.flag.text)) + '</span>' : '') + '</span>' +
+          (recs.length > 1 ? '<span class="mc">' + esc(L('First')) + ' ' + fmtv(f0, row) + ' → ' + esc(L('Latest')) + ' ' + fmtv(c, row) +
+            (isNum(d) ? ' (<span class="' + (better === true ? 'up' : better === false ? 'down' : '') + '">' + (d > 0 ? '+' : d < 0 ? '−' : '') + D(Math.abs(d).toFixed(row.dec)) + '</span>)' : '') + (mean ? ' · ' + esc(mean) : '') + '</span>' : '') +
+          (recs.length > 1 ? '<span class="pc-trend">' + spark(norm) + '</span>' : '') + '</div>';
+      }
+      html += '</div>';
+    }
+    el.innerHTML = html;
+    show('scr-creport');
   }
 
   /* ---------- report and history ---------- */
@@ -2269,18 +2742,21 @@ if (typeof module !== 'undefined') module.exports = Report;
   function loadPerson() { const p = Report.person(pid()); $('age').value = p.age || ''; $('sex').value = p.sex || ''; }
   const savePerson = () => { const a = parseInt($('age').value, 10); Report.setPerson(pid(), Object.assign({}, Report.person(pid()), { age: a >= 18 && a <= 110 ? a : null, sex: $('sex').value || null })); if (!$('report').hidden) showReport(); };
   $('age').onchange = savePerson; $('sex').onchange = savePerson;
-  $('btn-report').onclick = () => { showReport(); $('report').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
-  $('btn-example').onclick = () => { $('pid').value = Report.EXAMPLE; Report.seedExample(); loadPerson(); showReport(); $('report').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  $('btn-report').onclick = () => showCReport();
+  $('btn-example').onclick = () => { $('pid').value = Report.EXAMPLE; Report.seedExample(); loadPerson(); renderPlanEdit(); showReport(); showCReport(); };
 
   $('btn-start').onclick = () => { const k = $('btn-start').dataset.ex; if (plan().every(isDone)) { skipped = {}; } openIntro(k || plan()[0]); };
-  $('intro-back').onclick = () => { renderHome(); show('scr-home'); };
+  $('intro-back').onclick = () => { renderHome(); show('scr-home'); speakHome(); };
   $('helper').onchange = () => { $('btn-ready').disabled = !$('helper').checked; };
   $('btn-ready').onclick = ready;
   $('btn-skip').onclick = () => { skipped[exKey] = today(); goNext(); };
   $('btn-finish').onclick = () => { if (guided) say('Stopped.'); finish(); };
   $('btn-next').onclick = () => { const a = $('btn-next').dataset.act; if (a === 'again') openIntro(exKey); else if (a === 'done') showDone(); else goNext(); };
   $('btn-again').onclick = () => { if ($('btn-again').dataset.act === 'skip') { skipped[exKey] = today(); goNext(); } else openIntro(exKey); };
-  $('btn-home').onclick = () => { renderHome(); show('scr-home'); };
+  $('btn-home').onclick = () => { renderHome(); show('scr-home'); speakHome(); };
+  $('btn-progress').onclick = showProgress; $('btn-done-progress').onclick = showProgress;
+  $('prog-back').onclick = () => { renderHome(); show('scr-home'); };
+  $('intro-listen').onclick = speakIntro; $('res-listen').onclick = () => say(resultSpeech); $('prog-listen').onclick = () => showProgress();
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.face'); if (!b) return;
     Report.rateLatest(pid(), exKey, b.dataset.k, +b.dataset.v);
@@ -2290,16 +2766,42 @@ if (typeof module !== 'undefined') module.exports = Report;
   $('close-clinic').onclick = () => { stopSource(); guided = false; renderHome(); show('scr-home'); };
   function renderPlanEdit() {
     const p = plan();
-    $('plan-edit').innerHTML = ORDER.map((k) => '<label class="check"><input type="checkbox" data-plan="' + k + '"' + (p.includes(k) ? ' checked' : '') + '> ' + EX[k].name + '</label>').join('');
+    $('plan-edit').innerHTML = ORDER.map((k) => '<label class="check"><input type="checkbox" data-plan="' + k + '"' + (p.includes(k) ? ' checked' : '') + '> ' + esc(L(EX[k].name)) + '</label>').join('');
     $('pname').value = Report.person(pid()).name || '';
   }
   $('plan-edit').onchange = () => { const p = [...$('plan-edit').querySelectorAll('input:checked')].map((x) => x.dataset.plan); setPlan(p.length ? p : ORDER.slice()); };
   $('pname').onchange = () => { Report.setPerson(pid(), Object.assign({}, Report.person(pid()), { name: $('pname').value.trim() || null })); };
   $('show-tech').onchange = () => { $('tech').hidden = !$('show-tech').checked; };
+  $('btn-detail').onclick = () => { show('scr-clinic'); showReport(); $('report').scrollIntoView({ block: 'start' }); };
+  $('crep-back').onclick = () => show('scr-clinic');
+
+  /* sound and language */
+  function syncSound() {
+    const on = $('voice').checked;
+    $('sound-toggle').setAttribute('aria-pressed', on); $('sound-toggle').querySelector('.ico').textContent = on ? '🔊' : '🔇'; $('sound-label').textContent = L(on ? 'Sound on' : 'Sound off');
+  }
+  $('sound-toggle').onclick = () => { $('voice').checked = !$('voice').checked; syncSound(); try { localStorage.setItem('irehab.sound', $('voice').checked ? '1' : '0'); } catch (e) { /* optional */ } if ($('voice').checked) say('Sound on'); };
+  $('voice').onchange = syncSound;
+  try { if (localStorage.getItem('irehab.sound') === '0') $('voice').checked = false; } catch (e) { /* default on */ }
+  function relang(l) {
+    I18N.setLang(l);
+    for (const b of [$('lang-toggle'), $('lang-toggle-c')]) { b.textContent = I18N.lang === 'ar' ? 'English' : 'عربي'; b.lang = I18N.lang === 'ar' ? 'en' : 'ar'; }
+    for (const b of $('seg').children) b.textContent = L(EX[b.dataset.ex].name);
+    syncSound(); renderPlanEdit(); $('count-label').textContent = L(ex.countLabel);
+    const vis = [...document.querySelectorAll('.screen')].find((s) => !s.hidden);
+    if (!vis || vis.id === 'scr-home') renderHome();
+    else if (vis.id === 'scr-intro') openIntro(exKey);
+    else if (vis.id === 'scr-progress') showProgress();
+    else if (vis.id === 'scr-creport') showCReport();
+    else if (vis.id === 'scr-done') showDone();
+  }
+  $('lang-toggle').onclick = () => { relang(I18N.lang === 'ar' ? 'en' : 'ar'); if (vis('scr-home')) speakHome(); };
+  $('lang-toggle-c').onclick = () => relang(I18N.lang === 'ar' ? 'en' : 'ar');
+  const vis = (id) => !$(id).hidden;
 
   loadPerson();
   renderExercise();
-  renderHome();
+  relang(I18N.lang);
   show('scr-home');
   initTracker();
 })();
