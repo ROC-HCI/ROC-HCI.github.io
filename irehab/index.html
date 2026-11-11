@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>iRehab Motion Check</title>
+<meta name="theme-color" content="#0b6e6a">
 <style>
 /* Layout: a dark camera stage on the left that the patient watches from 2 to 3 m away,
    a clinician's readout column on the right, the rep log underneath. */
@@ -185,69 +186,253 @@ input.btn { width: 8.5em; cursor: text; }
   .v-clin { break-before: page; }
 }
 [hidden] { display: none !important; }
+
+/* ================= patient-facing screens (mobile first) ================= */
+/* One task per screen, large type and touch targets, plain words, voice for everything said on screen. */
+:root { --pt-size: 19px; --tap: 64px; --face-good: #2f9e5b; --face-mid: #e0a800; --face-bad: #d9534f; }
+.screen[hidden] { display: none !important; }
+.pt { max-width: 560px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; gap: 18px; font-size: var(--pt-size); line-height: 1.45;
+  padding-block: 18px 32px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.pt-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; }
+.brand { font-weight: 800; font-size: 20px; color: var(--accent); letter-spacing: -0.01em; }
+.pt-h1 { font-size: clamp(28px, 7.5vw, 36px); line-height: 1.15; margin: 0; letter-spacing: -0.015em; text-wrap: balance; }
+.pt-h2 { font-size: 21px; margin: 6px 0 0; }
+.pt-lead { margin: 0; color: var(--muted); font-size: 20px; }
+.pt-note { margin: 0; color: var(--muted); font-size: 17px; }
+.pt-fine { margin: auto 0 0; color: var(--muted); font-size: 14px; text-align: center; }
+.center { text-align: center; align-self: center; }
+.step { font-weight: 700; color: var(--muted); font-size: 17px; }
+.big { display: block; width: 100%; min-height: var(--tap); border-radius: 18px; border: 2px solid transparent; font: 700 22px/1.2 var(--font); padding: 14px 20px; cursor: pointer; }
+.big.primary { background: var(--accent); color: var(--accent-ink); }
+.big.primary:disabled { opacity: .55; cursor: default; }
+.big.stop { background: #b3261e; color: #fff; }
+.big.stop:disabled { opacity: .5; }
+.linkbtn { background: none; border: 0; color: var(--accent); font: 600 17px var(--font); padding: 12px 6px; min-height: 44px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.backbtn { background: none; border: 0; color: var(--ink); font: 700 19px var(--font); padding: 10px 4px; min-height: 48px; cursor: pointer; }
+.big:focus-visible, .linkbtn:focus-visible, .backbtn:focus-visible, .face:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* today's plan */
+.plan { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.plan li { display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; align-items: center; gap: 14px; background: var(--surface); border: 2px solid var(--line); border-radius: 18px; padding: 10px 14px 10px 10px; }
+.plan li.next { border-color: var(--accent); }
+.plan li.done { opacity: .75; }
+.plan .ic { width: 76px; height: 70px; border-radius: 12px; background: var(--stage); display: grid; place-items: center; }
+.plan .ic svg { width: 70px; height: 62px; }
+.plan .nm { font-weight: 700; font-size: 20px; line-height: 1.2; }
+.plan .du { color: var(--muted); font-size: 16px; }
+.plan .st { font-weight: 700; font-size: 15px; padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+.plan .st.done { background: var(--good-soft); color: var(--good); }
+.plan .st.next { background: var(--accent); color: var(--accent-ink); }
+.plan .st.later { background: var(--bg); color: var(--muted); }
+
+/* how-to pictures */
+.howto { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.howto li { position: relative; background: var(--stage); color: var(--stage-ink); border-radius: 16px; padding: 10px 10px 14px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.25; min-width: 0; }
+.howto svg { width: 100%; height: auto; }
+.howto .num { position: absolute; top: 8px; left: 10px; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font: 800 16px/28px var(--font); text-align: center; }
+.howto .fg { fill: none; stroke: #eaf2f0; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.howto .ch { fill: none; stroke: #eaf2f0; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: .5; }
+.howto .ac { fill: none; stroke: #5ee0d6; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.howto .acf { fill: #5ee0d6; stroke: none; }
+.howto .dim { fill: none; stroke: #eaf2f0; stroke-width: 1.5; opacity: .4; }
+.howto .dimline { fill: none; stroke: #eaf2f0; stroke-width: 1.2; opacity: .7; }
+.howto .dimfoot { fill: none; stroke: #eaf2f0; stroke-width: 2.5; stroke-dasharray: 3 3; opacity: .6; }
+.howto .no { fill: none; stroke: #f0a851; stroke-width: 4; stroke-linecap: round; }
+.howto .tx { fill: #eaf2f0; font: 600 10px var(--font); }
+.plan .ic .fg { fill: none; stroke: #eaf2f0; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.plan .ic .ch, .plan .ic .dim, .plan .ic .dimline, .plan .ic .tx { display: none; }
+.plan .ic .ac { fill: none; stroke: #5ee0d6; stroke-width: 3; stroke-linecap: round; }
+.plan .ic .acf { fill: #5ee0d6; }
+.plan .ic .dimfoot { fill: none; stroke: #eaf2f0; stroke-width: 2.5; stroke-dasharray: 3 3; opacity: .6; }
+.safety { background: var(--warn-soft); color: var(--ink); border-radius: 14px; padding: 12px 14px; font-size: 18px; }
+.safety:empty { display: none; }
+.confirm { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; padding: 14px; font-weight: 700; cursor: pointer; }
+.confirm input { width: 30px; height: 30px; accent-color: var(--accent); flex: none; }
+
+/* live screen: the phone stands 2 to 3 m away, so everything is readable from across a room */
+.live { height: 100dvh; display: flex; flex-direction: column; background: #000; color: #fff; }
+.livebar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px max(14px, env(safe-area-inset-right, 0px)) 10px max(14px, env(safe-area-inset-left, 0px)); font: 700 18px var(--font); }
+.livebar .clock { font: 700 18px var(--mono); font-variant-numeric: tabular-nums; }
+.live .stage { flex: 1; min-height: 0; border-radius: 0; aspect-ratio: auto; max-height: none; width: 100%; background: #000; border: 6px solid transparent; transition: border-color .2s; }
+.live .stage.ok { border-color: #2fbf71; }
+.live .stage.bad { border-color: #f0a851; }
+.live .count { top: 10px; left: 14px; font: 800 clamp(80px, 22vw, 180px)/0.95 var(--font); }
+.live .count small { font-size: clamp(16px, 4vw, 24px); letter-spacing: .06em; }
+.live .count #count-goal { opacity: .85; letter-spacing: 0; text-transform: none; }
+.live .cue { font-size: clamp(22px, 6vw, 40px); padding: 16px 18px; line-height: 1.2; }
+.guide { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; padding: 0 20px; font: 800 clamp(26px, 7vw, 46px)/1.2 var(--font); text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+.countdown { position: absolute; inset: 0; display: grid; place-items: center; font: 900 clamp(140px, 45vw, 320px)/1 var(--font); color: #fff; text-shadow: 0 4px 24px rgba(0,0,0,.7); background: rgba(0,0,0,.25); }
+.live .big.stop { border-radius: 0; min-height: 72px; font-size: 24px; padding-bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
+.live .tech { border-radius: 0; max-height: 30vh; overflow: auto; color: var(--ink); }
+
+/* well done */
+.cheer { align-self: center; width: 96px; height: 96px; }
+.cheer svg { width: 100%; height: 100%; }
+.cheer circle { fill: var(--good-soft); stroke: var(--good); stroke-width: 2.5; }
+.cheer path { fill: none; stroke: var(--good); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.res-big { margin: 0; text-align: center; font-size: 22px; color: var(--muted); }
+.res-big b { display: block; font-size: clamp(56px, 16vw, 84px); line-height: 1; color: var(--ink); }
+.pt .wins { font-size: 19px; }
+.tip { margin: 0; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 19px; }
+.tip::before { content: "Next time: "; font-weight: 700; }
+.tip:empty { display: none; }
+/* the main action sits in a bar pinned to the bottom of the screen, always in reach of the thumb */
+.actions { position: sticky; bottom: 0; z-index: 5; display: flex; flex-direction: column; gap: 10px; margin-top: auto;
+  margin-left: calc(-1 * max(18px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(18px, env(safe-area-inset-right, 0px)));
+  padding: 14px max(18px, env(safe-area-inset-right, 0px)) max(14px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+  background: var(--bg); border-top: 1px solid var(--line); }
+.pt { padding-bottom: 0; }
+.pt-fine { margin: 0; }
+.big.primary:disabled { background: var(--line); color: var(--muted); opacity: 1; }
+.faces { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+.face { display: flex; flex-direction: column; align-items: center; gap: 2px; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 8px 2px 6px; min-height: 64px; cursor: pointer; font: 600 13px var(--font); color: var(--muted); }
+.face svg { width: 100%; max-width: 46px; height: auto; }
+.face[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--ink); }
+.face .fc { stroke: none; } .face .ft { fill: none; stroke: #1b1b1b; stroke-width: 2.4; stroke-linecap: round; }
+.faces-scale { display: flex; justify-content: space-between; font-size: 15px; color: var(--muted); margin-top: -6px; }
+.rate-block { display: flex; flex-direction: column; gap: 10px; }
+
+/* clinician area keeps the dense desktop layout */
+.clin { min-height: 100dvh; }
+.clin h2 { margin: 6px 0 0; }
+.clin .panel h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>iRehab Motion Check</h1>
-    <p>Research prototype, not a medical device. Pose tracking runs on this device. No video is stored or sent anywhere.</p>
-    <span class="pill" id="status">Loading tracker…</span>
-  </header>
+<div class="app">
 
-  <div class="controls">
-    <div class="seg" role="group" aria-label="Exercise" id="seg"></div>
-    <select class="btn" id="stance" aria-label="Balance stance" hidden>
-      <option value="two">1. Feet together</option><option value="semi">2. Semi-tandem</option><option value="tandem">3. Tandem (heel to toe)</option><option value="one">4. One leg</option>
-    </select>
-    <button class="btn primary" id="btn-cam" disabled>Start camera</button>
-    <label class="btn" id="lbl-file" for="file">Use a video file</label>
-    <input type="file" id="file" accept="video/*" hidden>
-    <button class="btn" id="btn-finish" disabled>Finish session</button>
-    <span class="spacer"></span>
-    <label class="check">Participant <input class="btn" id="pid" value="P001" maxlength="24" autocomplete="off"></label>
-    <label class="check">Age <input class="btn" id="age" type="number" min="18" max="110" inputmode="numeric" style="width:4.6em"></label>
-    <label class="check">Sex <select class="btn" id="sex"><option value="">Not set</option><option value="F">Female</option><option value="M">Male</option></select></label>
-    <button class="btn" id="btn-report">Progress report</button>
-    <button class="btn" id="btn-example">Example report</button>
-    <label class="check"><input type="checkbox" id="voice" checked> Voice cues</label>
-  </div>
+  <!-- ================= PATIENT: today's exercises ================= -->
+  <section class="screen pt" id="scr-home">
+    <div class="pt-top">
+      <span class="brand">iRehab</span>
+      <button class="linkbtn" id="open-clinic">For clinicians</button>
+    </div>
+    <h1 class="pt-h1" id="hello">Today's exercises</h1>
+    <p class="pt-lead" id="home-lead">Do them one at a time. The phone will guide you.</p>
+    <ol class="plan" id="plan"></ol>
+    <p class="pt-note" id="home-note">Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.</p>
+    <p class="pt-fine">Research prototype, not a medical device. Video stays on this phone.</p>
+    <div class="actions"><button class="big primary" id="btn-start" disabled>Getting ready…</button></div>
+  </section>
 
-  <div class="main">
+  <!-- ================= PATIENT: how to do it ================= -->
+  <section class="screen pt" id="scr-intro" hidden>
+    <div class="pt-top"><button class="backbtn" id="intro-back" aria-label="Back to today's exercises">‹ Back</button><span class="step" id="intro-step"></span></div>
+    <h1 class="pt-h1" id="intro-title"></h1>
+    <p class="pt-lead" id="intro-what"></p>
+    <ol class="howto" id="idle"></ol>
+    <div class="safety" id="intro-safety"></div>
+    <div class="actions">
+      <label class="confirm" id="helper-row" hidden><input type="checkbox" id="helper"><span>Someone is here with me</span></label>
+      <button class="big primary" id="btn-ready">I'm ready</button>
+      <button class="linkbtn center" id="btn-skip">Skip this one today</button>
+    </div>
+  </section>
+
+  <!-- ================= LIVE (patient and clinician) ================= -->
+  <section class="screen live" id="scr-live" hidden>
+    <div class="livebar"><span id="live-title"></span><span class="clock" id="clock">0:00</span></div>
     <div class="stage" id="stage">
       <video id="video" playsinline muted></video>
       <canvas id="canvas" width="1280" height="720"></canvas>
-      <div class="idle" id="idle"></div>
-      <div class="count" id="count" hidden><small id="count-label">Reps</small><span id="count-n">0</span></div>
-      <div class="clock" id="clock" hidden>0:00</div>
+      <div class="count" id="count" hidden><small id="count-label">Reps</small><span id="count-n">0</span><small id="count-goal"></small></div>
+      <div class="guide" id="guide" hidden><span id="guide-text"></span></div>
+      <div class="countdown" id="countdown" hidden></div>
       <div class="cue" id="cue" hidden></div>
     </div>
-
-    <div class="panel">
-      <h2>Live</h2>
+    <div class="tech panel" id="tech" hidden>
       <div class="gauges" id="gauges"></div>
       <dl class="stats" id="live-stats"></dl>
       <p class="note" id="scope"></p>
     </div>
-  </div>
+    <button class="big stop" id="btn-finish" disabled>Stop</button>
+  </section>
 
-  <div class="panel" id="report" hidden></div>
-
-  <div class="panel" id="summary" hidden>
-    <div class="sumhead">
-      <h2>All measurements from this session</h2>
-      <button class="btn" id="btn-copy">Copy summary</button>
-      <button class="btn" id="btn-csv">Download log (CSV)</button>
+  <!-- ================= PATIENT: well done ================= -->
+  <section class="screen pt" id="scr-result" hidden>
+    <div class="cheer" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 25l7 7 13-15"/></svg></div>
+    <h1 class="pt-h1 center" id="res-title">Well done!</h1>
+    <p class="res-big" id="res-big"></p>
+    <ul class="wins" id="res-wins"></ul>
+    <p class="tip" id="res-next"></p>
+    <div class="rate-block" id="rate-block">
+      <h2 class="pt-h2">How hard was that?</h2>
+      <div class="faces" id="faces-rpe" role="group" aria-label="How hard was that"></div>
+      <h2 class="pt-h2">Any pain?</h2>
+      <div class="faces" id="faces-pain" role="group" aria-label="Pain"></div>
     </div>
-    <dl class="stats" id="sum-stats"></dl>
-    <p class="note">Angles are image-plane estimates, typically within 5 to 10 degrees. Compare sessions recorded with the same camera position. This is not a strength grade, a diagnosis or a fall-risk assessment.</p>
-  </div>
+    <div class="actions">
+      <button class="big primary" id="btn-next">Next exercise</button>
+      <button class="linkbtn center" id="btn-again">Do this one again</button>
+    </div>
+  </section>
 
-  <div class="panel" id="logpanel">
-    <h2 id="log-title">Log</h2>
-    <div class="tablebox"><table id="reps"><thead></thead><tbody></tbody></table></div>
-    <p class="empty" id="reps-empty">Entries appear here as they are completed.</p>
-  </div>
+  <!-- ================= PATIENT: all done ================= -->
+  <section class="screen pt" id="scr-done" hidden>
+    <div class="cheer" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 25l7 7 13-15"/></svg></div>
+    <h1 class="pt-h1 center">All done for today</h1>
+    <p class="pt-lead center" id="done-lead"></p>
+    <ol class="plan" id="done-plan"></ol>
+    <div class="actions"><button class="big primary" id="btn-home">Back to start</button></div>
+  </section>
+
+  <!-- ================= CLINICIAN ================= -->
+  <section class="screen clin" id="scr-clinic" hidden>
+    <div class="wrap">
+      <header>
+        <button class="btn" id="close-clinic">‹ Patient view</button>
+        <h1>iRehab Motion Check: clinician</h1>
+        <span class="pill" id="status">Loading tracker…</span>
+      </header>
+      <div class="panel">
+        <h2>Participant</h2>
+        <div class="controls">
+          <label class="check">ID <input class="btn" id="pid" value="P001" maxlength="24" autocomplete="off"></label>
+          <label class="check">Age <input class="btn" id="age" type="number" min="18" max="110" inputmode="numeric" style="width:4.6em"></label>
+          <label class="check">Sex <select class="btn" id="sex"><option value="">Not set</option><option value="F">Female</option><option value="M">Male</option></select></label>
+          <label class="check">First name shown to patient <input class="btn" id="pname" maxlength="24" autocomplete="off" placeholder="optional"></label>
+        </div>
+        <h2>Exercises in the daily plan</h2>
+        <div class="controls" id="plan-edit"></div>
+        <h2>Options</h2>
+        <div class="controls">
+          <label class="check"><input type="checkbox" id="voice" checked> Voice instructions</label>
+          <label class="check"><input type="checkbox" id="show-tech"> Show live measurements during exercises</label>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Run or analyse a single exercise</h2>
+        <div class="controls">
+          <div class="seg" role="group" aria-label="Exercise" id="seg"></div>
+          <select class="btn" id="stance" aria-label="Balance stance" hidden>
+            <option value="two">1. Feet together</option><option value="semi">2. Semi-tandem</option><option value="tandem">3. Tandem (heel to toe)</option><option value="one">4. One leg</option>
+          </select>
+          <button class="btn primary" id="btn-cam" disabled>Start camera</button>
+          <label class="btn" id="lbl-file" for="file">Analyse a video file</label>
+          <input type="file" id="file" accept="video/*" hidden>
+          <span class="spacer"></span>
+          <button class="btn" id="btn-report">Progress report</button>
+          <button class="btn" id="btn-example">Example report</button>
+        </div>
+      </div>
+      <div class="panel" id="report" hidden></div>
+      <div class="panel" id="summary" hidden>
+        <div class="sumhead">
+          <h2>All measurements from this session</h2>
+          <button class="btn" id="btn-copy">Copy summary</button>
+          <button class="btn" id="btn-csv">Download log (CSV)</button>
+        </div>
+        <dl class="stats" id="sum-stats"></dl>
+        <p class="note">Angles are image-plane estimates, typically within 5 to 10 degrees. Compare sessions recorded with the same camera position. This is not a strength grade, a diagnosis or a fall-risk assessment.</p>
+      </div>
+      <div class="panel" id="logpanel">
+        <h2 id="log-title">Log of the last session</h2>
+        <div class="tablebox"><table id="reps"><thead></thead><tbody></tbody></table></div>
+        <p class="empty" id="reps-empty">Entries appear here as they are completed.</p>
+      </div>
+      <p class="note">Research prototype, not a medical device. Pose tracking runs on this device. No video is stored or sent anywhere.</p>
+    </div>
+  </section>
 </div>
 
 <script>window.IREHAB_ASSETS = { loader: "vision_wasm_internal.js", wasm: "vision_wasm_internal.wasm", model: "pose_landmarker_full.task" };</script>
@@ -409,14 +594,16 @@ const Core = (function () {
   const STS = { SIT: 0.45, STAND: 0.8, FULL_KNEE: 155, FAST_DESCENT: 0.25 };
 
   function StsCounter() {
-    let phase = 'unknown', lastSitT = null, lastStandT = null, cur = null, handsNow = false, leanNow = 0;
+    let phase = 'unknown', lastSitT = null, lastStandT = null, cur = null, handsNow = false, leanNow = 0, lastSeen = null;
     const reps = [];
     return {
       reps,
       get phase() { return phase; },
+      get lastT() { return lastSeen; },
       /* returns {type:'stand'|'sit', rep} or null */
       feed(f, t) {
         if (!f.ok) return null;
+        lastSeen = t;
         const s = f.level;
         if (phase === 'unknown') {
           if (s < STS.SIT) { phase = 'sit'; lastSitT = t; }
@@ -506,7 +693,9 @@ const Core = (function () {
     };
   }
 
-  function summarizeSts(reps) {
+  /* tEnd: when the session ended. The 30-second count is valid once the session lasted 30 s from the first rise,
+     even if no stand happened after the 30-second mark. */
+  function summarizeSts(reps, tEnd) {
     const t0 = reps.length ? reps[0].tStart : NaN;
     const five = reps.length >= 5 ? (isNaN(reps[4].tEnd) ? reps[4].tStand : reps[4].tEnd) - t0 : NaN;
     const done = reps.filter((r) => !isNaN(r.tEnd));
@@ -514,7 +703,7 @@ const Core = (function () {
       reps: reps.length,
       fiveTime: five,
       in30: reps.filter((r) => r.tStand - t0 <= 30).length,
-      spans30: reps.length ? (reps[reps.length - 1].tStand - t0) >= 30 : false,
+      spans30: reps.length ? (Math.max(reps[reps.length - 1].tStand, tEnd == null ? -Infinity : tEnd) - t0) >= 30 : false,
       meanRise: mean(clean(reps.map((r) => r.rise))),
       meanCycle: mean(done.map((r) => r.tEnd - r.tStart)),
       slowing: slowing(done.map((r) => r.tEnd - r.tStart)),
@@ -715,13 +904,13 @@ const Core = (function () {
   }
   function BalanceCounter(mode, target) {
     target = target || BAL.TARGET;
-    let state = 'arming', win = [], cur = null, lastT = null, coolUntil = 0, pending = null, recent = [], lifts = [];
+    let state = 'arming', win = [], cur = null, lastT = null, coolUntil = 0, pending = null, recent = [], lifts = [], lastRef = null, needMove = false;
     const med3 = (k) => { const a = recent.map((r) => r[k]); if (a.length < 3) return a[a.length - 1];
       const xs = a.map((p) => p.x).sort((x, y) => x - y), ys = a.map((p) => p.y).sort((x, y) => x - y); return { x: xs[1], y: ys[1] }; };
     const centroid = (arr, k) => ({ x: mean(arr.map((w) => w[k].x)), y: mean(arr.map((w) => w[k].y)) });
     const reps = [];
     function end(t, why) {
-      const r = cur; cur = null; state = 'cool'; coolUntil = t + BAL.COOL; win = []; pending = null;
+      const r = cur; cur = null; state = 'cool'; coolUntil = t + BAL.COOL; win = []; pending = null; lastRef = r.ref;
       r.tEnd = t; r.dur = Math.min(target, t - r.tStart); r.ended = why;
       if (r.dur < BAL.MIN_HOLD) return { type: 'abort' };
       r.samples = r.samples.filter((s) => s[0] <= t).map((s) => s[1]);
@@ -741,7 +930,9 @@ const Core = (function () {
       reps,
       get mode() { return mode; }, get target() { return target; },
       /* change stance between holds, so one session can cover all four stages */
-      setMode(m, tgt) { if (state === 'hold') return false; mode = m; target = tgt || BAL.TARGET; win = []; pending = null; state = 'arming'; return true; },
+      // After a change of stance, the next hold starts only once a foot has moved away from where it was in the
+      // previous hold, so someone who has not changed position yet is not timed in the wrong stance.
+      setMode(m, tgt) { if (state === 'hold') return false; mode = m; target = tgt || BAL.TARGET; win = []; pending = null; state = 'arming'; needMove = !!lastRef && m !== 'one'; return true; },
       get state() { return state; },
       elapsed(t) { return cur ? t - cur.tStart : 0; },
       feed(f, t) {
@@ -755,6 +946,11 @@ const Core = (function () {
         if (state === 'cool') { if (t < coolUntil) return null; state = 'arming'; win = []; }
         if (state === 'arming') {
           if (!liftOk(Object.assign({}, f, { lift: mean(lifts) }))) { win = []; return null; }   // averaged, so noise does not keep resetting the start
+          if (needMove) {
+            const lim = 0.75 * BAL.FOOT_MOVE * f.bh, dL = Math.hypot(f.aL.x - lastRef.aL.x, f.aL.y - lastRef.aL.y), dR = Math.hypot(f.aR.x - lastRef.aR.x, f.aR.y - lastRef.aR.y);
+            if (dL < lim && dR < lim) { win = []; return null; }
+            needMove = false;
+          }
           win.push({ t, v: f.sway, aL: f.aL, aR: f.aR });
           while (win.length && t - win[0].t > BAL.ARM_S) win.shift();
           const vs = win.map((w) => w.v), still = 0.5 * BAL.FOOT_MOVE * f.bh, k3 = Math.max(1, Math.floor(win.length / 3));
@@ -875,7 +1071,7 @@ const Report = (function () {
                 ['goodPct', 'Reps with good form', '%', 0, 'up'], ['slowing', 'Slowing, last third vs first', '%', 0, 'down'], ['rests', 'Rests over 3 s', '', 0, 'down']],
       trend: { title: 'Five Times Sit to Stand time', unit: ' s', series: [['fiveStand', '5xSTS time']] },
       measure(c) {
-        const s = Core.summarizeSts(c.reps), n = s.reps;
+        const s = Core.summarizeSts(c.reps, c.lastT), n = s.reps;
         const five = n >= 5 ? c.reps[4].tStand - c.reps[0].tStart : NaN;
         return { reps: n, fiveStand: five, cst30: s.spans30 ? s.in30 : NaN, sppbChair: sppbChair(five), fiveTime: s.fiveTime, cycle: s.meanCycle, rise: s.meanRise, handsPct: pctOf(s.hands, n), uprightPct: pctOf(n - s.incomplete, n),
                  controlledPct: pctOf(n - s.fastDescent, n), goodPct: pctOf(s.good, n), slowing: s.slowing, rests: s.rests.n };
@@ -1281,7 +1477,8 @@ const Report = (function () {
     });
   }
 
-  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard };
+  function rateLatest(pid, ex, key, v) { const s = sessions(pid, ex), last = s[s.length - 1]; if (last) update(last.id, pid, { [key]: v }); }
+  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest };
 })();
 if (typeof module !== 'undefined') module.exports = Report;
 
@@ -1299,6 +1496,8 @@ if (typeof module !== 'undefined') module.exports = Report;
   let exKey = 'shoulder', ex = null, landmarker = null, running = false, source = null, stream = null;
   let counter = null, t0 = null, lastT = null, frames = 0, tracked = 0, tsLast = 0, rafId = 0, lastSummary = null;
   let sm = {}, live = {};   // smoothed signals; per-session scratch for the active exercise
+  let guided = false;       // true when a patient runs the guided daily plan; false in the clinician area
+  let wakeLock = null;
 
   /* ---------- shared UI helpers ---------- */
   function gauge(id, label, ticks) {
@@ -1341,7 +1540,10 @@ if (typeof module !== 'undefined') module.exports = Report;
   /* ---------- exercises ---------- */
   const EX = {
     shoulder: {
-      name: 'Shoulder elevation', countLabel: 'Reps',
+      name: 'Shoulder elevation', countLabel: 'Reps', dur: 'About 1 minute', goal: 10,
+      what: 'Raise both arms out to the side, then lower them. 10 times. You can sit or stand.',
+      startSay: 'Raise both arms out to the side, then lower them slowly. Ten times.',
+      auto: (t) => counter.reps.length >= 10 && t - counter.reps[9].tEnd > 0.8,
       setup: ['Face the camera. Sit or stand so your head, both arms and hips are in view.',
               'Start with both arms down at your sides.',
               'Raise both arms out to the side as high as is comfortable, then lower them slowly.',
@@ -1383,7 +1585,10 @@ if (typeof module !== 'undefined') module.exports = Report;
     },
 
     sts: {
-      name: 'Sit to stand', countLabel: 'Reps',
+      name: 'Sit to stand', countLabel: 'Stands', dur: '30 seconds',
+      what: 'Stand up and sit down as many times as you safely can in 30 seconds.',
+      startSay: 'Arms across your chest. Stand up and sit down as many times as you can. Go.',
+      auto: (t) => (counter.reps.length && t - counter.reps[0].tStart >= 30) || (!counter.reps.length && t > 90),
       setup: ['Place a firm chair side-on or at 45 degrees to the camera, against a wall if possible.',
               'Stand the phone or laptop 2 to 3 m away so your head and feet are both in view.',
               'Sit down, arms crossed over your chest if you can.',
@@ -1424,7 +1629,7 @@ if (typeof module !== 'undefined') module.exports = Report;
         return { five, cst: validity(r[0].tStart, r[0].tStart + 30) };
       },
       summary() {
-        const s = Core.summarizeSts(counter.reps);
+        const s = Core.summarizeSts(counter.reps, counter.lastT);
         const v = this.validity();
         return [['Reps', s.reps], ['Good-form reps', s.good + ' of ' + s.reps],
                 ['Time for 5 reps', isNaN(s.fiveTime) ? 'needs 5 reps' : s.fiveTime.toFixed(1) + ' s' + (v.five.length ? ' (check: ' + v.five.join(', ') + ')' : '')],
@@ -1437,7 +1642,10 @@ if (typeof module !== 'undefined') module.exports = Report;
     },
 
     march: {
-      name: 'Marching in place', countLabel: 'Steps',
+      name: 'Marching in place', countLabel: 'Steps', dur: '2 minutes',
+      what: 'March on the spot for 2 minutes, lifting your knees. Hold a chair if you need to.',
+      startSay: 'March on the spot. Lift your knees. Two minutes. Go.',
+      auto: (t) => !counter.reps.length && t > 60,
       setup: ['Face the camera, 2 to 3 m away, so your hips, knees and feet are all in view.',
               'Stand next to a sturdy chair or counter and hold it if you need to.',
               'Lift one knee, lower it, then lift the other. Keep a steady rhythm.',
@@ -1486,7 +1694,10 @@ if (typeof module !== 'undefined') module.exports = Report;
     },
 
     tug: {
-      name: 'Timed Up and Go', countLabel: 'Seconds',
+      name: 'Timed Up and Go', countLabel: 'Seconds', dur: 'About 2 minutes', helper: true,
+      what: 'Stand up, walk to a line 3 metres away, turn around, walk back and sit down. Twice.',
+      startSay: 'Sit in the chair and wait until I say go.',
+      auto: (t) => (counter.reps.length >= 2 && (counter.state === 'wait' || counter.state === 'ready') && t - counter.reps[counter.reps.length - 1].tEnd > 0.8) || (!counter.reps.length && t > 120),
       setup: ['Put a chair against a wall and mark a line on the floor 3 m in front of it.',
               'Place the camera 1.5 to 2 m beyond the line, facing the chair, so the whole body stays in view for the whole walk.',
               'Sit down and wait for "Ready".',
@@ -1545,7 +1756,12 @@ if (typeof module !== 'undefined') module.exports = Report;
     },
 
     balance: {
-      name: 'Standing balance', countLabel: 'Hold (s)',
+      name: 'Standing balance', countLabel: 'Seconds', dur: 'About 2 minutes', helper: true,
+      what: 'Stand still in four positions, 10 seconds each. Each one is a little harder.',
+      startSay: 'Stand with your feet together and keep still.',
+      auto: (t) => !counter.reps.length && t > 60 && counter.state !== 'hold',
+      order: ['two', 'semi', 'tandem', 'one'],
+      tell: { two: 'Feet together. Keep still.', semi: 'Now put one foot half a step forward. Keep still.', tandem: 'Now put one foot right in front of the other, heel to toe. Keep still.', one: 'Now stand on one leg. Keep still.' },
       setup: ['Choose the stance above. You can change it between holds to work through all four stages.',
               'Face the camera, 2 to 3 m away, with your shoulders and both feet in view. Stand next to a sturdy support.',
               'Get into the stance and stand still. The hold starts by itself after about 2 seconds.',
@@ -1555,9 +1771,9 @@ if (typeof module !== 'undefined') module.exports = Report;
       head: ['#', 'Stance', 'Hold time', 'Sway (RMS)', 'Sway range', 'Sway speed', 'Result'],
       gauges: () => gauge('gS', 'Sway now', [[33.3, '2°'], [66.7, '4°']]),
       stats: () => stat('Hold time', 's-hold') + stat('Holds', 's-n') + COMMON_STATS,
-      target: (v) => (v === 'one' ? 30 : 10),
+      target: (v) => (v === 'one' && !guided ? 30 : 10),
       make() { return Core.BalanceCounter($('stance').value, this.target($('stance').value)); },
-      frame: (p) => Core.balanceFrame(p, $('stance').value),
+      frame: (p) => Core.balanceFrame(p, guided && counter && counter.mode ? counter.mode : $('stance').value),
       stanceName: { two: 'Feet together', semi: 'Semi-tandem', tandem: 'Tandem (heel to toe)', one: 'One leg' },
       step(f, t, ema) {
         const g = Object.assign({}, f, { sway: ema('sway', f.sway) });
@@ -1566,8 +1782,18 @@ if (typeof module !== 'undefined') module.exports = Report;
         if (ev && ev.type === 'done') {
           const r = ev.rep, n = counter.reps.length;
           addRow([n, this.stanceName[r.mode], fmt(r.dur, 1, ' s'), fmt(r.rms, 1, '°'), fmt(r.range, 1, '°'), fmt(r.vel, 1, '°/s'), chip(r.cue)]);
-          setCount(r.dur.toFixed(0)); showCue(r.cue.text, r.cue.ok ? 'good' : 'fix');
-          say(r.cue.ok ? 'Done. Well held.' : 'Stopped at ' + r.dur.toFixed(0) + ' seconds.');
+          setCount(r.dur.toFixed(0));
+          if (guided) {
+            // 4-Stage Balance Test: move on after each 10-second hold, stop at the first stage not held
+            const i = this.order.indexOf(r.mode), nxt = this.order[i + 1];
+            if (r.cue.ok && nxt) { counter.setMode(nxt, this.target(nxt)); $('stance').value = nxt; showCue(this.tell[nxt], 'good'); say('Well done. ' + this.tell[nxt]); $('count-goal').textContent = 'Stage ' + (i + 2) + ' of 4'; }
+            else { live.autoStopAt = t + 1.5; showCue(r.cue.ok ? 'All four done. Excellent!' : 'Well done. That is enough for today.', 'good'); say(r.cue.ok ? 'All four done. Excellent.' : 'Well done. You can relax now.'); }
+          } else { showCue(r.cue.text, r.cue.ok ? 'good' : 'fix'); say(r.cue.ok ? 'Done. Well held.' : 'Stopped at ' + r.dur.toFixed(0) + ' seconds.'); }
+        }
+        if (ev && ev.type === 'abort' && guided) {
+          live.aborts = (live.aborts || 0) + 1;
+          if (live.aborts > 1) { live.autoStopAt = t + 1.5; showCue('Well done. That is enough for today.', 'good'); say('Well done. You can relax now.'); }
+          else { showCue('Let us try that one again.', ''); say('Let us try that one again. ' + this.tell[counter.mode]); }
         }
         if (counter.state === 'hold') {
           const e = counter.elapsed(t);
@@ -1575,7 +1801,7 @@ if (typeof module !== 'undefined') module.exports = Report;
           const d = Math.abs(g.sway - live.ref); setGauge('gS', d / 6, fmt(d, 1, '°'));
         } else if (counter.state === 'arming') {
           setGauge('gS', 0, 'n/a');
-          if (!ev) showCue({ two: 'Stand still with your feet together.', semi: 'Put one foot half a step ahead and hold still.', tandem: 'Stand heel to toe and hold still.', one: 'Lift one foot off the floor and hold still.' }[counter.mode], '');
+          if (!ev && !(guided && live.autoStopAt)) showCue({ two: 'Stand still with your feet together.', semi: 'Put one foot half a step ahead and hold still.', tandem: 'Stand heel to toe and hold still.', one: 'Lift one foot off the floor and hold still.' }[counter.mode], '');
         }
         $('s-n').textContent = counter.reps.length;
       },
@@ -1679,10 +1905,15 @@ if (typeof module !== 'undefined') module.exports = Report;
     };
   })();
   function renderIdle() {
-    const pics = exKey === 'balance' ? PIC.balance($('stance').value) : PIC[exKey]();
-    $('idle').innerHTML = '<h2>' + ex.name + '</h2><ol class="pics" aria-label="' + ex.setup.join(' ').replace(/"/g, '&quot;') + '">' +
-      pics.map((p, i) => '<li class="pic"><span class="num">' + (i + 1) + '</span>' + p[0] + '<span>' + p[1] + '</span></li>').join('') +
-      '</ol><p>' + ex.why + '</p>';
+    if (exKey === 'balance') {
+      const st = (k) => PIC.balance(k)[1][0].replace(/<text[^>]*>[^<]*<\/text>/g, '');   // captions carry the words
+      $('idle').innerHTML = [[PIC.balance('two')[0][0], 'Face the camera, a support nearby'], [st('two'), 'Feet together'], [st('semi'), 'One foot half a step forward'], [st('tandem'), 'Heel to toe']]
+        .map((p, i) => '<li class="pic"><span class="num">' + (i + 1) + '</span>' + p[0] + '<span>' + p[1] + '</span></li>').join('') +
+        '<li class="pic"><span class="num">5</span>' + st('one') + '<span>One leg</span></li><li class="pic"><span class="num">⏱</span>' + PIC.balance('two')[2][0] + '<span>10 seconds each</span></li>';
+      return;
+    }
+    const pics = PIC[exKey]();
+    $('idle').innerHTML = pics.map((p, i) => '<li class="pic"><span class="num">' + (i + 1) + '</span>' + p[0] + '<span>' + p[1] + '</span></li>').join('');
   }
 
   /* ---------- tracker setup: everything is embedded, nothing is fetched ---------- */
@@ -1710,11 +1941,12 @@ if (typeof module !== 'undefined') module.exports = Report;
           minPoseDetectionConfidence: 0.5, minPosePresenceConfidence: 0.5, minTrackingConfidence: 0.5 });
       for (const id of ['b64-loader', 'b64-wasm-gz', 'b64-model']) $(id).textContent = '';
       $('status').textContent = 'Tracker ready'; $('status').className = 'pill ready';
-      $('btn-cam').disabled = false;
+      $('btn-cam').disabled = false; renderHome();
       window.irehab = { landmarker, Core };
     } catch (e) {
       console.error(e);
       $('status').textContent = 'Tracker failed to load'; $('status').className = 'pill err';
+      $('btn-start').textContent = 'This phone cannot run iRehab'; $('home-note').textContent = 'Please try the latest Chrome (Android) or Safari (iPhone).';
       showCue('The pose tracker could not start in this browser. Try a current version of Chrome, Edge or Safari.', 'fix');
     }
   }
@@ -1731,6 +1963,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     $('reps').tHead.innerHTML = '<tr>' + ex.head.map((h) => '<th>' + h + '</th>').join('') + '</tr>';
     resetSession();
   }
+  function show(id) { for (const s of document.querySelectorAll('.screen')) s.hidden = s.id !== id; window.scrollTo(0, 0); }
   function resetSession() {
     counter = ex.make();
     t0 = null; lastT = null; frames = 0; tracked = 0; sm = {}; live = {}; lastSummary = null;
@@ -1741,9 +1974,11 @@ if (typeof module !== 'undefined') module.exports = Report;
   /* ---------- input sources ---------- */
   async function startCamera() {
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }, audio: false });
+      const portrait = innerHeight > innerWidth;   // a phone propped upright: ask for an upright picture so the person fills the screen
+      stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: portrait ? 720 : 1280 }, height: { ideal: portrait ? 1280 : 720 }, facingMode: 'user' }, audio: false });
     } catch (e) {
-      showCue('Camera access was blocked. Allow the camera for this page, or use a recorded video file.', 'fix');
+      if (guided) { show('scr-intro'); $('intro-safety').textContent = 'The camera is blocked. Tap Allow when the phone asks, or turn on camera access for this website in your phone settings. Then tap I\'m ready again.'; }
+      else showCue('Camera access was blocked. Allow the camera for this page, or use a recorded video file.', 'fix');
       return;
     }
     video.srcObject = stream; source = 'camera';
@@ -1752,6 +1987,7 @@ if (typeof module !== 'undefined') module.exports = Report;
   }
   async function startFile(file) {
     stopSource();
+    guided = false;
     video.srcObject = null; video.src = URL.createObjectURL(file); source = 'file';
     video.onended = () => finish();
     try { await video.play(); } catch (e) { showCue('This video could not be played. Try an MP4 recorded on a phone.', 'fix'); return; }
@@ -1760,9 +1996,14 @@ if (typeof module !== 'undefined') module.exports = Report;
   function begin() {
     resetSession();
     running = true;
-    $('idle').hidden = true; $('count').hidden = false; $('clock').hidden = false;
+    show('scr-live'); $('live-title').textContent = ex.name;
+    $('tech').hidden = !$('show-tech').checked;
+    $('count').hidden = !!guided; $('guide').hidden = true; $('countdown').hidden = true; $('stage').className = 'stage';
+    $('count-goal').textContent = guided && ex.goal ? 'of ' + ex.goal : guided && exKey === 'balance' ? 'Stage 1 of 4' : '';
     $('btn-finish').disabled = false; $('btn-cam').disabled = true;
-    showCue(source === 'camera' ? 'Get into position' : '', '');
+    live.phase = guided ? 'position' : 'run';
+    showCue(guided ? '' : source === 'camera' ? 'Get into position' : '', '');
+    try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then((w) => { wakeLock = w; }, () => {}); } catch (e) { /* optional */ }
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(loop);
   }
@@ -1770,6 +2011,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     running = false; cancelAnimationFrame(rafId);
     if (stream) { stream.getTracks().forEach((t) => t.stop()); stream = null; }
     video.pause(); $('stance').disabled = false;
+    if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
   }
   function finish() {
     if (!running && !counter.reps.length) return;
@@ -1777,15 +2019,19 @@ if (typeof module !== 'undefined') module.exports = Report;
     $('btn-finish').disabled = true; $('btn-cam').disabled = !landmarker;
     renderSummary();
     showCue('Session finished.', 'good');
+    if (!guided) show('scr-clinic');
+    let saved = false;
     if (counter.reps.length && !live.saved) {
+      saved = true;
       live.saved = true;
       Report.add(Report.record(exKey, counter, { pid: pid(), stance: exKey === 'balance' ? $('stance').value : null,
         dur: lastT - t0, track: frames ? tracked / frames * 100 : null, fps: live.fpsN ? live.fpsSum / live.fpsN : null,
         stalls: (live.q ? live.q.gaps.length : 0), lostT: (live.q ? live.q.lost.length : 0) * (lastT - t0) / Math.max(1, frames),
         validity: ex.validity ? ex.validity() : null }));
       const r = showReport();
-      if (r) say('Well done. ' + r.wins[0]);
+      if (r && !guided) say('Well done. ' + r.wins[0]);
     }
+    if (guided) showResult(saved);
   }
 
   /* ---------- frame loop ---------- */
@@ -1821,12 +2067,43 @@ if (typeof module !== 'undefined') module.exports = Report;
     if (!lms) { live.q.lost.push(t); showCue('No person in view. Step back until your whole body is visible.', 'fix'); trackPct(); return; }
     const f = ex.frame(Core.toPoints(lms, W / H));
     drawSkeleton(lms, W, H, mirror, f);
-    if (!f.ok) { live.q.lost.push(t); showCue(f.hint + '. Step back or adjust the camera.', 'fix'); trackPct(); return; }
+    if (live.phase !== 'run') { position(lms, f, mediaT); return; }
+    if (!f.ok) { live.q.lost.push(t); showCue(guided ? 'Step back so I can see all of you.' : f.hint + '. Step back or adjust the camera.', 'fix'); trackPct(); return; }
     tracked++;
     if (!live.smooth) live.smooth = Core.Smoother();
     const ema = (k, v) => { const r = live.smooth(k, v, dt, Core.SMOOTH_TAU[exKey], Core.SMOOTH_MEDIAN[exKey]); if (!isNaN(r)) sm[k] = r; return r; };
     ex.step(f, t, ema);
     trackPct();
+    if (guided && running && (t > 240 || (live.autoStopAt && t >= live.autoStopAt) || (ex.auto && ex.auto(t)))) {
+      if (!live.saidStop && exKey !== 'balance') { live.saidStop = true; say(exKey === 'march' ? 'Stop. Two minutes. Well done.' : 'Stop. Well done.'); }
+      finish();
+    }
+  }
+
+  /* Guided start: wait until the whole body is in view and steady, count down by voice, then start timing. */
+  const NEED = { shoulder: [0, 11, 12, 13, 14, 15, 16, 23, 24] };
+  function inView(lms) {
+    return (NEED[exKey] || [0, 11, 12, 23, 24, 25, 26, 27, 28]).every((i) => lms[i] && (lms[i].visibility == null || lms[i].visibility > 0.5) && lms[i].x > 0.01 && lms[i].x < 0.99 && lms[i].y > 0.005 && lms[i].y < 0.995);
+  }
+  function position(lms, f, mediaT) {
+    const ok = !!lms && f.ok && inView(lms);
+    if (live.phase === 'position') {
+      $('stage').className = 'stage ' + (ok ? 'ok' : 'bad'); $('guide').hidden = false;
+      $('guide-text').textContent = !lms ? 'Step in front of the camera' : ok ? 'Good. Stay there.' : 'Step back so I can see all of you';
+      if (!ok) { live.okSince = null; if (!live.posSaid || mediaT - live.posSaid > 8) { live.posSaid = mediaT; say(!lms ? 'Please step in front of the camera.' : 'Please step back so I can see all of you, from head to feet.'); } return; }
+      if (live.okSince == null) live.okSince = mediaT;
+      if (mediaT - live.okSince >= 1.0) { live.phase = 'countdown'; live.goAt = null; live.cdEnd = mediaT + 3.2; say('Good. Starting in 3, 2, 1.'); }
+      return;
+    }
+    // countdown
+    const left = live.cdEnd - mediaT;
+    $('guide').hidden = true; $('countdown').hidden = false; $('countdown').textContent = Math.max(1, Math.ceil(left - 0.2));
+    if (left > 0) return;
+    $('countdown').hidden = true; $('stage').className = 'stage'; $('count').hidden = false;
+    counter = ex.make(); t0 = mediaT; frames = 0; tracked = 0; sm = {}; live.smooth = null; live.q = { gaps: [], lost: [] };
+    live.fpsSum = 0; live.fpsN = 0; live.goAt = null; live.goT = null; live.phase = 'run';
+    setCount('0'); $('reps').tBodies[0].innerHTML = '';
+    say(ex.startSay); showCue(ex.startSay, '');
   }
 
   /* ---------- drawing ---------- */
@@ -1850,7 +2127,7 @@ if (typeof module !== 'undefined') module.exports = Report;
       ctx.font = '700 ' + Math.round(Math.max(18, W / 40)) + 'px system-ui, sans-serif'; ctx.textAlign = 'center';
       ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.7)'; ctx.strokeText(text, p.x, p.y + dy * H); ctx.fillStyle = '#fff'; ctx.fillText(text, p.x, p.y + dy * H);
     };
-    if (ex.overlay) ex.overlay(f, label, P, W, H);
+    if (ex.overlay && !guided) ex.overlay(f, label, P, W, H);   // angle labels are clinician detail
   }
 
   /* ---------- summary ---------- */
@@ -1883,16 +2160,16 @@ if (typeof module !== 'undefined') module.exports = Report;
     renderExercise();
   }
   $('stance').onchange = () => {
+    if (guided) return;
     const v = $('stance').value;
     if (running && exKey === 'balance') { if (!counter.setMode(v, ex.target(v))) $('stance').value = counter.mode; }
     else { resetSession(); renderIdle(); }
   };
-  $('btn-cam').onclick = startCamera;
+  $('btn-cam').onclick = () => { guided = false; startCamera(); };
   $('file').onchange = (e) => { const f = e.target.files[0]; if (f && landmarker) startFile(f); e.target.value = ''; };
   $('lbl-file').onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('file').click(); } };
   $('lbl-file').tabIndex = 0;
-  $('btn-finish').onclick = finish;
-  $('btn-copy').onclick = async () => {
+    $('btn-copy').onclick = async () => {
     try { await navigator.clipboard.writeText(lastSummary); $('btn-copy').textContent = 'Copied'; }
     catch (e) { $('btn-copy').textContent = 'Copy not available'; }
     setTimeout(() => { $('btn-copy').textContent = 'Copy summary'; }, 1500);
@@ -1903,20 +2180,127 @@ if (typeof module !== 'undefined') module.exports = Report;
     a.download = 'irehab-' + exKey + '-log.csv'; document.body.appendChild(a); a.click(); a.remove();
   };
 
+  /* ---------- patient flow ---------- */
+  const ORDER = ['shoulder', 'sts', 'march', 'balance', 'tug'];
+  const today = () => new Date().toISOString().slice(0, 10);
+  function plan() { try { const p = JSON.parse(localStorage.getItem('irehab.plan.' + pid())); if (Array.isArray(p) && p.length) return ORDER.filter((k) => p.includes(k)); } catch (e) { /* default plan */ } return ORDER.slice(); }
+  function setPlan(p) { try { localStorage.setItem('irehab.plan.' + pid(), JSON.stringify(p)); } catch (e) { /* optional */ } }
+  let skipped = {};
+  const isDone = (k) => Report.sessions(pid(), k).some((r) => r.t.slice(0, 10) === today()) || skipped[k] === today();
+  const icon = (k) => (k === 'balance' ? PIC.balance('tandem')[1][0] : PIC[k]()[k === 'sts' ? 2 : k === 'tug' ? 1 : 2][0]);
+  function planList(el, mark) {
+    const p = plan(), nextK = p.find((k) => !isDone(k));
+    el.innerHTML = p.map((k) => {
+      const d = isDone(k), st = d ? (skipped[k] === today() && !Report.sessions(pid(), k).some((r) => r.t.slice(0, 10) === today()) ? ['later', 'Skipped'] : ['done', 'Done ✓']) : k === nextK && mark ? ['next', 'Next'] : ['later', 'To do'];
+      return '<li class="' + (d ? 'done' : k === nextK && mark ? 'next' : '') + '"><span class="ic">' + icon(k) + '</span><span><span class="nm">' + EX[k].name + '</span><br><span class="du">' + EX[k].dur + (EX[k].helper ? ' · with a helper' : '') + '</span></span><span class="st ' + st[0] + '">' + st[1] + '</span></li>';
+    }).join('');
+    return nextK;
+  }
+  function renderHome() {
+    const nm = (Report.person(pid()).name || '').trim();
+    $('hello').textContent = nm ? 'Hello, ' + nm : "Today's exercises";
+    const nextK = planList($('plan'), true), p = plan(), left = p.filter((k) => !isDone(k)).length;
+    $('home-lead').textContent = !left ? 'You have finished everything for today. Well done!' : left === p.length ? 'Do them one at a time. The phone will guide you.' : left + ' left for today. Keep going!';
+    const b = $('btn-start');
+    if (!landmarker) { b.disabled = true; b.textContent = 'Getting ready…'; return; }
+    b.disabled = false; b.textContent = !left ? 'Do them again' : left === p.length ? 'Start' : 'Continue';
+    b.dataset.ex = nextK || p[0];
+  }
+  function openIntro(k) {
+    if (exKey !== k) { exKey = k; renderExercise(); }
+    const p = plan(), i = p.indexOf(k);
+    $('intro-step').textContent = 'Exercise ' + (i + 1) + ' of ' + p.length;
+    $('intro-title').textContent = EX[k].name; $('intro-what').textContent = EX[k].what;
+    renderIdle();
+    $('intro-safety').textContent = EX[k].helper ? 'Only do this with another person close by. Use your usual walking aid.' : k === 'march' ? 'Stand next to a sturdy chair or counter. Hold it if you need to.' : k === 'sts' ? 'Use a firm chair without wheels, against a wall.' : '';
+    $('helper-row').hidden = !EX[k].helper; $('helper').checked = false;
+    $('btn-ready').disabled = !!EX[k].helper;
+    show('scr-intro');
+  }
+  async function ready() {
+    guided = true;
+    if (exKey === 'balance') $('stance').value = 'two';
+    say('Okay. Put the phone down, 2 to 3 metres away, and stand where it can see you.');   // also unlocks speech on iPhone
+    await startCamera();
+  }
+  const FACES = [[0, 'None', '#2f9e5b', 6], [2, '', '#7bbf4a', 3], [4, '', '#c9c23a', 0], [6, '', '#e0a800', -3], [8, '', '#e9762b', -6], [10, 'Worst', '#d9534f', -8]];
+  function faces(el, key, val, words) {
+    el.innerHTML = FACES.map(([v, l, c, smile], i) => '<button class="face" data-k="' + key + '" data-v="' + v + '" aria-pressed="' + (val === v) + '" aria-label="' + v + ' out of 10">' +
+      '<svg viewBox="0 0 40 40"><circle class="fc" cx="20" cy="20" r="18" fill="' + c + '"/><circle cx="14" cy="16" r="2.2"/><circle cx="26" cy="16" r="2.2"/>' +
+      '<path class="ft" d="M12 ' + (27 - smile / 2) + ' Q20 ' + (27 + smile) + ' 28 ' + (27 - smile / 2) + '"/></svg>' + (i === 0 ? words[0] : i === 5 ? words[1] : '&nbsp;') + '</button>').join('');
+  }
+  function showResult(saved) {
+    const k = exKey, recs = Report.sessions(pid(), k), last = recs[recs.length - 1];
+    if (!saved || !last) {
+      $('res-title').textContent = "Let's try that again"; $('res-big').innerHTML = 'I could not see enough movement to count.';
+      $('res-wins').innerHTML = '<li>Make sure the phone can see you from head to feet, then try again.</li>'; $('res-next').textContent = '';
+      $('rate-block').hidden = true; $('btn-next').textContent = 'Try again'; $('btn-next').dataset.act = 'again'; $('btn-again').textContent = 'Skip this one today'; $('btn-again').dataset.act = 'skip';
+      show('scr-result'); say("Let's try that again."); return;
+    }
+    const r = Report.render(document.createElement('div'), pid(), k) || { wins: [], next: '' };
+    const best = last.m.best != null ? last.m.best : last.m.bestAny;
+    const h = k === 'tug' ? [best != null ? best.toFixed(1) : '…', 'seconds, your best time'] : Report.DEF[k].headline(last.m);   // patients never see clinician wording
+    $('res-title').textContent = 'Well done!';
+    $('res-big').innerHTML = '<b>' + h[0] + '</b>' + h[1];
+    $('res-wins').innerHTML = r.wins.map((w) => '<li>' + w.replace(/[<>&]/g, '') + '</li>').join('');
+    $('res-next').textContent = r.next && !/^Keep doing|trials/.test(r.next) ? r.next : '';
+    $('rate-block').hidden = false;
+    faces($('faces-rpe'), 'rpe', last.rpe, ['Easy', 'Very hard']); faces($('faces-pain'), 'pain', last.pain, ['None', 'Worst']);
+    const nextK = plan().find((x) => x !== k && !isDone(x));
+    $('btn-next').textContent = nextK ? 'Next exercise' : 'Finish'; $('btn-next').dataset.act = nextK ? 'next' : 'done';
+    $('btn-again').textContent = 'Do this one again'; $('btn-again').dataset.act = 'again';
+    show('scr-result');
+    say('Well done. ' + (r.wins[0] || ''));
+  }
+  function goNext() { const nextK = plan().find((x) => !isDone(x)); if (nextK) openIntro(nextK); else showDone(); }
+  function showDone() {
+    planList($('done-plan'), false);
+    const days = new Set(Report.sessions(pid()).map((r) => r.t.slice(0, 10)));
+    $('done-lead').textContent = 'Thank you. Your results are saved on this phone.' + (days.size > 1 ? ' You have exercised on ' + days.size + ' days so far.' : '');
+    show('scr-done'); say('All done for today. Thank you.');
+  }
+
   /* ---------- report and history ---------- */
   const pid = () => $('pid').value.trim() || 'P001';
   function showReport() { const r = Report.render($('report'), pid(), exKey); $('report').hidden = false; return r; }
   try { const p = localStorage.getItem('irehab.pid'); if (p) $('pid').value = p; } catch (e) { /* storage is optional */ }
-  $('pid').onchange = () => { try { localStorage.setItem('irehab.pid', pid()); } catch (e) { /* storage is optional */ } loadPerson(); if (!$('report').hidden) showReport(); };
+  $('pid').onchange = () => { try { localStorage.setItem('irehab.pid', pid()); } catch (e) { /* storage is optional */ } loadPerson(); renderPlanEdit(); renderHome(); if (!$('report').hidden) showReport(); };
   Report.wire($('report'), () => ({ pid: pid(), ex: exKey }), showReport);
   function loadPerson() { const p = Report.person(pid()); $('age').value = p.age || ''; $('sex').value = p.sex || ''; }
-  const savePerson = () => { const a = parseInt($('age').value, 10); Report.setPerson(pid(), { age: a >= 18 && a <= 110 ? a : null, sex: $('sex').value || null }); if (!$('report').hidden) showReport(); };
+  const savePerson = () => { const a = parseInt($('age').value, 10); Report.setPerson(pid(), Object.assign({}, Report.person(pid()), { age: a >= 18 && a <= 110 ? a : null, sex: $('sex').value || null })); if (!$('report').hidden) showReport(); };
   $('age').onchange = savePerson; $('sex').onchange = savePerson;
   $('btn-report').onclick = () => { showReport(); $('report').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   $('btn-example').onclick = () => { $('pid').value = Report.EXAMPLE; Report.seedExample(); loadPerson(); showReport(); $('report').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
 
+  $('btn-start').onclick = () => { const k = $('btn-start').dataset.ex; if (plan().every(isDone)) { skipped = {}; } openIntro(k || plan()[0]); };
+  $('intro-back').onclick = () => { renderHome(); show('scr-home'); };
+  $('helper').onchange = () => { $('btn-ready').disabled = !$('helper').checked; };
+  $('btn-ready').onclick = ready;
+  $('btn-skip').onclick = () => { skipped[exKey] = today(); goNext(); };
+  $('btn-finish').onclick = () => { if (guided) say('Stopped.'); finish(); };
+  $('btn-next').onclick = () => { const a = $('btn-next').dataset.act; if (a === 'again') openIntro(exKey); else if (a === 'done') showDone(); else goNext(); };
+  $('btn-again').onclick = () => { if ($('btn-again').dataset.act === 'skip') { skipped[exKey] = today(); goNext(); } else openIntro(exKey); };
+  $('btn-home').onclick = () => { renderHome(); show('scr-home'); };
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.face'); if (!b) return;
+    Report.rateLatest(pid(), exKey, b.dataset.k, +b.dataset.v);
+    for (const x of b.parentNode.children) x.setAttribute('aria-pressed', x === b);
+  });
+  $('open-clinic').onclick = () => { guided = false; renderPlanEdit(); show('scr-clinic'); };
+  $('close-clinic').onclick = () => { stopSource(); guided = false; renderHome(); show('scr-home'); };
+  function renderPlanEdit() {
+    const p = plan();
+    $('plan-edit').innerHTML = ORDER.map((k) => '<label class="check"><input type="checkbox" data-plan="' + k + '"' + (p.includes(k) ? ' checked' : '') + '> ' + EX[k].name + '</label>').join('');
+    $('pname').value = Report.person(pid()).name || '';
+  }
+  $('plan-edit').onchange = () => { const p = [...$('plan-edit').querySelectorAll('input:checked')].map((x) => x.dataset.plan); setPlan(p.length ? p : ORDER.slice()); };
+  $('pname').onchange = () => { Report.setPerson(pid(), Object.assign({}, Report.person(pid()), { name: $('pname').value.trim() || null })); };
+  $('show-tech').onchange = () => { $('tech').hidden = !$('show-tech').checked; };
+
   loadPerson();
   renderExercise();
+  renderHome();
+  show('scr-home');
   initTracker();
 })();
 
