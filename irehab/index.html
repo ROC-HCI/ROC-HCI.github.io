@@ -263,6 +263,11 @@ input.btn { width: 8.5em; cursor: text; }
 .live .count small { font-size: clamp(16px, 4vw, 24px); letter-spacing: .06em; }
 .live .count #count-goal { opacity: .85; letter-spacing: 0; text-transform: none; }
 .live .cue { font-size: clamp(22px, 6vw, 40px); padding: 16px 18px; line-height: 1.2; }
+.guide-tip { position: absolute; left: 12px; right: 12px; bottom: 12px; margin: 0; padding: 10px 14px; border-radius: 14px; background: rgba(0,0,0,.72); color: #fff; font: 600 clamp(15px, 3.6vw, 20px)/1.35 var(--font); text-align: center; }
+.auto-banner { margin: 4px 0 0; padding: 14px 16px; border-radius: 16px; background: var(--good-soft); color: var(--ink); display: flex; flex-direction: column; gap: 4px; text-align: center; font-size: 18px; }
+.auto-banner b { font-size: 20px; }
+.auto-banner span { color: var(--muted); font-size: 15px; }
+.pt-note.warn { color: var(--warn); font-weight: 600; }
 .guide { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; padding: 0 20px; font: 800 clamp(26px, 7vw, 46px)/1.2 var(--font); text-shadow: 0 2px 12px rgba(0,0,0,.8); }
 .countdown { position: absolute; inset: 0; display: grid; place-items: center; font: 900 clamp(140px, 45vw, 320px)/1 var(--font); color: #fff; text-shadow: 0 4px 24px rgba(0,0,0,.7); background: rgba(0,0,0,.25); }
 .live .big.stop { border-radius: 0; min-height: 72px; font-size: 24px; padding-bottom: max(14px, env(safe-area-inset-bottom, 0px)); }
@@ -395,7 +400,7 @@ input.btn { width: 8.5em; cursor: text; }
     <p class="pt-lead" id="home-lead">Do them one at a time. The phone will guide you.</p>
     <ol class="plan" id="plan"></ol>
     <button class="big secondary" id="btn-progress" data-i18n>My progress</button>
-    <p class="pt-note" id="home-note" data-i18n>Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.</p>
+    <p class="pt-note" id="home-note" data-i18n>Prop the phone up 2 to 3 metres away, about knee to waist height. On a laptop, put it on a chair or low table. After you tap I'm ready, the app talks you through each exercise and moves on by itself.</p>
     <p class="pt-fine"><span data-i18n>Research prototype, not a medical device. Video stays on this phone.</span> <button class="linkbtn" id="open-clinic" data-i18n>For clinicians</button></p>
     <div class="actions"><button class="big primary" id="btn-start" disabled>Getting ready…</button></div>
   </section>
@@ -407,6 +412,7 @@ input.btn { width: 8.5em; cursor: text; }
     <p class="pt-lead" id="intro-what"></p>
     <ol class="howto" id="idle"></ol>
     <div class="safety" id="intro-safety"></div>
+    <p class="auto-banner" id="intro-auto" hidden aria-live="polite"></p>
     <div class="actions">
       <label class="confirm" id="helper-row" hidden><input type="checkbox" id="helper"><span data-i18n>Someone is here with me</span></label>
       <button class="big primary" id="btn-ready" data-i18n>I'm ready</button>
@@ -422,6 +428,7 @@ input.btn { width: 8.5em; cursor: text; }
       <canvas id="canvas" width="1280" height="720"></canvas>
       <div class="count" id="count" hidden><small id="count-label">Reps</small><span id="count-n">0</span><small id="count-goal"></small></div>
       <div class="guide" id="guide" hidden><span id="guide-text"></span></div>
+      <p class="guide-tip" id="guide-tip" hidden></p>
       <div class="countdown" id="countdown" hidden></div>
       <div class="cue" id="cue" hidden></div>
     </div>
@@ -443,6 +450,7 @@ input.btn { width: 8.5em; cursor: text; }
       <p class="change" id="res-change"></p>
     </div>
     <p class="res-big" id="res-big"></p>
+    <p class="auto-banner" id="res-auto" hidden aria-live="polite"></p>
     <ul class="wins" id="res-wins"></ul>
     <p class="tip" id="res-next"></p>
     <div class="rate-block" id="rate-block">
@@ -463,6 +471,12 @@ input.btn { width: 8.5em; cursor: text; }
     <div class="scorebox"><p class="kicker" data-i18n>Today's score</p><div class="ring" id="done-ring"></div><div class="stars" id="done-stars" aria-hidden="true"></div></div>
     <p class="pt-lead center" id="done-lead"></p>
     <div class="week" id="done-week"></div>
+    <div class="rate-block" id="done-rate">
+      <h2 class="pt-h2" data-i18n>How hard was today overall?</h2>
+      <div class="faces" id="done-rpe" role="group"></div>
+      <h2 class="pt-h2" data-i18n>Any pain?</h2>
+      <div class="faces" id="done-pain" role="group"></div>
+    </div>
     <ol class="plan" id="done-plan"></ol>
     <div class="actions"><button class="big primary" id="btn-done-progress" data-i18n>See my progress</button><button class="linkbtn center" id="btn-home" data-i18n>Back to start</button></div>
   </section>
@@ -565,7 +579,7 @@ const I18N = (function () {
     "Today's exercises": 'تمارين اليوم', 'Hello, {name}': 'مرحبًا يا {name}',
     'Do them one at a time. The phone will guide you.': 'قم بها واحدًا تلو الآخر، وسيرشدك الهاتف.',
     '{n} left for today. Keep going!': 'بقي {n} لليوم. استمر!', 'You have finished everything for today. Well done!': 'أنهيت جميع تمارين اليوم. أحسنت!',
-    'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Tap any exercise to do it now, as often as you like.': 'اضغط على أي تمرين لتبدأه الآن، كلما أردت.', 'Getting ready…': 'جارٍ التجهيز…',
+    'Start': 'ابدأ', 'Continue': 'تابع', 'Do them again': 'كرّرها مرة أخرى', 'Paused.': 'متوقف مؤقتًا.', 'Tap Next exercise when you are ready.': 'اضغط «التمرين التالي» عندما تكون جاهزًا.', 'Please step in front of the camera.': 'من فضلك قف أمام الكاميرا.', 'I cannot see your shoulders. Step back a little.': 'لا أرى كتفيك. تراجع قليلًا إلى الخلف.', 'I cannot see your arms. Step back so your arms are in view.': 'لا أرى ذراعيك. تراجع إلى الخلف حتى تظهر ذراعاك.', 'I cannot see your feet. Step back, or put the phone lower down.': 'لا أرى قدميك. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I cannot see your knees. Step back, or put the phone lower down.': 'لا أرى ركبتيك. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I cannot see your hips. Step back a little.': 'لا أرى وركيك. تراجع قليلًا إلى الخلف.', 'I cannot see your legs clearly. Step back, or put the phone lower down.': 'لا أرى ساقيك بوضوح. تراجع إلى الخلف، أو ضع الهاتف في مكان أدنى.', 'I can see only one leg. Turn to face the camera.': 'أرى ساقًا واحدة فقط. استدر لتواجه الكاميرا.', 'Stand where the camera can see you clearly.': 'قف في مكان تراك فيه الكاميرا بوضوح.', 'Tip: put the phone or laptop lower, about knee to waist height, and step further back.': 'نصيحة: ضع الهاتف أو الحاسوب في مكان أدنى، بين مستوى الركبة والخصر، وابتعد أكثر.', 'If the picture keeps zooming in on your face, turn off Center Stage: open Control Center, choose Video Effects, then turn off Center Stage.': 'إذا ظلت الصورة تقترب من وجهك، أوقف ميزة التأطير التلقائي: افتح مركز التحكم، ثم تأثيرات الفيديو، ثم أوقف Center Stage.', 'If the camera keeps zooming in on your face, turn off Center Stage on this device.': 'إذا ظلت الكاميرا تقترب من وجهك، أوقف ميزة التأطير التلقائي على هذا الجهاز.', 'Starting by itself in {n} seconds. Walk to your spot.': 'سيبدأ تلقائيًا بعد {n} ثانية. اذهب إلى مكانك.', 'Next: {name}, in {n} seconds.': 'التالي: {name}، بعد {n} ثانية.', 'Finishing in {n} seconds.': 'الإنهاء بعد {n} ثانية.', 'Tap the screen to stay here.': 'اضغط على الشاشة للبقاء هنا.', 'How hard was today overall?': 'ما مدى صعوبة تمارين اليوم إجمالًا؟', 'How hard was today overall? Tap a face.': 'ما مدى صعوبة تمارين اليوم إجمالًا؟ اضغط على أحد الوجوه.', 'Latest session started without a clear camera view. Check the setup before relying on it.': 'بدأت آخر جلسة دون رؤية واضحة من الكاميرا. تحقق من الإعداد قبل الاعتماد عليها.', 'Prop the phone up 2 to 3 metres away, about knee to waist height. On a laptop, put it on a chair or low table. After you tap I\'m ready, the app talks you through each exercise and moves on by itself.': 'ضع الهاتف على بعد ٢ إلى ٣ أمتار، بين مستوى الركبة والخصر. إذا كنت تستخدم حاسوبًا محمولًا فضعه على كرسي أو طاولة منخفضة. بعد الضغط على «أنا جاهز» يرشدك التطبيق صوتيًا في كل تمرين وينتقل وحده إلى التالي.', 'Tap any exercise to do it now, as often as you like.': 'اضغط على أي تمرين لتبدأه الآن، كلما أردت.', 'Getting ready…': 'جارٍ التجهيز…',
     'Prop the phone up 2 to 3 metres away. You will not need to touch it during an exercise.': 'ضع الهاتف واقفًا على بُعد مترين إلى ثلاثة أمتار. لن تحتاج إلى لمسه أثناء التمرين.',
     'Research prototype, not a medical device. Video stays on this phone.': 'نموذج بحثي أولي، وليس جهازًا طبيًا. يبقى الفيديو على هذا الهاتف.',
     'For clinicians': 'للأخصائيين', 'My progress': 'تقدّمي', 'Sound on': 'الصوت مفعّل', 'Sound off': 'الصوت متوقف', 'Listen': 'استمع',
@@ -1521,7 +1535,7 @@ const Report = (function () {
   function record(ex, counter, info) {
     const m = DEF[ex].measure(counter);
     for (const k in m) if (!num(m[k])) m[k] = null;
-    return { id: Date.now().toString(36), pid: info.pid, ex, stance: info.stance || null, t: new Date().toISOString(), dur: info.dur, track: info.track, fps: info.fps, stalls: info.stalls, validity: info.validity, m };
+    return { id: Date.now().toString(36), pid: info.pid, ex, stance: info.stance || null, t: new Date().toISOString(), dur: info.dur, track: info.track, fps: info.fps, stalls: info.stalls, validity: info.validity, posWeak: !!info.posWeak, m };
   }
   function add(rec) { const a = all().slice(); a.push(rec); saveAll(a); }
 
@@ -1722,7 +1736,8 @@ const Report = (function () {
     const clin = '<div class="view v-clin">' +
       '<h3>Standard outcome measures</h3><div class="tablebox"><table class="mt std"><thead><tr><th>Measure</th><th>This session</th><th>First session</th><th>Change</th><th>Clinically meaningful change?</th><th>Reference and interpretation</th></tr></thead><tbody>' + stdRows + '</tbody></table></div>' +
       '<p class="note">Recording quality: ' + f(cur.fps, 0, ' frames/s') + ', ' + (cur.stalls || 0) + ' frame stalls over 250 ms, tracking usable in ' + f(cur.track, 0, '%') + ' of frames.' +
-      (num(cur.fps) && cur.fps < 10 ? ' <b>Frame rate under 10/s: timed values are unreliable on this device.</b>' : '') + '</p>' +
+      (num(cur.fps) && cur.fps < 10 ? ' <b>Frame rate under 10/s: timed values are unreliable on this device.</b>' : '') +
+        (cur.posWeak ? ' <b>Started after the 12 s positioning check timed out with only a partial view: check the camera setup before relying on this session.</b>' : '') + '</p>' +
       '<p class="note">Participant: ' + (num(P.age) ? 'age ' + P.age : 'age not entered') + ', ' + ({ M: 'male', F: 'female' }[P.sex] || 'sex not entered') + '. Active on ' + week + ' of the last 7 days. ' +
       'The SPPB total also needs a 4 m gait-speed test, which this app does not measure. Camera timing has not yet been validated against a stopwatch.</p>' +
       '<div class="rgrid"><div class="rcol"><h3>App-derived movement-quality scores (0 to 100, not standardized)</h3>' + bars +
@@ -1776,7 +1791,7 @@ const Report = (function () {
 
   function rateLatest(pid, ex, key, v) { const s = sessions(pid, ex), last = s[s.length - 1]; if (last) update(last.id, pid, { [key]: v }); }
   const scoreOf = (ex, m) => overall(DEF[ex].score(m).d);   // 0 to 100 movement-quality score for one session
-  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest, bodyMap, latestRegions, scoreOf, band };
+  return { DEF, EXAMPLE, record, add, sessions, seedExample, render, wire, overall, person, setPerson, standard, rateLatest, rate: update, bodyMap, latestRegions, scoreOf, band };
 })();
 if (typeof module !== 'undefined') module.exports = Report;
 
@@ -1796,6 +1811,7 @@ if (typeof module !== 'undefined') module.exports = Report;
   let sm = {}, live = {};   // smoothed signals; per-session scratch for the active exercise
   let guided = false;       // true when a patient runs the guided daily plan; false in the clinician area
   let wakeLock = null;
+  let camOK = false;        // the camera has opened once this visit, so later exercises can start without a tap
 
   /* ---------- shared UI helpers ---------- */
   function gauge(id, label, ticks) {
@@ -2294,7 +2310,9 @@ if (typeof module !== 'undefined') module.exports = Report;
   async function startCamera() {
     try {
       const portrait = innerHeight > innerWidth;   // a phone propped upright: ask for an upright picture so the person fills the screen
-      stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: portrait ? 720 : 1280 }, height: { ideal: portrait ? 1280 : 720 }, facingMode: 'user' }, audio: false });
+      // 4:3 (3:4 upright) uses the whole camera sensor; 16:9 crops it and narrows the view
+      stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: portrait ? 960 : 1280 }, height: { ideal: portrait ? 1280 : 960 }, aspectRatio: { ideal: portrait ? 3 / 4 : 4 / 3 }, facingMode: 'user' }, audio: false });
+      camOK = true;
     } catch (e) {
       if (guided) { show('scr-intro'); $('intro-safety').textContent = I18N.L('The camera is blocked. Tap Allow when the phone asks, or turn on camera access for this website in your phone settings. Then tap I\'m ready again.'); say($('intro-safety').textContent); }
       else showCue('Camera access was blocked. Allow the camera for this page, or use a recorded video file.', 'fix');
@@ -2319,7 +2337,7 @@ if (typeof module !== 'undefined') module.exports = Report;
     $('tech').hidden = !$('show-tech').checked;
     $('count').hidden = !!guided; $('guide').hidden = true; $('countdown').hidden = true; $('stage').className = 'stage';
     $('count-goal').textContent = guided && ex.goal ? I18N.L('of {n}', { n: I18N.D(ex.goal) }) : guided && exKey === 'balance' ? I18N.L('Stage {i} of 4', { i: I18N.D(1) }) : '';
-    $('btn-finish').disabled = false; $('btn-cam').disabled = true;
+    $('btn-finish').disabled = false; $('btn-cam').disabled = true; $('guide-tip').hidden = true;
     live.phase = guided ? 'position' : 'run';
     showCue(guided ? '' : source === 'camera' ? 'Get into position' : '', '');
     try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then((w) => { wakeLock = w; }, () => {}); } catch (e) { /* optional */ }
@@ -2346,7 +2364,7 @@ if (typeof module !== 'undefined') module.exports = Report;
       Report.add(Report.record(exKey, counter, { pid: pid(), stance: exKey === 'balance' ? $('stance').value : null,
         dur: lastT - t0, track: frames ? tracked / frames * 100 : null, fps: live.fpsN ? live.fpsSum / live.fpsN : null,
         stalls: (live.q ? live.q.gaps.length : 0), lostT: (live.q ? live.q.lost.length : 0) * (lastT - t0) / Math.max(1, frames),
-        validity: ex.validity ? ex.validity() : null }));
+        validity: ex.validity ? ex.validity() : null, posWeak: !!live.posWeak }));
       const r = showReport();
       if (r && !guided) say('Well done. ' + r.wins[0]);
     }
@@ -2383,6 +2401,7 @@ if (typeof module !== 'undefined') module.exports = Report;
 
     const lms = res.landmarks && res.landmarks[0];
     const trackPct = () => { $('s-track').textContent = fmt(tracked / frames * 100, 0, '%'); };
+    if (!lms && guided && live.phase !== 'run') { position(null, { ok: false }, mediaT); return; }
     if (!lms) { live.q.lost.push(t); showCue('No person in view. Step back until your whole body is visible.', 'fix'); trackPct(); return; }
     const f = ex.frame(Core.toPoints(lms, W / H));
     drawSkeleton(lms, W, H, mirror, f);
@@ -2399,19 +2418,58 @@ if (typeof module !== 'undefined') module.exports = Report;
     }
   }
 
-  /* Guided start: wait until the whole body is in view and steady, count down by voice, then start timing. */
-  const NEED = { shoulder: [0, 11, 12, 13, 14, 15, 16, 23, 24] };
-  function inView(lms) {
-    return (NEED[exKey] || [0, 11, 12, 23, 24, 25, 26, 27, 28]).every((i) => lms[i] && (lms[i].visibility == null || lms[i].visibility > 0.5) && lms[i].x > 0.01 && lms[i].x < 0.99 && lms[i].y > 0.005 && lms[i].y < 0.995);
+  /* Guided start. Each exercise asks only for the body parts its scoring uses (sit to stand and Timed Up and Go:
+     one whole leg; marching: both legs; balance: both feet and shoulders; shoulder raises: shoulders and an arm).
+     It starts once that view has been steady for 1 s (75% of frames, so one bad frame does not reset it).
+     After 12 s of a partly usable view it starts anyway and marks the session, so nobody is stuck. */
+  const POS = { STEADY: 1.0, OK_FRAC: 0.75, GIVE_UP: 12, WEAK_FRAC: 0.3, TIP_AT: 8, TIP_SAY: 15 };
+  const seen = (l) => !!l && (l.visibility == null || l.visibility >= 0.5) && l.x >= 0 && l.x <= 1 && l.y >= 0 && l.y <= 1;
+  const legSeen = (lms, s) => (s === 'L' ? [23, 25, 27] : [24, 26, 28]).every((i) => seen(lms[i]));
+  function legGap(lms) {
+    if (!seen(lms[27]) && !seen(lms[28])) return 'feet';
+    if (!seen(lms[25]) && !seen(lms[26])) return 'knees';
+    if (!seen(lms[23]) && !seen(lms[24])) return 'hips';
+    return 'legs';
+  }
+  function missingPart(lms, f) {
+    if (!lms) return 'none';
+    let m = null;
+    if (exKey === 'shoulder') m = !(seen(lms[11]) && seen(lms[12])) ? 'shoulders' : !(seen(lms[13]) || seen(lms[14])) ? 'arms' : null;
+    else if (exKey === 'sts' || exKey === 'tug') m = legSeen(lms, 'L') || legSeen(lms, 'R') ? null : legGap(lms);
+    else if (exKey === 'march') { const l = legSeen(lms, 'L'), r = legSeen(lms, 'R'); m = l && r ? null : l || r ? 'oneLeg' : legGap(lms); }
+    else if (exKey === 'balance') m = !(seen(lms[27]) && seen(lms[28])) ? 'feet' : !(seen(lms[11]) && seen(lms[12])) ? 'shoulders' : null;
+    return m || (f.ok ? null : 'clear');
+  }
+  const POS_MSG = { none: 'Please step in front of the camera.', shoulders: 'I cannot see your shoulders. Step back a little.',
+    arms: 'I cannot see your arms. Step back so your arms are in view.', feet: 'I cannot see your feet. Step back, or put the phone lower down.',
+    knees: 'I cannot see your knees. Step back, or put the phone lower down.', hips: 'I cannot see your hips. Step back a little.',
+    legs: 'I cannot see your legs clearly. Step back, or put the phone lower down.', oneLeg: 'I can see only one leg. Turn to face the camera.',
+    clear: 'Stand where the camera can see you clearly.' };
+  const isApple = /iPhone|iPad|Macintosh/.test(navigator.userAgent);
+  function setupTip() {
+    return L('Tip: put the phone or laptop lower, about knee to waist height, and step further back.') +
+      (isApple ? ' ' + L('If the picture keeps zooming in on your face, turn off Center Stage: open Control Center, choose Video Effects, then turn off Center Stage.') : '');
   }
   function position(lms, f, mediaT) {
-    const ok = !!lms && f.ok && inView(lms);
     if (live.phase === 'position') {
+      const miss = missingPart(lms, f), ok = !miss;
+      if (live.posStart == null) live.posStart = mediaT;
+      const win = live.posWin = (live.posWin || []).filter((w) => w[0] >= mediaT - 3); win.push([mediaT, ok]);
+      const frac = (s) => { const r = win.filter((w) => w[0] >= mediaT - s); return r.length ? r.filter((w) => w[1]).length / r.length : 0; };
+      const waited = mediaT - live.posStart;
+      const steady = ok && win[0][0] <= mediaT - POS.STEADY && frac(POS.STEADY) >= POS.OK_FRAC;
+      const weak = !steady && waited >= POS.GIVE_UP && !!lms && f.ok && frac(3) >= POS.WEAK_FRAC;
       $('stage').className = 'stage ' + (ok ? 'ok' : 'bad'); $('guide').hidden = false;
-      $('guide-text').textContent = I18N.L(!lms ? 'Step in front of the camera' : ok ? 'Good. Stay there.' : 'Step back so I can see all of you');
-      if (!ok) { live.okSince = null; if (!live.posSaid || mediaT - live.posSaid > 8) { live.posSaid = mediaT; say(!lms ? 'Please step in front of the camera.' : 'Please step back so I can see all of you, from head to feet.'); } return; }
-      if (live.okSince == null) live.okSince = mediaT;
-      if (mediaT - live.okSince >= 1.0) { live.phase = 'countdown'; live.goAt = null; live.cdEnd = mediaT + 3.2; say('Good. Starting in 3, 2, 1.'); }
+      $('guide-text').textContent = I18N.L(ok ? 'Good. Stay there.' : POS_MSG[miss]);
+      $('guide-tip').textContent = setupTip(); $('guide-tip').hidden = ok || waited < POS.TIP_AT;
+      if (steady || weak) {
+        live.posWeak = weak; live.phase = 'countdown'; live.goAt = null; live.cdEnd = mediaT + 3.2; $('guide-tip').hidden = true;
+        say('Good. Starting in 3, 2, 1.'); return;
+      }
+      if (!ok && (live.posSaid == null || mediaT - live.posSaid > 8 || (live.posMiss !== miss && mediaT - live.posSaid > 3))) {
+        live.posSaid = mediaT; live.posMiss = miss;
+        say(isApple && waited >= POS.TIP_SAY && !live.tipSaid ? (live.tipSaid = true, POS_MSG[miss] + ' ' + L('If the camera keeps zooming in on your face, turn off Center Stage on this device.')) : POS_MSG[miss]);
+      }
       return;
     }
     // countdown
@@ -2541,7 +2599,33 @@ if (typeof module !== 'undefined') module.exports = Report;
   }
   function speakHome() { say($('hello').textContent + '. ' + $('home-lead').textContent + ' ' + L('Tap Start when you are ready.')); }
 
+  /* Hands-free flow: after a result the next exercise opens by itself, and an intro starts by itself, each after a
+     spoken countdown. Any tap on the screen cancels it. Exercises that need a helper still wait for the helper's tap. */
+  const AUTO = { NEXT: 15, START: 10 };
+  let autoTimer = null;
+  function cancelAuto() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } $('res-auto').hidden = true; $('intro-auto').hidden = true; }
+  function autoCount(el, screen, secs, label, done) {
+    cancelAuto();
+    const scale = window.IREHAB_AUTO_SCALE || 1; let left = secs;
+    const draw = () => { el.hidden = false; el.innerHTML = '<b>' + esc(label(left)) + '</b><span>' + esc(L('Tap the screen to stay here.')) + '</span>'; };
+    draw();
+    autoTimer = setInterval(() => {
+      if ($(screen).hidden) { cancelAuto(); return; }
+      if (--left <= 0) { cancelAuto(); done(); } else draw();
+    }, 1000 * scale);
+  }
+  // a tap pauses the countdown; the banner keeps its place (so nothing jumps under the finger) and says it has paused
+  function pauseAuto() {
+    if (!autoTimer) return;
+    clearInterval(autoTimer); autoTimer = null;
+    for (const id of ['res-auto', 'intro-auto']) if (!$(id).hidden) $(id).innerHTML = '<b>' + esc(L('Paused.')) + '</b><span>' + esc(L(id === 'res-auto' ? 'Tap Next exercise when you are ready.' : "Tap I'm ready when you are set up.")) + '</span>';
+  }
+  document.addEventListener('pointerdown', (e) => { if (e.target.closest('#scr-result, #scr-intro')) pauseAuto(); }, true);
+  document.addEventListener('keydown', pauseAuto, true);
+  const canAutoStart = (k) => camOK && !EX[k].helper;
+
   function openIntro(k) {
+    cancelAuto();
     if (exKey !== k) { exKey = k; renderExercise(); }
     const p = plan(), i = p.indexOf(k);
     $('intro-step').textContent = L('Exercise {i} of {n}', { i: D(i + 1), n: D(p.length) });
@@ -2551,14 +2635,20 @@ if (typeof module !== 'undefined') module.exports = Report;
     $('helper-row').hidden = !EX[k].helper; $('helper').checked = false;
     $('btn-ready').disabled = !!EX[k].helper;
     show('scr-intro');
-    speakIntro();
+    const text = introText(k);
+    if (canAutoStart(k)) {
+      const secs = AUTO.START + Math.ceil(text.length / 14);   // time to listen, then about 10 s to walk into place
+      say(text + ' ' + L('Starting by itself in {n} seconds. Walk to your spot.', { n: secs }));
+      autoCount($('intro-auto'), 'scr-intro', secs, (n) => L('Starting by itself in {n} seconds. Walk to your spot.', { n: D(n) }), ready);
+    } else say(text);
   }
-  function speakIntro() {
-    const k = exKey;
-    say([L(EX[k].name), L(EX[k].what), $('intro-safety').textContent, L(EX[k].helper ? 'Tick the box when someone is with you, then tap I\'m ready.' : 'Tap I\'m ready when you are set up.')].filter(Boolean).join(' '));
+  function introText(k) {
+    return [L(EX[k].name), L(EX[k].what), $('intro-safety').textContent,
+      EX[k].helper ? L('Tick the box when someone is with you, then tap I\'m ready.') : canAutoStart(k) ? '' : L('Tap I\'m ready when you are set up.')].filter(Boolean).join(' ');
   }
+  function speakIntro() { cancelAuto(); say(introText(exKey)); }
   async function ready() {
-    guided = true;
+    cancelAuto(); guided = true;
     if (exKey === 'balance') $('stance').value = 'two';
     say('Okay. Put the phone down, 2 to 3 metres away, and stand where it can see you.');
     await startCamera();
@@ -2658,8 +2748,10 @@ if (typeof module !== 'undefined') module.exports = Report;
     $('btn-again').textContent = L('Do this one again'); $('btn-again').dataset.act = 'again';
     show('scr-result');
     confetti(pb || !prev);
-    resultSpeech = [L('Well done!'), L('Your score') + ' ' + Math.round(s) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0], L('How hard was that?')].join(' ');
-    say(resultSpeech);
+    resultSpeech = [L('Well done!'), L('Your score') + ' ' + Math.round(s) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0]].join(' ');
+    const nextLabel = (n) => (nextK ? L('Next: {name}, in {n} seconds.', { name: L(EX[nextK].name), n: D(n) }) : L('Finishing in {n} seconds.', { n: D(n) }));
+    say(resultSpeech + ' ' + nextLabel(AUTO.NEXT));
+    autoCount($('res-auto'), 'scr-result', AUTO.NEXT, nextLabel, () => (nextK ? openIntro(nextK) : showDone()));
   }
   function goNext() { const nextK = nextAfter(exKey); if (nextK) openIntro(nextK); else showDone(); }
 
@@ -2679,10 +2771,14 @@ if (typeof module !== 'undefined') module.exports = Report;
     weekDots($('done-week'));
     const days = new Set(Report.sessions(pid()).map((r) => day(r.t)));
     $('done-lead').textContent = L('Thank you. Your results are saved on this phone.') + (days.size > 1 ? ' ' + L('You have exercised on {n} days so far.', { n: D(days.size) }) : '');
+    const rs = roundSessions(), common = (key) => { const v = rs.map((r) => r[key]); return v.length && v.every((x) => x === v[0]) ? v[0] : undefined; };
+    faces($('done-rpe'), 'rpe', common('rpe'), ['Easy', 'Very hard']); faces($('done-pain'), 'pain', common('pain'), ['None', 'Worst']);
+    const ask = rs.some((r) => r.rpe == null || r.pain == null);
     show('scr-done'); confetti(true);
-    say(L('All done for today. Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.');
+    say(L('All done for today. Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.' + (ask ? ' ' + L('How hard was today overall? Tap a face.') : ''));
   }
 
+  const roundSessions = () => { const t0 = roundT(); return Report.sessions(pid()).filter((r) => new Date(r.t).getTime() >= t0 && plan().includes(r.ex)); };
   /* patient: my progress */
   function spark(vals) {
     const v = vals.filter(isNum); if (v.length < 2) return '';
@@ -2737,6 +2833,7 @@ if (typeof module !== 'undefined') module.exports = Report;
             (isNum(d) ? ' (<span class="' + (better === true ? 'up' : better === false ? 'down' : '') + '">' + (d > 0 ? '+' : d < 0 ? '−' : '') + D(Math.abs(d).toFixed(row.dec)) + '</span>)' : '') + (mean ? ' · ' + esc(mean) : '') + '</span>' : '') +
           (recs.length > 1 ? '<span class="pc-trend">' + spark(norm) + '</span>' : '') + '</div>';
       }
+      if (cur.posWeak) html += '<p class="pt-note warn">' + esc(L('Latest session started without a clear camera view. Check the setup before relying on it.')) + '</p>';
       html += '</div>';
     }
     el.innerHTML = html;
@@ -2772,7 +2869,10 @@ if (typeof module !== 'undefined') module.exports = Report;
   $('intro-listen').onclick = speakIntro; $('res-listen').onclick = () => say(resultSpeech); $('prog-listen').onclick = () => showProgress();
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.face'); if (!b) return;
-    Report.rateLatest(pid(), exKey, b.dataset.k, +b.dataset.v);
+    if (b.closest('#scr-done')) {
+      const key = b.dataset.k, v = +b.dataset.v, by = 'by' + key;
+      for (const r of roundSessions()) if (r[key] == null || r[by] === 'day') Report.rate(r.id, pid(), { [key]: v, [by]: 'day' });
+    } else Report.rateLatest(pid(), exKey, b.dataset.k, +b.dataset.v);
     for (const x of b.parentNode.children) x.setAttribute('aria-pressed', x === b);
   });
   $('open-clinic').onclick = () => { guided = false; renderPlanEdit(); show('scr-clinic'); };
