@@ -1039,6 +1039,12 @@ const I18N = (function () {
     'Ready. March for 2 minutes. Lift one knee, then the other.': 'جاهز. امشِ في مكانك دقيقتين. ارفع ركبة ثم الأخرى.',
     'Get ready. Wait for Go.': 'استعد. انتظر كلمة انطلق.', 'Ready': 'استعد', 'GO': 'انطلق', 'Go': 'انطلق', 'Timing. Walk to the line.': 'بدأ التوقيت. امشِ إلى الخط.',
     'Turned. Walk back to the chair.': 'أحسنت. عُد إلى الكرسي.', 'Turn and sit down.': 'استدر واجلس.',
+    'Good. Walk to the line.': 'أحسنت. امشِ إلى الخط.', 'Now walk back to the chair.': 'الآن عُد إلى الكرسي.', 'Go. Stand up.': 'انطلق. قِف.',
+    'Well done. Rest a moment, then we do it once more.': 'أحسنت. استرح قليلًا، ثم نعيدها مرة أخرى.', 'Well done. Great effort, you are all done.': 'أحسنت. مجهود رائع، لقد انتهيت.',
+    'You can do it. Push up from the chair.': 'تستطيع ذلك. ادفع نفسك من الكرسي وقِف.',
+    'Well done! {t} seconds. Rest a moment, then we do it once more.': 'أحسنت! {t} ثانية. استرح قليلًا، ثم نعيدها مرة أخرى.',
+    'Excellent! {t} seconds, faster than the first time. Great job.': 'ممتاز! {t} ثانية، أسرع من المرة الأولى. عمل رائع.',
+    'Excellent work! {t} seconds. Great job, you are all done.': 'عمل ممتاز! {t} ثانية. أحسنت، لقد انتهيت.',
     'That was too short to be a full trial. Sit and wait for Ready.': 'كانت المحاولة قصيرة جدًا. اجلس وانتظر كلمة استعد.', 'Hold': 'اثبت',
     'Stand still with your feet together.': 'قف ثابتًا وقدماك متلاصقتان.', 'Put one foot half a step ahead and hold still.': 'ضع قدمًا أمام الأخرى بنصف خطوة واثبت.',
     'Stand heel to toe and hold still.': 'قف والكعب أمام أصابع القدم واثبت.', 'Lift one foot off the floor and hold still.': 'ارفع قدمًا عن الأرض واثبت.',
@@ -3168,7 +3174,8 @@ if (typeof module !== 'undefined') module.exports = Clinic;
       name: 'Timed Up and Go', countLabel: 'Seconds', dur: 'About 2 minutes', helper: true,
       what: 'Stand up, walk to a line 3 metres away, turn around, walk back and sit down. Twice.',
       startSay: 'Sit in the chair and wait until I say go.',
-      auto: (t) => (counter.reps.length >= 2 && (counter.state === 'wait' || counter.state === 'ready') && t - counter.reps[counter.reps.length - 1].tEnd > 0.8) || (!counter.reps.length && t > 120),
+      // in the guided flow wait until the closing praise has been spoken before moving to the result
+      auto: (t) => (counter.reps.length >= 2 && (counter.state === 'wait' || counter.state === 'ready') && t - counter.reps[counter.reps.length - 1].tEnd > (guided ? 5 : 0.8)) || (!counter.reps.length && t > 120),
       setup: ['Put a chair against a wall and mark a line on the floor 3 m in front of it.',
               'Place the camera 1.5 to 2 m beyond the line, facing the chair, so the whole body stays in view for the whole walk.',
               'Sit down and wait for "Ready".',
@@ -3189,12 +3196,13 @@ if (typeof module !== 'undefined') module.exports = Clinic;
         if (ev) {
           if (ev.type === 'ready') {
             live.goT = null;
-            if (source === 'camera') { live.goAt = t + 2.5; showCue('Get ready. Wait for Go.', ''); say('Ready'); }
+            if (source === 'camera') { live.readyAt = Math.max(t, live.quietUntil || 0); live.goAt = live.readyAt + 2.5; showCue('Get ready. Wait for Go.', ''); }
             else showCue('Ready. Stand, walk to the line, turn, walk back and sit down.', '');
           }
-          else if (ev.type === 'up') { live.tUp = t; showCue('Timing. Walk to the line.', ''); }
-          else if (ev.type === 'turn1') showCue('Turned. Walk back to the chair.', '');
-          else if (ev.type === 'turn2') showCue('Turn and sit down.', '');
+          // spoken step-by-step guidance, short so each line finishes before the next movement
+          else if (ev.type === 'up') { live.tUp = t; showCue('Timing. Walk to the line.', ''); if (guided) say('Good. Walk to the line.'); }
+          else if (ev.type === 'turn1') { showCue('Turned. Walk back to the chair.', ''); if (guided) say('Now walk back to the chair.'); }
+          else if (ev.type === 'turn2') { showCue('Turn and sit down.', ''); if (guided) say('Turn and sit down.'); }
           else if (ev.type === 'done') {
             const r = ev.rep, n = counter.reps.length, full = !isNaN(r.turnSit);
             // Primary: movement time, from leaving the seat to seated again. Secondary: time from the spoken Go, when there was one.
@@ -3206,10 +3214,21 @@ if (typeof module !== 'undefined') module.exports = Clinic;
             setCount(r.total.toFixed(1));
             addRow([n, fmt(r.total, 1, ' s'), fmt(r.goTotal, 1, ' s'), fmt(r.sitToStand, 1, ' s'), fmt(r.walkOut, 1, ' s'), fmt(r.turn1, 1, ' s'),
                     fmt(r.walkBack, 1, ' s'), fmt(r.turnSit, 1, ' s'), chip({ ok: r.valid, text: r.valid ? 'Valid' : 'Check: ' + r.why.join(', ') })]);
-            showCue('Time: ' + r.total.toFixed(1) + ' seconds', 'good'); say(r.total.toFixed(1) + ' seconds');
+            showCue('Time: ' + r.total.toFixed(1) + ' seconds', 'good');
+            if (!guided) say(r.total.toFixed(1) + ' seconds');
+            else {
+              live.quietUntil = t + 4.5;   // let the praise finish before "Ready" 
+              const sec = I18N.D(r.total.toFixed(1)), prev = counter.reps[n - 2];
+              say(!r.valid ? (n === 1 ? 'Well done. Rest a moment, then we do it once more.' : 'Well done. Great effort, you are all done.')
+                : n === 1 ? I18N.L('Well done! {t} seconds. Rest a moment, then we do it once more.', { t: sec })
+                : prev && prev.valid && r.total < prev.total - 0.3 ? I18N.L('Excellent! {t} seconds, faster than the first time. Great job.', { t: sec })
+                : I18N.L('Excellent work! {t} seconds. Great job, you are all done.', { t: sec }));
+            }
           } else if (ev.type === 'abort') { showCue('That was too short to be a full trial. Sit and wait for Ready.', 'fix'); }
         } else if (counter.state === 'wait' && !counter.reps.length) showCue('Sit down on the chair to begin.', '');
-        if (counter.state === 'ready' && live.goAt != null && live.goT == null && t >= live.goAt) { live.goT = t; showCue('GO', 'good'); say('Go'); }
+        if (live.readyAt != null && t >= live.readyAt) { live.readyAt = null; if (counter.state === 'ready' && !(guided && counter.reps.length >= 2)) say('Ready'); }
+        if (counter.state === 'ready' && live.goAt != null && live.goT == null && t >= live.goAt) { live.goT = t; live.nudged = false; showCue('GO', 'good'); say(guided ? 'Go. Stand up.' : 'Go'); }
+        if (guided && counter.state === 'ready' && live.goT != null && !live.nudged && t - live.goT > 4) { live.nudged = true; say('You can do it. Push up from the chair.'); }
         if (counter.state === 'ready' && live.goT != null) setCount((t - live.goT).toFixed(1));
         if (counter.state === 'out' || counter.state === 'back' || counter.state === 'return') {
           setCount((t - (live.goT != null && live.goT <= counter.tStart ? live.goT : counter.tStart)).toFixed(1));
@@ -3748,7 +3767,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     ex.step(f, t, ema);
     trackPct();
     if (guided && running && (t > 240 || (live.autoStopAt && t >= live.autoStopAt) || (ex.auto && ex.auto(t)))) {
-      if (!live.saidStop && exKey !== 'balance') { live.saidStop = true; say(exKey === 'march' ? 'Stop. Two minutes. Well done.' : 'Stop. Well done.'); }
+      if (!live.saidStop && exKey !== 'balance' && !(exKey === 'tug' && guided)) { live.saidStop = true; say(exKey === 'march' ? 'Stop. Two minutes. Well done.' : 'Stop. Well done.'); }
       finish();
     }
   }
@@ -4113,7 +4132,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     $('btn-again').textContent = L('Do this one again'); $('btn-again').dataset.act = 'again';
     show('scr-result');
     confetti(pb || !prev);
-    resultSpeech = [L('Well done!'), L('Your score') + ' ' + Math.round(s) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0]].join(' ');
+    resultSpeech = [L('Well done!'), L('Your score') + ' ' + D(Math.round(s)) + ' ' + L('out of 100') + '.', pb ? L('New personal best!') : ch, wins[0]].join(' ');
     const nextLabel = (n) => (nextK ? L('Next: {name}, in {n} seconds.', { name: L(EX[nextK].name), n: D(n) }) : L('Finishing in {n} seconds.', { n: D(n) }));
     if ($('btn-next').dataset.act === 'home') { $('res-auto').hidden = true; say(resultSpeech); return; }
     say(resultSpeech + ' ' + nextLabel(AUTO.NEXT));
@@ -4144,7 +4163,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
     faces($('done-rpe'), 'rpe', common('rpe'), ['Easy', 'Very hard']); faces($('done-pain'), 'pain', common('pain'), ['None', 'Worst']);
     const ask = rs.some((r) => r.rpe == null || r.pain == null);
     show('scr-done'); confetti(true);
-    say($('done-title').textContent + '. ' + L('Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? Math.round(s) : '') + ' ' + L('out of 100') + '.' + (ask ? ' ' + L('How hard was today overall? Tap a face.') : ''));
+    say($('done-title').textContent + '. ' + L('Thank you.') + ' ' + L("Today's score") + ' ' + (isNum(s) ? D(Math.round(s)) : '') + ' ' + L('out of 100') + '.' + (ask ? ' ' + L('How hard was today overall? Tap a face.') : ''));
   }
 
   const roundSessions = () => { const t0 = roundT(); return Report.sessions(pid()).filter((r) => new Date(r.t).getTime() >= t0); };
