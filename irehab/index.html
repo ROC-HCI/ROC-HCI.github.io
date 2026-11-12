@@ -259,6 +259,14 @@ input.btn { width: 8.5em; cursor: text; }
 .confirm.priv { font-weight: 400; }
 .confirm.priv .pv-t { display: block; font-weight: 700; }
 .confirm.priv .pv-d { display: block; color: var(--muted); font-size: 15px; margin-top: 2px; }
+.pose { position: absolute; top: 56px; inset-inline-end: 10px; z-index: 2; width: clamp(130px, 30vw, 230px); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px 10px; border-radius: 14px; background: rgba(0,0,0,.62); color: #fff; text-align: center; }
+.pose svg { width: 70%; height: auto; direction: ltr; }
+.pose .fg { fill: none; stroke: #eaf2f0; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.pose .ac { fill: none; stroke: #5ee0d6; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.pose .dimfoot { fill: none; stroke: #eaf2f0; stroke-width: 2.5; stroke-dasharray: 3 3; opacity: .6; }
+.pose .pose-n { font-size: 13px; font-weight: 600; opacity: .85; }
+.pose b { font-size: clamp(16px, 3.6vw, 22px); line-height: 1.2; }
+.pose.done { background: rgba(20, 110, 62, .85); }
 .priv-badge { position: absolute; top: 10px; inset-inline-end: 10px; z-index: 3; background: rgba(0,0,0,.6); color: #fff; font-size: 14px; font-weight: 600; padding: 6px 10px; border-radius: 999px; }
 .fam-status { display: flex; align-items: center; gap: 14px; font-size: 20px; font-weight: 700; }
 .fam-status .dot { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; color: #fff; }
@@ -639,6 +647,7 @@ input.btn { width: 8.5em; cursor: text; }
       <div class="guide" id="guide" hidden><span id="guide-text"></span></div>
       <p class="guide-tip" id="guide-tip" hidden></p>
       <div class="countdown" id="countdown" hidden></div>
+      <div class="pose" id="pose" hidden aria-live="polite"></div>
       <div class="cue" id="cue" hidden></div>
     </div>
     <div class="tech panel" id="tech" hidden>
@@ -987,7 +996,7 @@ const I18N = (function () {
     'Stand up and sit down as many times as you safely can in 30 seconds.': 'قف ثم اجلس أكبر عدد ممكن من المرات بأمان خلال ٣٠ ثانية.',
     'March on the spot for 2 minutes, lifting your knees. Hold a chair if you need to.': 'امشِ في مكانك لمدة دقيقتين مع رفع ركبتيك. أمسك بكرسي إذا احتجت.',
     'Stand up, walk to a line 3 metres away, turn around, walk back and sit down. Twice.': 'قم من الكرسي، وامشِ إلى خط على بُعد ٣ أمتار، ثم استدر وعُد واجلس. مرتين.',
-    'Stand still in four positions, 10 seconds each. Each one is a little harder.': 'قف ثابتًا في أربع وضعيات، ١٠ ثوانٍ لكل منها. كل وضعية أصعب قليلًا من التي قبلها.',
+    'Stand still for 10 seconds, one position at a time. I will show you each one.': 'قف ثابتًا لمدة ١٠ ثوانٍ، وضعية واحدة في كل مرة. سأعرض لك كل وضعية في وقتها.',
     'Only do this with another person close by. Use your usual walking aid.': 'قم بهذا التمرين فقط بوجود شخص قريب منك. استخدم أداة المشي المعتادة.',
     'Stand next to a sturdy chair or counter. Hold it if you need to.': 'قف بجانب كرسي أو طاولة ثابتة، وأمسك بها إذا احتجت.',
     'Use a firm chair without wheels, against a wall.': 'استخدم كرسيًا ثابتًا بلا عجلات، مُسندًا إلى الحائط.',
@@ -1000,6 +1009,8 @@ const I18N = (function () {
     'Face the camera, support nearby': 'واجه الكاميرا وبقربك ما تستند إليه', 'Lift one knee': 'ارفع ركبة واحدة', 'Then the other': 'ثم الأخرى', 'Aim for hip height': 'حاول الوصول إلى مستوى الورك',
     'Chair, line, camera': 'الكرسي، الخط، الكاميرا', 'Stand, walk to the line': 'قف وامشِ إلى الخط', 'Turn around': 'استدر', 'Walk back, sit down': 'عُد واجلس',
     'Face the camera, a support nearby': 'واجه الكاميرا وبقربك ما تستند إليه', 'Feet together': 'القدمان متلاصقتان', 'One foot half a step forward': 'قدم أمام الأخرى بنصف خطوة',
+    'Start with your feet together': 'ابدأ والقدمان متلاصقتان', 'Hold still for 10 seconds': 'ابقَ ثابتًا لمدة ١٠ ثوانٍ',
+    'Then I will show you the next position, one at a time': 'بعدها سأعرض لك الوضعية التالية، واحدة تلو الأخرى',
     'Heel to toe': 'الكعب أمام أصابع القدم', 'One leg': 'على قدم واحدة', '10 seconds each': '١٠ ثوانٍ لكل وضعية',
     // live
     'Stop': 'إيقاف', 'Step in front of the camera': 'قف أمام الكاميرا', 'Good. Stay there.': 'ممتاز. ابقَ مكانك.', 'Step back so I can see all of you': 'ابتعد قليلًا حتى أراك كاملًا',
@@ -1119,6 +1130,7 @@ const I18N = (function () {
     [/^Time: ([\d.]+) seconds$/, (m) => 'الوقت: ' + D(m[1]) + ' ثانية'],
     [/^([\d.]+) seconds$/, (m) => D(m[1]) + ' ثانية'],
     [/^Hold still for (\d+) seconds\.$/, (m) => 'ابقَ ثابتًا لمدة ' + D(m[1]) + ' ثوانٍ.'],
+    [/^Held for (\d+) seconds\.$/, (m) => 'ثبتّ لمدة ' + D(m[1]) + ' ثوانٍ.'],
     [/^Held the full (\d+) seconds$/, (m) => 'ثبتّ لمدة ' + D(m[1]) + ' ثوانٍ كاملة'],
     [/^Ended early: .*$/, () => 'انتهى مبكرًا'],
     [/^Stopped at (\d+) seconds\.$/, (m) => 'توقفت عند ' + D(m[1]) + ' ثوانٍ.'],
@@ -3216,7 +3228,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
 
     balance: {
       name: 'Standing balance', countLabel: 'Seconds', dur: 'About 2 minutes', helper: true,
-      what: 'Stand still in four positions, 10 seconds each. Each one is a little harder.',
+      what: 'Stand still for 10 seconds, one position at a time. I will show you each one.',
       startSay: 'Stand with your feet together and keep still.',
       auto: (t) => !counter.reps.length && t > 60 && counter.state !== 'hold',
       order: ['two', 'semi', 'tandem', 'one'],
@@ -3234,8 +3246,16 @@ if (typeof module !== 'undefined') module.exports = Clinic;
       make() { return Core.BalanceCounter($('stance').value, this.target($('stance').value)); },
       frame: (p) => Core.balanceFrame(p, guided && counter && counter.mode ? counter.mode : $('stance').value),
       stanceName: { two: 'Feet together', semi: 'Semi-tandem', tandem: 'Tandem (heel to toe)', one: 'One leg' },
+      poseName: { two: 'Feet together', semi: 'One foot half a step forward', tandem: 'Heel to toe', one: 'One leg' },
       step(f, t, ema) {
         const g = Object.assign({}, f, { sway: ema('sway', f.sway) });
+        if (guided && live.next && t >= live.next.at && counter.state !== 'hold') {
+          const n = live.next; live.next = null;
+          counter.setMode(n.mode, this.target(n.mode)); $('stance').value = n.mode; setCount('0');
+          $('count-goal').textContent = I18N.L('Stage {i} of 4', { i: I18N.D(n.i) });
+          showCue(this.tell[n.mode], ''); say(this.tell[n.mode]);
+        }
+        if (guided && !live.autoStopAt && !live.next && live.pose !== counter.mode) poseCard(counter.mode);
         const ev = counter.feed(g, t);
         if (ev && ev.type === 'start') { live.ref = g.sway; showCue('Hold still for ' + counter.target + ' seconds.', ''); say('Hold'); }
         if (ev && ev.type === 'done') {
@@ -3245,8 +3265,9 @@ if (typeof module !== 'undefined') module.exports = Clinic;
           if (guided) {
             // 4-Stage Balance Test: move on after each 10-second hold, stop at the first stage not held
             const i = this.order.indexOf(r.mode), nxt = this.order[i + 1];
-            if (r.cue.ok && nxt) { counter.setMode(nxt, this.target(nxt)); $('stance').value = nxt; showCue(this.tell[nxt], 'good'); say('Well done. ' + this.tell[nxt]); $('count-goal').textContent = I18N.L('Stage {i} of 4', { i: I18N.D(i + 2) }); }
-            else { live.autoStopAt = t + 1.5; showCue(r.cue.ok ? 'All four done. Excellent!' : 'Well done. That is enough for today.', 'good'); say(r.cue.ok ? 'All four done. Excellent.' : 'Well done. You can relax now.'); }
+            // one position at a time: praise this one first, then a short pause, then show and say the next
+            if (r.cue.ok && nxt) { live.next = { mode: nxt, at: t + 2.5, i: i + 2 }; poseCard(r.mode, true); showCue('Well done. Held for ' + Math.round(r.dur) + ' seconds.', 'good'); say('Well done. Held for ' + Math.round(r.dur) + ' seconds.'); }
+            else { live.autoStopAt = t + 1.5; poseCard(null); showCue(r.cue.ok ? 'All four done. Excellent!' : 'Well done. That is enough for today.', 'good'); say(r.cue.ok ? 'All four done. Excellent.' : 'Well done. You can relax now.'); }
           } else { showCue(r.cue.text, r.cue.ok ? 'good' : 'fix'); say(r.cue.ok ? 'Done. Well held.' : 'Stopped at ' + r.dur.toFixed(0) + ' seconds.'); }
         }
         if (ev && ev.type === 'abort' && guided) {
@@ -3260,7 +3281,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
           const d = Math.abs(g.sway - live.ref); setGauge('gS', d / 6, fmt(d, 1, '°'));
         } else if (counter.state === 'arming') {
           setGauge('gS', 0, 'n/a');
-          if (!ev && !(guided && live.autoStopAt)) showCue({ two: 'Stand still with your feet together.', semi: 'Put one foot half a step ahead and hold still.', tandem: 'Stand heel to toe and hold still.', one: 'Lift one foot off the floor and hold still.' }[counter.mode], '');
+          if (!ev && !(guided && (live.autoStopAt || live.next))) showCue({ two: 'Stand still with your feet together.', semi: 'Put one foot half a step ahead and hold still.', tandem: 'Stand heel to toe and hold still.', one: 'Lift one foot off the floor and hold still.' }[counter.mode], '');
         }
         $('s-n').textContent = counter.reps.length;
       },
@@ -3507,12 +3528,23 @@ if (typeof module !== 'undefined') module.exports = Clinic;
       },
     };
   })();
+  // live picture of the one balance position to do now, so nothing has to be remembered
+  function poseCard(mode, done) {
+    const el = $('pose'); if (!el) return;
+    live.pose = mode;
+    if (!mode) { el.hidden = true; return; }
+    const i = EX.balance.order.indexOf(mode);
+    el.innerHTML = '<span class="pose-n">' + I18N.L('Stage {i} of 4', { i: I18N.D(i + 1) }) + (done ? ' ✓' : '') + '</span>' +
+      PIC.balance(mode)[1][0].replace(/<text[^>]*>[^<]*<\/text>/g, '').replace('viewBox="0 0 130 116"', 'viewBox="38 30 54 52"') + '<b>' + I18N.L(EX.balance.poseName[mode]) + '</b>';
+    el.className = 'pose' + (done ? ' done' : ''); el.hidden = false;
+  }
   function renderIdle() {
     if (exKey === 'balance') {
       const st = (k) => PIC.balance(k)[1][0].replace(/<text[^>]*>[^<]*<\/text>/g, '');   // captions carry the words
-      $('idle').innerHTML = [[PIC.balance('two')[0][0], 'Face the camera, a support nearby'], [st('two'), 'Feet together'], [st('semi'), 'One foot half a step forward'], [st('tandem'), 'Heel to toe']]
-        .map((p, i) => '<li class="pic"><span class="num">' + I18N.D(i + 1) + '</span>' + p[0] + '<span>' + I18N.L(p[1]) + '</span></li>').join('') +
-        '<li class="pic"><span class="num">' + I18N.D(5) + '</span>' + st('one') + '<span>' + I18N.L('One leg') + '</span></li><li class="pic"><span class="num">⏱</span>' + PIC.balance('two')[2][0] + '<span>' + I18N.L('10 seconds each') + '</span></li>';
+      // only the first position here; the app shows each next one on screen when it is time
+      $('idle').innerHTML = [[PIC.balance('two')[0][0], 'Face the camera, a support nearby'], [st('two'), 'Start with your feet together'], [PIC.balance('two')[2][0], 'Hold still for 10 seconds'],
+        [st('semi').replace('style="direction:ltr"', 'style="direction:ltr;opacity:.45"'), 'Then I will show you the next position, one at a time']]
+        .map((p, i) => '<li class="pic"><span class="num">' + I18N.D(i + 1) + '</span>' + p[0] + '<span>' + I18N.L(p[1]) + '</span></li>').join('');
       return;
     }
     const pics = PIC[exKey]();
@@ -3593,7 +3625,7 @@ if (typeof module !== 'undefined') module.exports = Clinic;
   function closeDemo() { const el = $('intro-demo'); if (el && el.querySelector('iframe')) renderDemo(exKey); }
   function resetSession() {
     counter = ex.make();
-    t0 = null; lastT = null; frames = 0; tracked = 0; sm = {}; live = {}; lastSummary = null;
+    t0 = null; lastT = null; frames = 0; tracked = 0; sm = {}; live = {}; lastSummary = null; if ($('pose')) $('pose').hidden = true;
     $('reps').tBodies[0].innerHTML = ''; $('reps-empty').hidden = false;
     $('summary').hidden = true; $('report').hidden = true; setCount('0'); $('clock').textContent = '0:00';
   }
