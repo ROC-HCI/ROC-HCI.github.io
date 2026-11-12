@@ -511,6 +511,14 @@ input.btn { width: 8.5em; cursor: text; }
 .cr-cal i.l1 { background: color-mix(in srgb, var(--accent) 40%, var(--sil)); } .cr-cal i.l2 { background: color-mix(in srgb, var(--accent) 70%, var(--sil)); } .cr-cal i.l3 { background: var(--accent); }
 @media (prefers-color-scheme: dark) { .cr-badge.watch, .cr-chip.watch { background: #3a3110; color: #f2d36b; } }
 .actions.static { position: static; }
+/* Short phones (e.g. iPhone SE): keep the result readable above the pinned buttons. The two links share one row
+   and the bar is tighter, so the headline number is not hidden behind it. */
+@media (max-height: 760px) {
+  #scr-result .actions { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0 10px; padding-top: 8px; padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
+  #scr-result .actions .big { flex: 1 1 100%; font-size: 19px; padding: 10px 16px; min-height: 52px; margin-bottom: 2px; }
+  #scr-result .actions .linkbtn { padding: 8px 2px; font-size: 15px; }
+  #scr-result .res-auto, #scr-result .auto-banner { flex: 1 1 100%; }
+}
 .cr-legend { display: flex; gap: 14px; font-size: 13px; color: var(--muted); margin-top: 4px; } .cr-legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; } .cr-legend .s0 { background: var(--s0); } .cr-legend .s1 { background: var(--s1); }
 </style>
 </head>
